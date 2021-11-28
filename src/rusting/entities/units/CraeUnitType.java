@@ -15,6 +15,7 @@ import mindustry.ui.Bar;
 import mindustry.ui.Cicon;
 import rusting.content.Palr;
 import rusting.content.RustingStatusEffects;
+import rusting.entities.units.flying.CraeUnitEntity;
 
 import static mindustry.Vars.state;
 

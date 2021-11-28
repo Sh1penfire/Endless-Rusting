@@ -15,6 +15,7 @@ import mindustry.graphics.Layer;
 import mindustry.type.Liquid;
 import mindustry.world.Tile;
 import rusting.interfaces.*;
+import rusting.interfaces.block.PulseCanalc;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.utility.PulseTeleporterController.PulseTeleporterControllerBuild;
 

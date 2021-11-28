@@ -12,7 +12,7 @@ import mindustry.graphics.Layer;
 import mindustry.type.Liquid;
 import mindustry.world.Tile;
 import rusting.content.Fxr;
-import rusting.interfaces.PulseCanalc;
+import rusting.interfaces.block.PulseCanalc;
 import rusting.interfaces.Pulsec;
 import rusting.world.blocks.pulse.distribution.PulseCanal;
 

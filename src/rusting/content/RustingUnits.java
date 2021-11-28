@@ -10,7 +10,8 @@ import arc.math.geom.Vec2;
 import arc.struct.ObjectIntMap;
 import arc.struct.ObjectMap.Entry;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.ai.types.*;
 import mindustry.content.*;
 import mindustry.core.Version;
@@ -24,16 +25,22 @@ import mindustry.logic.Ranged;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.world.blocks.defense.turrets.Turret.TurretBuild;
-import rusting.EndlessRusting;
 import rusting.Varsr;
 import rusting.ai.types.BossStingrayAI;
 import rusting.ai.types.MultiSupportAI;
 import rusting.entities.abilities.*;
 import rusting.entities.bullet.*;
 import rusting.entities.units.*;
+import rusting.entities.units.flying.CraeUnitEntity;
+import rusting.entities.units.flying.StingrayUnitEntity;
+import rusting.entities.units.mech.BaseUnit;
+import rusting.entities.units.spider.BaseSpiderEntity;
+import rusting.entities.units.spider.SpecialWeaponsSpider;
+import rusting.entities.units.weapons.SpecialBulletWeapon;
 import rusting.interfaces.Targeting;
 
 import static arc.graphics.g2d.Draw.color;
+import static rusting.EndlessRusting.modname;
 import static rusting.content.RustingAISwitches.*;
 
 public class RustingUnits implements ContentList{
@@ -43,7 +50,9 @@ public class RustingUnits implements ContentList{
             prov(StingrayUnitEntity.class, StingrayUnitEntity::new),
             prov(CraeUnitEntity.class, CraeUnitEntity::new),
             prov(BaseUnitEntity.class, BaseUnitEntity::new),
-            prov(BaseUnit.class, BaseUnit::new)
+            prov(BaseUnit.class, BaseUnit::new),
+            prov(BaseSpiderEntity.class, BaseSpiderEntity::new),
+            prov(SpecialWeaponsSpider.class, SpecialWeaponsSpider::new)
     };
 
     private static ObjectIntMap<Class<? extends Entityc>> idMap = new ObjectIntMap<>();
@@ -95,7 +104,8 @@ public class RustingUnits implements ContentList{
         duono, duoly, duanga;
     public static UnitType
         marrow, metaphys, ribigen, spinascene, trumpedoot,
-            fahrenheit, celsius, kelvin;
+        diaphysis,
+        fahrenheit, celsius, kelvin;
     public static UnitType
         pulseBarrenBezerker;
     public static UnitType
@@ -929,6 +939,71 @@ public class RustingUnits implements ContentList{
             );
         }};
 
+        EntityMapping.nameMap.put("diaphysis", SpecialWeaponsSpider::new);
+        diaphysis = new SpecialWeaponsUnitType("diaphysis"){{
+            hitSize = 15;
+            health = 3500;
+            armor = 9;
+            speed = 1.5f;
+            accel = 0.65f;
+            drag = 0.45f;
+
+            legCount = 3;
+            legLength = 14;
+            legTrns = 0.6f;
+            legMoveSpace = 3.25f;
+            hovering = true;
+
+            rotateSpeed = 4.95f;
+            lightRadius = hitSize * 4.5f;
+            lightColor = Palr.dustriken;
+            lightOpacity = 0.013f;
+            itemCapacity = 125;
+            commandLimit = 5;
+
+            visualElevation = 0.65f;
+            groundLayer = Layer.legUnit;
+
+            constructor = SpecialWeaponsSpider::new;
+
+            singleTarget = false;
+
+            specialWeapons.addAll(new SpecialBulletWeapon(modname + "-diaphysis-harpoon-launcher"){{
+                y = -5;
+                x = 0;
+            }});
+
+            weapons.addAll(
+                new Weapon(modname + "-flamethrower-small"){{
+                    bullet = RustingBullets.shortPyraFlame;
+                    shots = 1;
+                    reload = 3;
+                    top = false;
+                    x = 3.5f;
+                    y = 9f;
+                    shootY = 5.15f;
+                    shootSound = Sounds.flame2;
+                    shootCone = 65;
+                }},
+                new Weapon(modname + "-diaphysis-backwards-launcher"){{
+                    bullet = RustingBullets.raehWeaver;
+                    shots = 3;
+                    reload = 120;
+                    recoil = 5;
+                    alternate = false;
+                    top = false;
+                    x = 0f;
+                    y = 0f;
+                    shootX = 6.5f;
+                    shootY = -3.25f;
+                    shootSound = Sounds.bang;
+                    soundPitchMax = 0.5f;
+                    soundPitchMin = 0.35f;
+                    shootCone = 360;
+                }}
+            );
+        }};
+
         EntityMapping.nameMap.put("guardian-sulphur-stingray", StingrayUnitEntity::new);
         stingray = new UnitType("guardian-sulphur-stingray"){{
             health = 6500;
@@ -1121,7 +1196,7 @@ public class RustingUnits implements ContentList{
                 new StatusFieldAbility(StatusEffects.overdrive, 1690, 1380, 85)
             );
             weapons.addAll(
-                    new Weapon(EndlessRusting.modname + "-sharpen-weapon"){{
+                    new Weapon(modname + "-sharpen-weapon"){{
                         x = 8.5f;
                         y = -0.5f;
                         reload = 2;

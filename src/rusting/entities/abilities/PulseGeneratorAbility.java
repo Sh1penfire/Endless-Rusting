@@ -8,7 +8,7 @@ import mindustry.Vars;
 import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
 import rusting.content.Palr;
-import rusting.entities.units.CraeUnitEntity;
+import rusting.entities.units.flying.CraeUnitEntity;
 import rusting.interfaces.Pulsec;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.PulseBlock.PulseBlockBuild;

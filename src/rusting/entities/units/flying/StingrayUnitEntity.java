@@ -1,4 +1,4 @@
-package rusting.entities.units;
+package rusting.entities.units.flying;
 
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
@@ -15,7 +15,7 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Trail;
 import rusting.content.*;
 
-public class StingrayUnitEntity extends AntiquimGuardianUnitEntity{
+public class StingrayUnitEntity extends AntiquimGuardianUnitEntity {
     public Seq<Trail> trailSeq = Seq.with(new Trail(6), new Trail(6));
     public static Seq<Vec2> trailPos = Seq.with(new Vec2(18.75f, -4.7f), new Vec2(-18.75f, -4.7f));
     private static float tmpFloat, tmpFloat2;

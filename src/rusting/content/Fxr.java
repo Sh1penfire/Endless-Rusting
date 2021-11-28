@@ -15,7 +15,7 @@ import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.Team;
 import mindustry.gen.Unit;
 import mindustry.graphics.*;
-import rusting.entities.units.CraeUnitEntity;
+import rusting.entities.units.flying.CraeUnitEntity;
 import rusting.entities.units.CraeUnitType;
 import rusting.math.Mathr;
 
@@ -69,10 +69,26 @@ public class Fxr{
             });
         }),
 
-        shootLongPyraFlame = new Effect(123f, 80f, e -> {
+        shootShortPyraFlame = new Effect(63f, 80f, e -> {
             color(Pal.lightTrail, Pal.darkPyraFlame, Color.gray, e.finpow());
             Draw.alpha(e.fout() * 0.25f + 0.75f);
 
+            randLenVectors(e.id, 7, e.finpow() * 45f, e.rotation, 21f, (x, y) -> {
+                Fill.circle(e.x + x, e.y + y + Math.max(e.finpow() - 0.9f, 0)/9 * 10 * 9 * Tmp.v1.set(x, y).len()/172 * 9, e.fout() * 2.6f);
+            });
+
+            color(Pal.lightTrail, Pal.darkPyraFlame, Color.gray, e.finpow());
+            Draw.alpha(e.fout() * 0.25f + 0.75f);
+
+            randLenVectors(e.id, 3, e.finpow() * 80f, e.rotation, 13f, (x, y) -> {
+                Fill.circle(e.x + x, e.y + y + Math.max(e.finpow() - 0.9f, 0)/9 * 10 * 9 * Tmp.v1.set(x, y).len()/172 * 9, e.fout() * 2.6f);
+            });
+        }),
+
+        shootLongPyraFlame = new Effect(123f, 80f, e -> {
+            color(Pal.lightTrail, Pal.darkPyraFlame, Color.gray, e.finpow());
+            Draw.alpha(e.fout() * 0.25f + 0.75f);
+    
             randLenVectors(e.id, 15, e.finpow() * 172f, e.rotation, 10f, (x, y) -> {
                 Fill.circle(e.x + x, e.y + y + Math.max(e.finpow() - 0.9f, 0)/9 * 10 * 9 * Tmp.v1.set(x, y).len()/172 * 9, e.fout() * 2.6f);
             });
@@ -634,6 +650,34 @@ public class Fxr{
         stroke(e.fout());
 
         randLenVectors(e.id + 1, 6, 1f + 23f * e.finpow(), (x, y) -> {
+            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 5f);
+        });
+    }),
+
+    instaltSummonerExplosionLarge = new Effect(85, e -> {
+        color(Pal.bulletYellowBack);
+
+        e.scaled(25, i -> {
+            stroke(3f * i.fout());
+            Lines.circle(e.x, e.y, 5f + i.fin() * 55f);
+
+        });
+
+        e.scaled(9, i -> {
+            stroke(4f * i.fout());
+            Lines.circle(e.x, e.y, 3f + i.fin() * 75f);
+        });
+
+        color(Color.gray);
+
+        randLenVectors(e.id, 12, 2f + 43f * e.finpow(), (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 4.5f + 0.55f);
+        });
+
+        color(Pal.bulletYellow);
+        stroke(e.fout());
+
+        randLenVectors(e.id + 1, 9, 1f + 33f * e.finpow(), (x, y) -> {
             lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 5f);
         });
     }),

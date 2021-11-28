@@ -1,4 +1,4 @@
-package rusting.entities.units;
+package rusting.entities.units.flying;
 
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
@@ -14,6 +14,8 @@ import mindustry.gen.*;
 import mindustry.graphics.Layer;
 import mindustry.type.StatusEffect;
 import rusting.content.*;
+import rusting.entities.units.BaseUnitEntity;
+import rusting.entities.units.CraeUnitType;
 import rusting.interfaces.Pulsec;
 
 import static mindustry.Vars.state;

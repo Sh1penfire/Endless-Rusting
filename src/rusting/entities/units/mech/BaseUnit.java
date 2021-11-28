@@ -1,4 +1,4 @@
-package rusting.entities.units;
+package rusting.entities.units.mech;
 
 import arc.util.io.Reads;
 import arc.util.io.Writes;

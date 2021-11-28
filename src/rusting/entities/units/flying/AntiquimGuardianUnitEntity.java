@@ -1,4 +1,4 @@
-package rusting.entities.units;
+package rusting.entities.units.flying;
 
 import arc.util.io.Reads;
 import arc.util.io.Writes;
@@ -6,6 +6,7 @@ import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import rusting.content.Fxr;
+import rusting.entities.units.BaseUnitEntity;
 
 public class AntiquimGuardianUnitEntity extends BaseUnitEntity {
     public float iframes = 0;

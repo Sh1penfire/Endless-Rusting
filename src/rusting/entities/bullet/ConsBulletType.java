@@ -22,6 +22,7 @@ public class ConsBulletType extends BasicBulletType {
     public float range = 0;
     public float trueSpeed = speed;
     public boolean useTrueSpeed = true;
+    public float rotationOffset = 0;
 
     public ConsBulletType(float speed, float damage, String sprite){
         super(speed, damage, sprite);
@@ -62,7 +63,7 @@ public class ConsBulletType extends BasicBulletType {
         bullet.owner = owner;
         bullet.team = team;
         bullet.time = 0f;
-        bullet.vel.trns(angle, (useTrueSpeed ? trueSpeed : speed) * velocityScl);
+        bullet.vel.trns(angle += rotationOffset, (useTrueSpeed ? trueSpeed : speed) * velocityScl);
         if(backMove){
             bullet.set(x - bullet.vel.x * Time.delta, y - bullet.vel.y * Time.delta);
         }else{

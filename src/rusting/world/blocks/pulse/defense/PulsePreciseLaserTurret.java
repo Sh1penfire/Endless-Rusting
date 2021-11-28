@@ -20,6 +20,7 @@ import rusting.content.Fxr;
 import rusting.content.Palr;
 import rusting.graphics.*;
 import rusting.interfaces.*;
+import rusting.interfaces.block.PulseCanalc;
 import rusting.world.blocks.pulse.PulseBlock;
 
 import static arc.util.Time.time;

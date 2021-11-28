@@ -8,7 +8,7 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.entities.Units;
 import mindustry.graphics.Layer;
-import rusting.entities.units.CraeUnitEntity;
+import rusting.entities.units.flying.CraeUnitEntity;
 import rusting.world.blocks.pulse.PulseBlock;
 
 //Finds units which can be charged with Pulse, or Buildings which are lacking pulse. Fires a continuous stream of Pulse.

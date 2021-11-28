@@ -11,6 +11,7 @@ import mindustry.type.Liquid;
 import mindustry.world.Tile;
 import mindustry.world.meta.Stat;
 import rusting.interfaces.*;
+import rusting.interfaces.block.PulseCanalc;
 
 public class PulseCanalInput extends PulseCanal {
 
