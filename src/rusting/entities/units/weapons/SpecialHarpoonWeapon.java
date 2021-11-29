@@ -7,13 +7,16 @@ import mindustry.gen.Bullet;
 import mindustry.gen.Unit;
 
 public class SpecialHarpoonWeapon extends SpecialBulletWeapon{
+
+    private static HarpoonDataHolder currentHarpoon = null;
+
     public SpecialHarpoonWeapon(String name) {
         super(name);
     }
 
-    public class HarpoonDataHolder{
+    public static class HarpoonDataHolder{
 
-        public Vec2 harpoonPosition = new Vec2(x, y);
+        public Vec2 harpoonPosition = new Vec2(0, 0);
         public Bullet harpoonBullet;
         public boolean harpoonShot = false;
         public boolean harpoonStuck = false;
@@ -29,4 +32,28 @@ public class SpecialHarpoonWeapon extends SpecialBulletWeapon{
         Seq<Cons> consSeq = Seq.with();
 
     }
+
+    @Override
+    public void shoot(SpecialWeaponMount mount) {
+        currentHarpoon = getHarpoonHolder(mount);
+
+    }
+
+    @Override
+    public void init(SpecialWeaponMount mount) {
+        super.init(mount);
+        setupHarpoon(mount);
+    }
+
+    public static HarpoonDataHolder getHarpoonHolder(SpecialWeaponMount mount){
+        return mount.data instanceof HarpoonDataHolder ? (HarpoonDataHolder) mount.data : setupHarpoon(mount);
+    }
+
+    public static HarpoonDataHolder setupHarpoon(SpecialWeaponMount mount){
+        HarpoonDataHolder harpoon = new HarpoonDataHolder();
+        mount.data = harpoon;
+        return harpoon;
+    }
+
+
 }
