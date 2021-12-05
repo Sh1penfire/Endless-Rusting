@@ -33,6 +33,78 @@ public class SpecialHarpoonWeapon extends SpecialBulletWeapon{
 
     }
 
+    /*
+    @Override
+    public void update(SpecialWeaponMount mount) {
+        super.update(mount);
+        if(harpoonRetracting){
+            harpoonPosition.add(Tmp.v2.trns(Tmp.v1.set(harpoonPosition).angleTo(this.x, this.y), Mathf.clamp(dst(harpoonPosition), 0, retractSpeed * timeScale())));
+            if(within(harpoonPosition, shootLength + 1)){
+                harpoonRetracting = false;
+                harpoonShot = false;
+                reload = reloadTime * autoreloadThreshold;
+                Sounds.click.at(x, y);
+            }
+        }
+        else if(harpoonShot && harpoonBullet != null && !harpoonStuck && !harpoonRetracting){
+            harpoonPosition.x = harpoonBullet.x;
+            harpoonPosition.y = harpoonBullet.y;
+            if(harpoonBullet.lifetime != 0) lastBulletLifetime = harpoonBullet.fout();
+            rotation = angleTo(harpoonBullet);
+        }
+        else if(harpoonStuck){
+            if(stuckOn == null || stuckOn.dead == true) {
+                harpoonStuck = false;
+                harpoonShot = false;
+                harpoonRetracting = true;
+            }
+            else {
+                harpoonPosition.set(stuckOn.x, stuckOn.y).add(Tmp.v2.trns(stuckOn.rotation + relativeRotation, distanceOffset));
+
+                tr.trns(rotation, shootLength);
+
+                if(Tmp.v1.set(stuckOn.x, stuckOn.y).add(stuckOn.vel).dst(x, y) > range){
+                    harpoonStuck = false;
+                    harpoonShot = false;
+                    harpoonRetracting = false;
+                    if(hasHarpoon()) {
+                        BlockHarpoonBulletType bullet = getHarpoon();
+                        stuckOn.damagePierce(bullet.tearDamage);
+                        stuckOn.apply(bullet.bleedEffect, bullet.bleedEffectDuration);
+                        Fxr.instaltSummonerExplosion.at(harpoonPosition.x, harpoonPosition.y);
+                        Geometry.iterateLine(0, x, y, stuckOn.x, stuckOn.y, getHarpoon().chainRegion.height/4, (x2, y2) -> {
+                            Fxr.regionDrop.at(x2, y2, angleTo(harpoonPosition) - 90, getHarpoon().chainRegion);
+                        });
+                    };
+                    stuckOn = null;
+
+                }
+                else {
+                    if(isShooting()) {
+                        stuckOn.impulse(Tmp.v2.trns(Tmp.v1.set(stuckOn.x, stuckOn.y).angleTo(x + tr.x, y + tr.y), Mathf.lerp(pullStrength, basePullStrength, Mathf.clamp(1 - (dst(stuckOn) + detachRange) / (range - detachRange), 0, 1)) * Time.delta));
+                        if(hasHarpoon()) {
+                            BlockHarpoonBulletType bullet = getHarpoon();
+                            bullet.updateUnitEffect(this, stuckOn);
+
+                            if (damageInterval >= 10) {
+                                stuckOn.damagePierce(bullet.ripDamage * Mathf.clamp((dst(stuckOn) - detachRange) / (range - detachRange), 0, 1));
+                                damageInterval -= 10;
+                            } else damageInterval += Time.delta;
+                        }
+                    }
+                }
+                float toHarpoon = angleTo(harpoonPosition.x, harpoonPosition.y);
+                rotation = Mathf.clamp(Angles.moveToward(rotation, toHarpoon, 1f * Time.delta),toHarpoon - 15, toHarpoon + 15);
+            }
+        }
+    }
+
+    @Override
+    public boolean shouldReload(SpecialWeaponMount mount) {
+        return mount.reload <= autoreloadThreshold * reload && !isShooting() && !harpoonShot && !harpoonStuck;
+    }
+
+    */
     @Override
     public void shoot(SpecialWeaponMount mount) {
         currentHarpoon = getHarpoonHolder(mount);

@@ -24,8 +24,7 @@ import rusting.core.Rusting;
 import rusting.core.holder.ItemScoreHolder;
 import rusting.ctype.UnlockableAchievement;
 import rusting.entities.abilities.SpeedupAbility;
-import rusting.game.ERSectorPreset;
-import rusting.game.ScriptedSectorHandler;
+import rusting.game.*;
 import rusting.ui.RustingUI;
 import rusting.util.MusicControl;
 import rusting.world.Worldr;
@@ -33,6 +32,7 @@ import rusting.world.blocks.pulse.distribution.PulseCanal.PulseCanalBuild;
 import rusting.world.format.holder.FormatHolder;
 import rusting.world.research.RustingResearch;
 
+//having everything not branch off my main class was done due to ***AR O N FICX THE FUCKN M O D NAM E***
 public class Varsr implements Loadable {
 
     protected final static Queue<PulseCanalBuild> canalQueue = new Queue<>();
@@ -50,6 +50,7 @@ public class Varsr implements Loadable {
     public static RustedContentLoader content = new RustedContentLoader();
     public static RustingResearch research = new RustingResearch();
     public static ScriptedSectorHandler sectors = new ScriptedSectorHandler();
+    public static PulseFieldManager pulseFieldManager;
     public static Worldr world = new Worldr();
     public static MusicControl music = new MusicControl();
     public static String username;

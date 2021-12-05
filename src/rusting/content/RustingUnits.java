@@ -969,6 +969,7 @@ public class RustingUnits implements ContentList{
             singleTarget = false;
 
             specialWeapons.addAll(new SpecialBulletWeapon(modname + "-diaphysis-harpoon-launcher"){{
+                bulletType = RustingBullets.stingrayShard;
                 y = -5;
                 x = 0;
             }});

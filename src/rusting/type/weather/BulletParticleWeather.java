@@ -30,7 +30,7 @@ public class BulletParticleWeather extends BaseParticleWeather {
     public int fadeTime = 60 * 6;
     //Colour of generated region. Only change if PixmapRegion is not found
     public Color regionColour = Color.white;
-
+    
     TextureRegion drawParticleRegion = null;
 
     public BulletParticleWeather(String name) {

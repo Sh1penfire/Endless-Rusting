@@ -10,8 +10,7 @@ import arc.func.Boolf;
 import arc.func.Boolp;
 import arc.math.Mathf;
 import arc.struct.*;
-import arc.util.Log;
-import arc.util.Nullable;
+import arc.util.*;
 import mindustry.core.GameState;
 import mindustry.core.GameState.State;
 import mindustry.game.EventType;
@@ -64,7 +63,7 @@ public class MusicControl {
     public class MusicHolder{
         public Music music;
         public float fade = 1;
-        public float duration = 0, totalDuration = music.getPosition();
+        public float duration = 0, totalDuration = 0;
         public int importance = 0;
         public Boolp playUntil = () -> true;
 
@@ -77,10 +76,10 @@ public class MusicControl {
             playUntil = () -> true;
         }
 
-        public MusicHolder setup(Music music, int importance, float duration, boolean loop, Boolp play){
+        public MusicHolder setup(Music music, int importance, float totalDuration, boolean loop, Boolp play){
             this.music = music;
             this.importance = importance;
-            this.duration = duration;
+            this.totalDuration = totalDuration;
             music.setLooping(loop);
             playUntil = play;
             return this;
@@ -105,8 +104,8 @@ public class MusicControl {
             public boolean loop;
             public int musicId;
             public float playChance = 0.0015f;
-            //initialized on FileTreeIni, DO NOT ASSIGN A VALUE TO THIS FIELD
-            public float duration;
+            //asign a value to this field to get the music to play
+            public float duration = 0;
         }
 
         public Seq<ObjectMap<Boolf<GameState>, Seq<MusicSecSegment>>> musicMap = Seq.with();
@@ -120,6 +119,9 @@ public class MusicControl {
                 musicPlayTime += 1;
                 return;
             }
+
+            music.current.duration += 1;
+
             musicPlayTime = 0;
             music.stillSearching = true;
             importance = 0;
@@ -148,7 +150,7 @@ public class MusicControl {
                 control.sound.stop();
 
                 music.stillSearching = false;
-                music.playUntil(music.secSegment.musicId, candidatesBools.get(candidatesBools.size - 1), trueImportance,true, false, music.secSegment.loop);
+                music.playUntil(music.secSegment.musicId, candidatesBools.get(candidatesBools.size - 1), trueImportance, music.secSegment.duration * 60,true, false, music.secSegment.loop);
             }
         }
     }
@@ -208,7 +210,7 @@ public class MusicControl {
         }
     }
 
-    public void playUntil(int id, @Nullable Boolp end, int importance, boolean fadein, boolean wait, boolean loop){
+    public void playUntil(int id, @Nullable Boolp end, int importance, float duration, boolean fadein, boolean wait, boolean loop){
         if(id < 0 || importance < cimportance && current != null) return; //do not use this method to shut it up!
         cpred = end;
         cimportance = Math.max(0, importance);
@@ -220,11 +222,11 @@ public class MusicControl {
             waiting = wait;
         }
         else{
-            play(musics[id], importance, fadein, wait, loop, end);
+            play(musics[id], importance, duration, fadein, wait, loop, end);
         }
     }
 
-    public void play(Music music, int importance, boolean fadein, boolean wait, boolean loop, Boolp boolp){
+    public void play(Music music, int importance, float duration, boolean fadein, boolean wait, boolean loop, Boolp boolp){
         fadeMode = wait ? 1 : 2;
         if(lastVol != -1){
             Core.settings.put("musicvol", lastVol);
@@ -237,12 +239,12 @@ public class MusicControl {
             current.music.setVolume(fadein ? 0f : Core.settings.getInt("musicvol") / 100f);
         }
         else{
-            musicQue.addLast(get().setup(music, importance, 10, loop, boolp));
+            musicQue.addLast(get().setup(music, importance, duration, loop, boolp));
         }
     }
 
     //hipity hpity-
-    double calculateDuration(final File oggFile) throws IOException {
+    public double calculateDuration(final File oggFile) throws IOException {
         int rate = -1;
         int length = -1;
 
@@ -335,7 +337,7 @@ public class MusicControl {
         long duration = 0;
 
         try {
-            fileInputStream = new FileInputStream(fil.file());
+            fileInputStream = new FileInputStream(file);
         } catch (FileNotFoundException e) {
             Log.err(e);
         }

@@ -41,13 +41,14 @@ public class RustingSectorPresets implements ContentList {
         saltyShoals = new ERSectorPreset("salty-shoals", RustingPlanets.err, 1){{
             captureWave = 40;
             difficulty = 6;
+            musicChance = 1;
 
             musicSecController.musicMap.addAll(
                 ObjectMap.of(
                     (Boolf<GameState>) gameState -> gameState.rules.spawns.find(s -> s.effect == StatusEffects.boss && (gameState.wave - s.begin) % s.spacing ==  s.spacing) != null || Groups.unit.find(u -> u.team == Vars.state.rules.defaultTeam && u.hasEffect(StatusEffects.boss)) != null,
                     Seq.with(new MusicSecSegment(1, true){{
-                        musicChance = 1;
-                        duration = 15;
+                        playChance = 1;
+                        duration = 138;
                     }})
                 )
             );
@@ -66,16 +67,20 @@ public class RustingSectorPresets implements ContentList {
         crystallineCrags = new ERSectorPreset("crystalline-crags", RustingPlanets.err, 268){{
             captureWave = 40;
             difficulty = 4;
+            musicChance = 1;
 
             musicSecController.musicMap.addAll(
                     ObjectMap.of(
                         (Boolf<GameState>) gameState -> gameState.wave > 3,
-                        Seq.with(new MusicSecSegment(0, false))
+                        Seq.with(new MusicSecSegment(0, false){{
+                            duration = 125;
+                        }})
                     ),
                     ObjectMap.of(
                         (Boolf<GameState>) gameState -> gameState.rules.spawns.find(s -> s.effect == StatusEffects.boss && (gameState.wave - s.begin) % s.spacing ==  s.spacing) != null || Groups.unit.find(u -> u.team == Vars.state.rules.defaultTeam && u.hasEffect(StatusEffects.boss)) != null,
                         Seq.with(new MusicSecSegment(1, true){{
                             musicChance = 1;
+                            duration = 138;
                         }})
                     )
             );

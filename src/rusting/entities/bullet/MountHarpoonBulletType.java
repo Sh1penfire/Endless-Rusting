@@ -7,8 +7,9 @@ import mindustry.entities.Lightning;
 import mindustry.entities.Units;
 import mindustry.gen.*;
 import mindustry.type.StatusEffect;
+import rusting.entities.units.weapons.SpecialHarpoonWeapon;
+import rusting.entities.units.weapons.SpecialHarpoonWeapon.HarpoonDataHolder;
 import rusting.entities.units.weapons.SpecialWeaponMount;
-import rusting.world.blocks.defense.turret.HarpoonTurret.HarpoonTurretBuild;
 
 public class MountHarpoonBulletType extends ConsBulletType{
 
@@ -50,16 +51,13 @@ public class MountHarpoonBulletType extends ConsBulletType{
         super.despawned(b);
     }
 
-    public void updateUnitEffect(HarpoonTurretBuild build, Unit unit){
-        if(dischargeLightning && Mathf.randomBoolean(dischargeChance)) Lightning.create(build.team, lightningColor, lightningDamage < 0 ? damage : lightningDamage, unit.x, unit.y, unit.rotation() + Mathf.range(lightningCone/2) + lightningAngle, lightningLength + Mathf.random(lightningLengthRand));
+    public void updateUnitEffect(SpecialWeaponMount mount, Unit unit){
+        if(dischargeLightning && Mathf.randomBoolean(dischargeChance)) Lightning.create(mount.owner.self().team, lightningColor, lightningDamage < 0 ? damage : lightningDamage, unit.x, unit.y, unit.rotation() + Mathf.range(lightningCone/2) + lightningAngle, lightningLength + Mathf.random(lightningLengthRand));
     }
 
     //retract harpoon
     public void resetHarpoon(Bullet b){
-        if(b.owner instanceof HarpoonTurretBuild) {
-            HarpoonTurretBuild turret = ((HarpoonTurretBuild) b.owner);
-            turret.harpoonRetracting = true;
-        }
+        SpecialHarpoonWeapon.getHarpoonHolder(getMount(b)).harpoonRetracting = true;
     }
 
     @Override
@@ -68,8 +66,8 @@ public class MountHarpoonBulletType extends ConsBulletType{
 
         Unit u = Units.closestEnemy(b.team, b.x, b.y, hitSize + 8, unit -> unit != null);
         if(u != null) b.collided.add(u.id);
-        if(b.owner instanceof HarpoonTurretBuild && b.collided.size > 0) {
-            HarpoonTurretBuild harpoon = ((HarpoonTurretBuild) b.owner);
+        if(b.owner instanceof SpecialWeaponMount && b.collided.size > 0) {
+            HarpoonDataHolder harpoon = SpecialHarpoonWeapon.getHarpoonHolder(getMount(b));
             harpoon.harpoonStuck = true;
             harpoon.harpoonRetracting = false;
             harpoon.stuckOn = Groups.unit.getByID(b.collided.get(b.collided.size - 1));

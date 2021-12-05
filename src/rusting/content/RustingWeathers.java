@@ -89,7 +89,7 @@ public class RustingWeathers implements ContentList{
             attrs.set(Attribute.heat, -0.35f);
         }};
 
-        chemNullificationStorm = new BaseParticleWeather("chem-nullification-storm") {{
+        chemNullificationStorm = new BulletDamagingParticleWeather("chem-nullification-storm") {{
             color = noiseColor = Color.cyan;
             particleRegion = "particle";
             useWindVector = true;

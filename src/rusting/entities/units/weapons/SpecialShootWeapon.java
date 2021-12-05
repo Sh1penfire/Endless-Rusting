@@ -19,7 +19,7 @@ public class SpecialShootWeapon extends SpecialWeapon{
         super.update(mount);
         if(rotates) mount.rotation = Angles.moveToward(Tmp.v1.set(mount.getPos()).angleTo(mount.owner.self().aimX, mount.owner.self().aimY), mount.rotation, rotateSpeed * Time.delta);
 
-        if(mount.owner.self().isShooting()) {
+        if(isShooting(mount) && shouldReload(mount)) {
             mount.reload += Time.delta * mount.owner.self().reloadMultiplier();
             if (mount.reload >= reload) shoot(mount);
         }
@@ -27,5 +27,17 @@ public class SpecialShootWeapon extends SpecialWeapon{
 
     public void shoot(SpecialWeaponMount mount){
         mount.reload = 0;
+    }
+
+    public boolean shouldReload(SpecialWeaponMount mount){
+        return true;
+    }
+
+    public boolean canShoot(SpecialWeaponMount mount){
+        return true;
+    }
+
+    public boolean isShooting(SpecialWeaponMount mount){
+        return mount.owner.self().isShooting();
     }
 }

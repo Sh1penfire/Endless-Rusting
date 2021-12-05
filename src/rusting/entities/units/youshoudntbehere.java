@@ -5,14 +5,14 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.Time;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.gen.Bullet;
 import mindustry.gen.Hitboxc;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.UnitType;
+import rusting.Varsr;
 import rusting.content.Palr;
 import rusting.content.RustingUnits;
 import rusting.entities.units.flying.AntiquimGuardianUnitEntity;
@@ -24,8 +24,6 @@ public class youshoudntbehere extends AntiquimGuardianUnitEntity {
     private PixmapRegion manipulationIsKey;
     private Pixmap stencil;
     private int drawingLayer = 0;
-    private int endOn = 0;
-
     @Override
     public void collision(Hitboxc other, float x, float y) {
         super.collision(other, x, y);
@@ -35,13 +33,12 @@ public class youshoudntbehere extends AntiquimGuardianUnitEntity {
     }
 
     public void updateRegion(){
-        //ourRegionNow = Vars.content.units().random().region;
-        endOn += 1;
-        if(endOn >= 81) return;
-        if(endOn >= 80) {
-            manipulationIsKey = Core.atlas.getPixmap("endless-rusting-PLACEHOLDER8");
+
+        for (int i = 0; i < type.weapons.size; i++) {
+            weapons.clear();
+            weapons.add(Seq.with(Vars.content.units()).filter(s -> Core.atlas.isFound(s.region)  && s.weapons.size > 0).random().weapons.random().region);
         }
-        else manipulationIsKey = Core.atlas.getPixmap(Seq.with(Vars.content.units()).filter(s -> Core.atlas.isFound(s.region)).random().name);
+        manipulationIsKey = Core.atlas.getPixmap(Seq.with(Vars.content.units()).filter(s -> Core.atlas.isFound(s.region)).random().name);
         Drawr.pigmentae(manipulationIsKey, Palr.voidBullet);
 
         try{
@@ -60,19 +57,14 @@ public class youshoudntbehere extends AntiquimGuardianUnitEntity {
                 float distance = Tmp.v1.set(manipulationIsKey.width/2, manipulationIsKey.height/2).dst(x, y);
 
                 //get color at the current point
-                Color col = new Color(stencil.getPixel(x, y));
+                Color col = Tmp.c1.set(stencil.getPixel(x, y));
 
                 //the closer the point selected is to the center, the more it's lerped into Palr.voidBullet
                 col.lerp(Palr.voidBullet, distance/Mathf.dst(manipulationIsKey.width, manipulationIsKey.height, 0, 0));
                 if(col.a == 1) stencil.draw(x, y, col);
             }
         }
-
-        ourRegionNow = new TextureRegion(new Texture(stencil));
-
-        for (int i = 0; i < type.weapons.size; i++) {
-            weapons.add(Seq.with(Vars.content.units()).filter(s -> Core.atlas.isFound(s.region)  && s.weapons.size > 0).random().weapons.random().region);
-        }
+        ourRegionNow.set(new Texture(stencil));
     }
 
     @Override
@@ -112,7 +104,7 @@ public class youshoudntbehere extends AntiquimGuardianUnitEntity {
 
     @Override
     public String toString() {
-        return "run.#no.";
+        return "run. now. You are seeing the " + id + "th itteration of this error. Please Return this device to tech support, and make sure it's with the username " + OS.username + " under the name of " + Varsr.username;
     }
 
     @Override
