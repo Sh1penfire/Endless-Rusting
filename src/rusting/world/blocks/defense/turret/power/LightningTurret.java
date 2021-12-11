@@ -34,7 +34,7 @@ public class LightningTurret extends PulseBlock {
     public boolean targetGround = true, targetAir = true;
 
     public int lightning = 3;
-    public float damage = 2;
+    public float damage = 3;
     public float healPercent = 0, statusDuration = 160;
     public float shootLength = 5;
     public float shootCone = 55;
@@ -43,7 +43,7 @@ public class LightningTurret extends PulseBlock {
 
     public Sound shootSound = Sounds.none;
     public float range = 15;
-    public float recoilAmount = 2, restitution = 0.5f;
+    public float recoilAmount = 2, restitution = 0.1f;
 
     public StatusEffect status = StatusEffects.shocked;
     public boolean hitUnits = true, hitBuildings = true;
@@ -113,13 +113,12 @@ public class LightningTurret extends PulseBlock {
             lightningPos.trns(rotation, shootLength).add(x, y);
             updateTargeting();
 
-            if(isShooting()) {
+            if(isShooting() && customConsumeValid()) {
                 if(isControlled()) aimPos.set(unit().aimX, unit().aimY);
                 else if(target != null) aimPos.set(target.getX(), target.getY());
 
                 rotation = Angles.moveToward(rotation, angleTo(aimPos.x, aimPos.y), delta() * rotationSpeed);
                 updateShooting();
-                recoil = 1;
             }
             recoil = Mathf.lerpDelta(recoil, 0f, restitution);
         }
@@ -130,7 +129,6 @@ public class LightningTurret extends PulseBlock {
 
         protected void updateShooting() {
             if(reload >= reloadTime){
-                customConsume();
                 shoot();
 
                 reload = 0f;
@@ -161,7 +159,6 @@ public class LightningTurret extends PulseBlock {
             if (hitBuildings && targetGround) {
                 Vars.indexer.eachBlock(null, rx, ry, range, b -> b.team != Team.derelict && (b.team != this.team || b.damaged()) && dst(b) <= range && Angles.within(rotation, Tmp.v1.angleTo(b.x, b.y), shootCone), b -> {
                     all.add(b);
-                    Fx.smoke.at(b.x, b.y);
                 });
             };
 
@@ -212,7 +209,11 @@ public class LightningTurret extends PulseBlock {
                 });
             }
 
-            shootSound.at(this);
+            if(anyNearby) {
+                shootSound.at(this);
+                recoil = 1;
+                customConsume();
+            }
         }
 
         @Override

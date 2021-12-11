@@ -1063,7 +1063,6 @@ public class RustingBlocks implements ContentList{
 
         contingent = new PulsePreciseLaserTurret("contingent"){{
             category = Category.effect;
-            hideFromUI();
             size = 3;
             health = 155 * size * size;
         }};
@@ -1623,23 +1622,28 @@ public class RustingBlocks implements ContentList{
         }};
 
         pulver = new LightningTurret("pulver"){{
-            centerResearchRequirements(ItemStack.with(Items.silicon, 260, RustingItems.gelChip, 50));
-            requirements(Category.turret, ItemStack.with(RustingItems.decilita, 25, Items.metaglass, 45, RustingItems.bulastelt, 55));
+            centerResearchRequirements(true, ItemStack.with(Items.silicon, 260, RustingItems.gelChip, 50));
+            requirements(Category.turret, ItemStack.with(RustingItems.gelChip, 25, Items.metaglass, 45, RustingItems.bulastelt, 55));
             size = 2;
             health = 185 * size * size;
+
+
+            canOverload = false;
+            pulseStorage = 125;
+
+            customConsumes.pulse = 6;
+
             range = 145;
             lightning = 4;
             healPercent = 0.15f;
 
             shootCone = 65;
-            reloadTime = 15;
+            reloadTime = 12;
 
-            shootSound = Sounds.lasershoot;
+            shootSound = Sounds.spark;
 
             healEffect = Fxr.healingWaterSmoke;
             color = Color.valueOf("#a9e2ea");
-
-            researchTypes.add(RustingResearchTypes.pulse);
         }};
 
         horaNoctis = new AutoreloadItemTurret("hora-noctis"){{
