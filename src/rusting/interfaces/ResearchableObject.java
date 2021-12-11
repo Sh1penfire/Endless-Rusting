@@ -63,5 +63,7 @@ public interface ResearchableObject {
 
     default Seq<ResearchModule> upgrades(){return Seq.with();};
 
+    default boolean upgradeable(){return upgrades().size > 0;};
+
     default CustomStatHolder customStatHolder(){return null;}
 }

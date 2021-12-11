@@ -31,6 +31,9 @@ import rusting.world.blocks.OverrideColourStaticWall;
 import rusting.world.blocks.capsules.CapsuleBlockResearchCenter;
 import rusting.world.blocks.defense.ProjectileAttackWall;
 import rusting.world.blocks.defense.turret.*;
+import rusting.world.blocks.defense.turret.healer.*;
+import rusting.world.blocks.defense.turret.power.LightningTurret;
+import rusting.world.blocks.defense.turret.power.PanelTurret;
 import rusting.world.blocks.environment.*;
 import rusting.world.blocks.logic.UnbreakableMessageBlock;
 import rusting.world.blocks.power.AttributeBurnerGenerator;
@@ -142,6 +145,8 @@ public class RustingBlocks implements ContentList{
         spraien,
         //platonic elements represented by four turrets.
         octain, triagon, cuin, icosahen,
+        //other elemental turrets, wiht names relating to gemstones
+        pulver,
         //turrets relating almost directly to Pixelcraft with their name but change things up a bit. Classified under elemental in the turret's sprite folder
         horaNoctis, holocaust,
         //bomerang related turrets
@@ -1615,6 +1620,26 @@ public class RustingBlocks implements ContentList{
                     RustingLiquids.melomae, RustingBullets.melomaeBeamShot,
                     RustingLiquids.cameaint, RustingBullets.cameoBeamShot
             );
+        }};
+
+        pulver = new LightningTurret("pulver"){{
+            centerResearchRequirements(ItemStack.with(Items.silicon, 260, RustingItems.gelChip, 50));
+            requirements(Category.turret, ItemStack.with(RustingItems.decilita, 25, Items.metaglass, 45, RustingItems.bulastelt, 55));
+            size = 2;
+            health = 185 * size * size;
+            range = 145;
+            lightning = 4;
+            healPercent = 0.15f;
+
+            shootCone = 65;
+            reloadTime = 15;
+
+            shootSound = Sounds.lasershoot;
+
+            healEffect = Fxr.healingWaterSmoke;
+            color = Color.valueOf("#a9e2ea");
+
+            researchTypes.add(RustingResearchTypes.pulse);
         }};
 
         horaNoctis = new AutoreloadItemTurret("hora-noctis"){{

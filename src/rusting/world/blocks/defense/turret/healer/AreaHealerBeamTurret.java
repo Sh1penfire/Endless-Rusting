@@ -1,4 +1,4 @@
-package rusting.world.blocks.defense.turret;
+package rusting.world.blocks.defense.turret.healer;
 
 import arc.Core;
 import arc.graphics.Color;
@@ -11,7 +11,7 @@ import mindustry.entities.bullet.BulletType;
 import mindustry.graphics.*;
 import rusting.math.Mathr;
 
-public class AreaHealerBeamTurret extends HealerBeamTurret{
+public class AreaHealerBeamTurret extends HealerBeamTurret {
 
     public float healRadius = 8;
     public int beams = 6;

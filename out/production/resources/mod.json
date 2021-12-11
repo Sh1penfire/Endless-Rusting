@@ -1,0 +1,11 @@
+{
+  "name": "endlessRusting",
+  "displayName": "Endless Rusting",
+  "author": "sh1p",
+  "description": "test java mod",
+  "version": "11",
+  "main": "rusting.EndlessRusting",
+  "minGameVersion": "126.2",
+  "hidden": false,
+  "java": true
+}

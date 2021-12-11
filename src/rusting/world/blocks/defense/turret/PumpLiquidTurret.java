@@ -25,7 +25,8 @@ public class PumpLiquidTurret extends LiquidTurret {
     @Override
     public void setStats(){
         super.setStats();
-        stats.add(Stat.input, 60f * pumpSpeed * size * size, StatUnit.liquidSecond);
+        stats.add(Stat.output, 60f * pumpSpeed * size * size, StatUnit.liquidSecond);
+
     }
 
     public boolean canPump(Tile tile){

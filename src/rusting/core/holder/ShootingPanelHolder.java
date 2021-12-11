@@ -2,7 +2,7 @@ package rusting.core.holder;
 
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
-import rusting.world.blocks.defense.turret.PanelTurret;
+import rusting.world.blocks.defense.turret.power.PanelTurret;
 
 public class ShootingPanelHolder extends PanelHolder{
     Effect shootEffect = Fx.shootSmall;

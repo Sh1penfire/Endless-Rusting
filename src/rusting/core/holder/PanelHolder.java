@@ -7,7 +7,7 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import mindustry.entities.bullet.BulletType;
 import mindustry.graphics.Layer;
-import rusting.world.blocks.defense.turret.PanelTurret;
+import rusting.world.blocks.defense.turret.power.PanelTurret;
 
 public class PanelHolder {
     public String name;

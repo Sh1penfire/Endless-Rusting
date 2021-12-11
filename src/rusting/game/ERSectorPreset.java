@@ -18,10 +18,15 @@ public class ERSectorPreset extends SectorPreset {
 
     public ERSectorPreset(String name, Planet planet, int sector) {
         super(name, planet, sector);
-        Varsr.music.musicSectors.add(this);
         Events.on(EventType.ClientLoadEvent.class, e -> {
             loadBundles();
         });
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        if(musicSecController.musicMap.size > 0) Varsr.music.musicSectors.add(this);
     }
 
     @Override

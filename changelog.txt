@@ -1,0 +1,47 @@
+V8
+-Added a techtree, as well as a custom objective
+-Added achievements, accessible through f1
+-Research now saves between games of the same save!
+-Independent research system not hardcoded to serve Pulse
+-Added settings for no bloom Pulse, Pulse's glare and shake regions as well as additive blending
+-Added debug mode which is independent of the game's own debug (AKA, launching the executable with the debug flag)
+-Added settings for Blinding weather's visual effect
+-Added blinding weather, which decreases visibility depending on whether the unit is grounded or flying
+-Added a whole campaign segment to Endless Rusting
+-Added a whole new turret tree, that being made of Autoreloading item turrets(Both unique in their own ways) and a power turret which shoots unstoppable shockwaves
+-Added several new status effects, to go along with the new turrets
+-Added new weathers and reworked Corrosive Deluge. Also increased Fossil Sotrm's damage
+-Balanced build costs
+-Increase Pulse Block's costs and Buff them overall
+-Pulse Upkeeper overdrive values are now correct
+-Added a wip Pusle Teleporter and sub-system of Pulse, Pulse Cannals
+-Added several new sectors, list of names is
+1. Plantae Preservere Domae
+2. Lush Preservatory
+2. Volen Channels
+3. Crystalline Crags
+4. Sulphuric Seas
+-Added a dedicated boss unit, Stingray which serves the Natives of Endless Rusting's first planet and acts as the first true challenge to players.
+-Added in an upgrade to Fahrenheit
+-Slightly changed MultiSupportAi
+-Some changes to UnbreakableMessageBlock(s) to make them normally unbreakable and configurable outside of editor mode.
+
+V7.1
+-Added 3 new units, from the forgotten faction with names based around bones.
+-Schematics now save Pulse Block config
+-New ContentLoader class used in Endless Rusting
+-Moved varius "Do this" items on the trello to the tasks section
+-Made class which is able to save and write things to save
+-PulseBarrier class now displays a shield when absorbing projectiles, fixed absorption and Pulse required
+-Gave Pulse Barrier and Pulse Barrier Large charged and shake sprites
+-PulseLandmines now have full pulse when placed
+-new class PulseParticleSpawner which has config for particles it can spawn
+-Dysfucntional monolith has new fields for reading and writing
+-Boiler block added, with AttributeGenerator going brrr
+-Moved /holder from rusting/core/entities to core/rusting/core/
+-Readme update
+-Modloader finally loads the mod :D
+-spilled milk again
+-forget the milk, theres water here
+-spiken't's bundle problems have now been fixed
+-coolant is nice

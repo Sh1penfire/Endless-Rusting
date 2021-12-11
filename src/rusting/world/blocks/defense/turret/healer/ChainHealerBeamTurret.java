@@ -1,4 +1,4 @@
-package rusting.world.blocks.defense.turret;
+package rusting.world.blocks.defense.turret.healer;
 
 import arc.Core;
 import arc.graphics.Color;
@@ -14,7 +14,7 @@ import mindustry.graphics.*;
 import mindustry.world.Tile;
 import rusting.math.Mathr;
 
-public class ChainHealerBeamTurret extends HealerBeamTurret{
+public class ChainHealerBeamTurret extends HealerBeamTurret {
     public int chains = 3;
     public float chainRange = 35;
     private static Seq<Building> builds = Seq.with(), builds2 = Seq.with();

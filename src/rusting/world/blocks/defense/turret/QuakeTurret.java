@@ -6,6 +6,7 @@ import arc.util.Tmp;
 import mindustry.entities.Damage;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
+import rusting.world.blocks.defense.turret.power.PanelTurret;
 
 //a turret which shoots spaced projectiles, with some of their stats being treated differently.
 public class QuakeTurret extends PanelTurret {

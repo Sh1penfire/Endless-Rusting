@@ -86,6 +86,7 @@ public class BounceBulletType extends ConsBulletType {
         if(pierceCap != -1 && bounces(b).bounceAmount >= pierceCap){
             b.remove();
         }
+
     }
 
     @Override

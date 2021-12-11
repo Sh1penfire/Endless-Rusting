@@ -129,7 +129,7 @@ public class ResearchDialog extends CustomBaseDialog{
                 }
             });
         },  "Information");
-        addButton(Core.atlas.getDrawable("endless-rusting-upgrade-block"), (o) -> o.upgrades().size > 0, () -> {}, "Upgrade Block");
+        addButton(Core.atlas.getDrawable("endless-rusting-upgrade-block"), (o) -> o.upgradeable(), () -> {}, "Upgrade Block");
 
     }
 

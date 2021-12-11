@@ -1,4 +1,4 @@
-package rusting.world.blocks.defense.turret;
+package rusting.world.blocks.defense.turret.healer;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.*;

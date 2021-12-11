@@ -13,7 +13,6 @@ import rusting.entities.units.weapons.SpecialWeaponMount;
 
 public class MountHarpoonBulletType extends ConsBulletType{
 
-    public float shredDamage = 0;
     //chance per tick
     public float dischargeChance = 0.015f;
 

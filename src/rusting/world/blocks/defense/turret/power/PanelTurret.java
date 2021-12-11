@@ -1,4 +1,4 @@
-package rusting.world.blocks.defense.turret;
+package rusting.world.blocks.defense.turret.power;
 
 import arc.graphics.g2d.Draw;
 import arc.struct.Seq;

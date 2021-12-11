@@ -120,7 +120,7 @@ public class MusicControl {
                 return;
             }
 
-            music.current.duration += 1;
+            if(music.current != null) music.current.duration += 1;
 
             musicPlayTime = 0;
             music.stillSearching = true;

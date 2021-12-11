@@ -1,13 +1,12 @@
 package rusting.content;
 
 import arc.Core;
+import arc.func.Floatp;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
-import arc.math.Angles;
-import arc.math.Mathf;
-import arc.util.Time;
-import arc.util.Tmp;
+import arc.math.*;
+import arc.util.*;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.entities.Effect;
@@ -15,9 +14,10 @@ import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.Team;
 import mindustry.gen.Unit;
 import mindustry.graphics.*;
-import rusting.entities.units.flying.CraeUnitEntity;
 import rusting.entities.units.CraeUnitType;
+import rusting.entities.units.flying.CraeUnitEntity;
 import rusting.math.Mathr;
+import rusting.world.blocks.defense.turret.power.LightningTurret.VisualLightningHolder;
 
 import static arc.graphics.g2d.Draw.alpha;
 import static arc.graphics.g2d.Draw.color;
@@ -27,6 +27,9 @@ import static arc.math.Angles.angle;
 import static arc.math.Angles.randLenVectors;
 
 public class Fxr{
+    private static Rand rand = new Rand();
+    private static float precent = 0;
+
     public static final Effect
 
         none = new Effect(0, 0f, e -> {}),
@@ -278,15 +281,74 @@ public class Fxr{
             randLenVectors(e.id, clouds, 2f + 23f * e.finpow(), (x, y) -> {
                 Fill.circle(e.x + x, e.y + y, e.fout() * splosionRadius/2 + 0.5f);
             });
-
-            color(Palr.pulseChargeEnd);
             stroke(e.fout());
 
+
+            color(Palr.pulseChargeEnd);
             randLenVectors(e.id + 1, clouds - 1, 1f + 23f * e.finpow(), (x, y) -> {
                 lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * splosionRadius/2.5f);
             });
         }),
 
+        chainLightning = new Effect(25f, 300f, e -> {
+            if(!(e.data instanceof VisualLightningHolder)) return;
+            VisualLightningHolder p = (VisualLightningHolder) e.data;
+
+            //get the start and ends of the lightning, then the distance between them
+            float tx = Tmp.v1.set(p.start()).x, ty = Tmp.v1.y, dst = Mathf.dst(Tmp.v2.set(p.end()).x, Tmp.v2.y, tx, ty);
+
+            Tmp.v3.set(p.end()).sub(p.start()).nor();
+            float normx = Tmp.v3.x, normy = Tmp.v3.y;
+
+            rand.setSeed(e.id + ((int) e.fin() * 3));
+
+            float arcWidth = rand.range(dst * 0.85f);
+
+
+            float angle = Tmp.v1.angleTo(Tmp.v2);
+
+            Floatp arcX = () -> {
+                return Mathf.sinDeg(precent * 180) * arcWidth;
+            };
+
+            //range of lightning strike's vary
+            float range = 15f;
+            int links = Mathf.ceil(dst / range);
+            float spacing = dst / links;
+    
+            Lines.stroke(2.5f * e.fout());
+            Draw.color(Color.white, e.color, e.fin());
+
+
+            //begin the line
+            Lines.beginLine();
+    
+            Lines.linePoint(Tmp.v1.x, Tmp.v1.y);
+    
+            rand.setSeed(e.id);
+    
+            for(int i = 0; i < links; i++){
+                float nx, ny;
+                if(i == links - 1){
+                    //line at end
+                    nx = Tmp.v2.x;
+                    ny = Tmp.v2.y;
+                }else{
+                    float len = (i + 1) * spacing;
+                    rand.setSeed(e.id + i);
+                    Tmp.v3.setToRandomDirection().scl(range/2);
+                    precent = links/(i + 1);
+
+                    nx = tx + normx * len + Tmp.v3.x + Tmp.v4.set(arcX.get(), 0).rotate(angle).x;
+                    ny = ty + normy * len + Tmp.v3.y + Tmp.v4.y;
+                }
+    
+                Lines.linePoint(nx, ny);
+            }
+    
+            Lines.endLine();
+        }),
+    
         pulseSmoke = new Effect(315f, e -> {
             float nonfinalSplosionRadius = 42 + 3 * e.fout();
             int clouds = 5;

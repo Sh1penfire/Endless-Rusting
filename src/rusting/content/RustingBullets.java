@@ -1790,9 +1790,9 @@ public class RustingBullets implements ContentList{
             bleedEffect = causticBurning;
         }};
 
-        buulasteltSmallHarpoon = new BlockHarpoonBulletType(3.15f, 5, EndlessRusting.modname + "-bulastelt-small-harpoon") {{
+        buulasteltSmallHarpoon = new BlockHarpoonBulletType(0, 5, EndlessRusting.modname + "-bulastelt-small-harpoon") {{
             consUpdate = velbasedHoming;
-            trueSpeed = 0;
+            trueSpeed = 3.15f;
             lifetime = 450;
             width = 8;
             height = 8;
