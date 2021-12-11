@@ -4,6 +4,7 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
+import arc.util.Log;
 import arc.util.Nullable;
 import arc.util.Time;
 
@@ -11,8 +12,6 @@ import static mindustry.Vars.headless;
 import static mindustry.Vars.tree;
 
 public class RustedShaders {
-    public static @Nullable
-    NamedShader sharpeffect;
 
     public static @Nullable
     PulseShader pulseGradiant;
@@ -20,14 +19,20 @@ public class RustedShaders {
 
     public static void load(){
         if(headless) return;
-        sharpeffect = new NamedShader("sharpeffect");
-        pulseGradiant = new PulseShader("pulseGradiant");
         loaded = true;
+
+        try {
+            pulseGradiant = new PulseShader("pulseGradiant");
+        }
+        catch (IllegalArgumentException error){
+            loaded = false;
+            Log.err("Failed to load ER's shaders: " + error);
+        }
+
     }
 
     public static void dispose(){
         if(!headless && loaded){
-            sharpeffect.dispose();
             pulseGradiant.dispose();
         }
     }

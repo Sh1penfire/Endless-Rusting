@@ -308,12 +308,4 @@ public class MultiSupportAI extends FlyingAI {
         }
         return t;
     }
-
-    @Override
-    protected void updateTargeting(){
-        if(unit.hasWeapons()){
-            if(retarget()) target = findTarget(unit.x, unit.y, unit.range(), unit.type.targetGround, unit.type.targetAir);
-            updateWeapons();
-        }
-    }
 }
