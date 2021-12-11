@@ -15,7 +15,7 @@ repositories{
 
 ext{
     //the build number that this mod is made for
-    mindustryVersion = 'v131'
+    mindustryVersion = 'v126.2'
     jabelVersion = "0.6.0"
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
@@ -27,9 +27,12 @@ allprojects{
     }
 }
 
+
+
 dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
 
@@ -52,6 +55,8 @@ task jarAndroid{
     }
 }
 
+def isWindows = System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows");
+
 jar{
     archiveFileName = "${project.archivesBaseName}Desktop.jar"
 
@@ -65,6 +70,23 @@ jar{
 
     from("assets/"){
         include "**"
+    }
+}
+
+task buildRun(dependsOn: jar){
+    doLast{
+        copy{
+            from "${project.archivesBaseName}Desktop.jar"
+            into System.getenv("destination")
+        }
+        /*
+        exec {
+            if(isWindows) commandLine("");
+            else commandLine("");
+
+        }
+
+         */
     }
 }
 

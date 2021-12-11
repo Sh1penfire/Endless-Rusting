@@ -9,6 +9,7 @@ import arc.math.geom.Vec2;
 import arc.util.*;
 import mindustry.core.Version;
 import mindustry.type.Weapon;
+import rusting.Varsr;
 import rusting.math.Mathr;
 
 import java.lang.reflect.InvocationTargetException;
@@ -121,9 +122,11 @@ public class Drawr {
     }
 
     public static void drawPulseRegion(TextureRegion region, float x, float y, float rotation, Color drawCol, float alpha){
-        RustedShaders.pulseGradiant.startColor.set(drawCol);
-        RustedShaders.pulseGradiant.alpha = alpha;
-        Draw.shader(RustedShaders.pulseGradiant);
+        if(RustedShaders.loaded){
+            RustedShaders.pulseGradiant.startColor.set(drawCol);
+            RustedShaders.pulseGradiant.alpha = alpha;
+            Draw.shader(RustedShaders.pulseGradiant);
+        }
         Draw.rect(region, x, y, rotation);
         Draw.shader();
     }
