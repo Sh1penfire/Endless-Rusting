@@ -302,8 +302,7 @@ public class Fxr{
 
             rand.setSeed(e.id + ((int) e.fin() * 3));
 
-            float arcWidth = rand.range(dst * 0.85f);
-
+            float arcWidth = rand.range(dst * (p.owner() != null ? p.owner().arc : 0.85f));
 
             float angle = Tmp.v1.angleTo(Tmp.v2);
 
@@ -311,8 +310,8 @@ public class Fxr{
                 return Mathf.sinDeg(precent * 180) * arcWidth;
             };
 
-            //range of lightning strike's vary
-            float range = 15f;
+            //range of lightning strike's vary depending on turret
+            float range = p.owner() != null ? p.owner().width : 15f;
             int links = Mathf.ceil(dst / range);
             float spacing = dst / links;
     
@@ -337,9 +336,9 @@ public class Fxr{
                     float len = (i + 1) * spacing;
                     rand.setSeed(e.id + i);
                     Tmp.v3.setToRandomDirection().scl(range/2);
-                    precent = links/(i + 1);
+                    precent = ((float) (i + 1))/links;
 
-                    nx = tx + normx * len + Tmp.v3.x + Tmp.v4.set(arcX.get(), 0).rotate(angle).x;
+                    nx = tx + normx * len + Tmp.v3.x + Tmp.v4.set(0, arcX.get()).rotate(angle).x;
                     ny = ty + normy * len + Tmp.v3.y + Tmp.v4.y;
                 }
     

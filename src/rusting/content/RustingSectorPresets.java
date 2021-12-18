@@ -8,7 +8,11 @@ import mindustry.content.StatusEffects;
 import mindustry.core.GameState;
 import mindustry.ctype.ContentList;
 import mindustry.gen.Groups;
+import rusting.Varsr;
 import rusting.game.ERSectorPreset;
+import rusting.game.ScriptedSectorHandler.EventNodeSupplier;
+import rusting.game.nodes.action.EffectEventNode;
+import rusting.game.nodes.conditional.TimedEventNode;
 import rusting.util.MusicControl.MusicSecController.MusicSecSegment;
 
 public class RustingSectorPresets implements ContentList {
@@ -110,5 +114,12 @@ public class RustingSectorPresets implements ContentList {
             captureWave = 0;
         }};
 
+        Varsr.sectors.nodeRegistery.putAll(ObjectMap.of(
+                "positionaleffect",
+                new EventNodeSupplier(EffectEventNode.class),
+                "timed",
+                new EventNodeSupplier(TimedEventNode.class)
+            )
+        );
     }
 }

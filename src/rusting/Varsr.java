@@ -57,6 +57,7 @@ public class Varsr implements Loadable {
     public static String defaultUsername;
     public static boolean debug = false;
     public static float lerpedPlayerElevation = 0;
+    public static boolean showAllSectors = false;
 
     public static void setup(){
 
@@ -81,7 +82,7 @@ public class Varsr implements Loadable {
         username = Core.settings.getString("settings.er.username", defaultUsername);
         if(username.equals("")) username = defaultUsername;
         debug = Core.settings.getBool("settings.er.debug", false);
-
+        showAllSectors  = Core.settings.getBool("settings.er.showallsectors", false);
         ui = new RustingUI();
 
         ui.init();
@@ -135,6 +136,7 @@ public class Varsr implements Loadable {
 
         Events.on(Trigger.update.getClass(), e -> {
             music.update();
+            sectors.update();
             if(Vars.state.isPaused()) return;
             if(Vars.player.unit() != null) lerpedPlayerElevation = Mathf.lerp(lerpedPlayerElevation, Vars.player.unit().elevation, 0.1f);
             SpeedupAbility.speedupBullets.each(b -> {

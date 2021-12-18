@@ -45,6 +45,9 @@ public class LightningTurret extends PulseBlock {
     public float range = 15;
     public float recoilAmount = 2, restitution = 0.1f;
 
+    public float arc = 0.25f;
+    public float width = 15;
+
     public StatusEffect status = StatusEffects.shocked;
     public boolean hitUnits = true, hitBuildings = true;
     public Effect healEffect = Fx.heal, hitEffect = Fx.hitLaserBlast, damageEffect = Fxr.chainLightning;
@@ -58,6 +61,9 @@ public class LightningTurret extends PulseBlock {
     protected Vec2 rv = new Vec2();
 
     public interface VisualLightningHolder{
+
+        LightningTurret owner();
+
         Vec2 start();
 
         Vec2 end();
@@ -99,7 +105,7 @@ public class LightningTurret extends PulseBlock {
         }
 
         public boolean isShooting(){
-            return unit().isShooting() && isControlled() || target != null;
+            return unit().isShooting() || !isControlled() && target != null;
         }
 
         @Override
@@ -113,11 +119,10 @@ public class LightningTurret extends PulseBlock {
             lightningPos.trns(rotation, shootLength).add(x, y);
             updateTargeting();
 
+            rotation = Angles.moveToward(rotation, angleTo(aimPos.x, aimPos.y), delta() * rotationSpeed);
             if(isShooting() && customConsumeValid()) {
                 if(isControlled()) aimPos.set(unit().aimX, unit().aimY);
                 else if(target != null) aimPos.set(target.getX(), target.getY());
-
-                rotation = Angles.moveToward(rotation, angleTo(aimPos.x, aimPos.y), delta() * rotationSpeed);
                 updateShooting();
             }
             recoil = Mathf.lerpDelta(recoil, 0f, restitution);
@@ -196,6 +201,12 @@ public class LightningTurret extends PulseBlock {
                 }
 
                 damageEffect.at(lightningPos.x, lightningPos.y, 0f, color, new VisualLightningHolder(){
+
+                    @Override
+                    public LightningTurret owner() {
+                        return (LightningTurret) block;
+                    }
+
                     Vec2 unitPos = new Vec2(other.x(), other.y());
                     @Override
                     public Vec2 start() {

@@ -43,9 +43,11 @@ public class RustingUI implements ApplicationListener, Loadable {
         loadoutResistance = new LoadoutResistFrag();
         planetsUI = new WidgetGroup();
 
-        Core.scene.add(planetsUI);        Events.on(EventType.ClientLoadEvent.class, e -> {
+        Core.scene.add(planetsUI);
+
+        Events.on(EventType.ClientLoadEvent.class, e -> {
             Core.app.post(() -> {
-                loadoutResistance.build(Vars.ui.hudGroup);
+                loadoutResistance.build(Vars.ui.menuGroup);
             });
         });
 

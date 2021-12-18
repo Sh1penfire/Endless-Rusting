@@ -6,8 +6,7 @@ import arc.graphics.Color;
 import arc.input.KeyCode;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.Time;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.game.EventType;
@@ -20,6 +19,8 @@ import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 import rusting.content.*;
+import rusting.game.nodes.action.EffectEventNode;
+import rusting.game.nodes.conditional.TimedEventNode;
 import rusting.graphics.Drawr;
 import rusting.graphics.RustedShaders;
 import rusting.type.statusEffect.CrystalStatusEffect;
@@ -55,7 +56,6 @@ public class EndlessRusting extends Mod{
 
         Events.on(EventType.UnitCreateEvent.class,
             e -> {
-
                 if(e.unit.type == RustingUnits.stingray && ((Vars.state.rules.tags.getBool("events.er.stingrayfail") && e.spawner.team == Vars.state.rules.waveTeam) || !Core.settings.getBool("settings.er.stingrayloyal") && e.spawner.team == Vars.state.rules.defaultTeam && !Varsr.debug)){
                     if(!Vars.headless) {
                         callNukestorm(7, 6, e.spawner.team == Vars.state.rules.defaultTeam ? true : false, e.spawner.rotation * 90, e.spawner.x, e.spawner.y, 25);
@@ -80,7 +80,26 @@ public class EndlessRusting extends Mod{
         );
 
         Events.on(Trigger.update.getClass(), e -> {
-            if(Core.input.keyDown(KeyCode.f1)) Varsr.ui.achievements.show();
+            if(Core.input.keyTap(KeyCode.f2)) Varsr.ui.achievements.show();
+            if(Core.input.keyTap(KeyCode.f3)){
+                Varsr.sectors.nodes.clear();
+                //test
+                Varsr.sectors.nodes.addAll(
+                        new TimedEventNode(){{
+                            time = 5;
+                            targetTime = 250;
+                            active = true;
+                            activates.add(1);
+                        }},
+                        new EffectEventNode(){{
+                       }}
+                );
+
+                Log.info(Varsr.sectors.writeNodes());
+
+                Varsr.sectors.readNodes();
+
+            }
         });
     }
 

@@ -71,7 +71,7 @@ public class RustingPlanets implements ContentList {
         oop.accessible = false;
 
 
-        err = createPlanet("antiquum terrae", oop, 3, 1f, () -> new HexMesh(err, 6));
+        err = createPlanet("antiquum-terrae", oop, 3, 1f, () -> new HexMesh(err, 6));
         err.generator = new AntiquumPlanetGenerator();
         err.hasAtmosphere = true;
         err.atmosphereColor = Palr.camaintLightning;

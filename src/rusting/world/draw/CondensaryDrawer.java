@@ -7,7 +7,6 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.world.Block;
 import rusting.content.Palr;
-import rusting.graphics.RustedShaders;
 import rusting.world.blocks.pulse.crafting.PulseGenericCrafter.PulseGenericCrafterBuild;
 
 public class CondensaryDrawer extends DrawPulseBlock{
@@ -41,7 +40,6 @@ public class CondensaryDrawer extends DrawPulseBlock{
         Fill.circle(entity.x, entity.y, fout * 8);
         Fill.light(entity.x, entity.y, 16, radius, Tmp.c1.set(Palr.pulseBullet).a(alpha * entity.warmup), Tmp.c2.set(effects ? Palr.darkerPulseChargeStart : Palr.pulseChargeEnd).a((1 - alpha) * 0.85f * entity.warmup));
         Fill.light(entity.x, entity.y, 8, smallerRadius, Tmp.c3.set(Pal.lightTrail).a(alpha * 0.75f * entity.warmup), Tmp.c4.set(Palr.pulseBullet).a((1 - alpha) * 0.65f * entity.warmup));
-        Draw.shader();
         Draw.reset();
     }
 

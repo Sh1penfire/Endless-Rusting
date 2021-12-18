@@ -10,8 +10,6 @@ import arc.math.geom.Intersector;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
-import mindustry.Vars;
-import mindustry.annotations.Annotations.Load;
 import mindustry.content.Fx;
 import mindustry.gen.*;
 import mindustry.graphics.Layer;
@@ -37,7 +35,7 @@ public class BulletDamageField extends PulseBlock {
     public float cooldownNormal = 1.75f;
     public float cooldownLiquid = 1.5f;
     public float cooldownBrokenBase = 0.35f;
-    public @Load ("@-top") TextureRegion topRegion;
+    public TextureRegion topRegion;
 
     static BulletDamageBuild paramEntity;
     static final Cons<Bullet> shieldConsumer = trait -> {

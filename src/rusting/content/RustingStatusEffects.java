@@ -23,7 +23,7 @@ import rusting.type.statusEffect.*;
 
 public class RustingStatusEffects implements ContentList {
     public static StatusEffect
-            weather, hpooned, fuesin, amberstriken, umbrafliction, macrosis, macotagus, balancedPulsation, hailsalilty, causticBurning, deceptione, potassiumDeficiency, shieldShatter, corruptShield, fragmentaein, guardiansBlight;
+            weather, hpooned, fuesin, amberstriken, umbrafliction, macrosis, macotagus, balancedPulsation, hailsalilty, causticBurning, deceptione, blackout, potassiumDeficiency, shieldShatter, corruptShield, fragmentaein, guardiansBlight;
     public static Cons
             corruptShieldCons;
 
@@ -204,6 +204,10 @@ public class RustingStatusEffects implements ContentList {
             speedMultiplier = 1.15f;
             damageMultiplier = 1.05f;
             dragMultiplier = 2;
+        }};
+
+        blackout = new StatusEffect("blackout"){{
+
         }};
 
         potassiumDeficiency = new ConsStatusEffect("potassium-deficiency"){{

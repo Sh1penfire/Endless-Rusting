@@ -944,7 +944,7 @@ public class RustingUnits implements ContentList{
             hitSize = 15;
             health = 3500;
             armor = 9;
-            speed = 1.5f;
+            speed = 0.5f;
             accel = 0.65f;
             drag = 0.45f;
 
@@ -1073,8 +1073,33 @@ public class RustingUnits implements ContentList{
                     singleTarget = true;
                 }},
                 new Weapon("none") {{
-                    bullet = RustingBullets.mhemShard;
+                    //a modified Mhem shard, has speed of 0
+                    bullet = new BounceBulletType(0, 22.5f, "bullet"){{
+                        trueSpeed = 6;
+                        range = 210;
+                        maxRange = 210;
+                        consUpdate = RustingBullets.homingFlame;
+                        despawnEffect = Fx.fireSmoke;
+                        hitEffect = Fx.fire;
+                        bounceEffect = Fxr.shootMhemFlame;
+                        incendChance = 1;
+                        incendAmount = 10;
+                        status = StatusEffects.burning;
+                        statusDuration = 3600;
+                        width = 6;
+                        height = 8;
+                        hitSize = 12;
+                        lifetime = 35;
+                        hitEffect = Fx.hitFuse;
+                        trailLength = 0;
+                        drag = 0.015f;
+                        bounciness = 0.95;
+                        bounceCap = 2;
+                        rotationOffset = 180;
+                    }};
                     shootCone = 360;
+                    shots = 3;
+                    spacing = 30;
                     x = 8.75f;
                     y = -7.5f;
                     reload = 15;

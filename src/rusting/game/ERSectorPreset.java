@@ -35,15 +35,18 @@ public class ERSectorPreset extends SectorPreset {
     }
 
     public void loadBundles(){
+        unlockedInCampaign = true;
+
         if(!alwaysUnlocked){
             unlockedInCampaign = !Vars.enableConsole || Varsr.debug;
             TechTree.get(this).objectives.each(o -> {
                 if(unlockedInCampaign && !o.complete()) unlockedInCampaign = false;
             });
         }
+
         if(unlocked || alwaysUnlocked) localizedName = Core.bundle.get("sector." + name + ".name");
         else localizedName = "???";
-        if(alwaysUnlocked || (unlocked() && unlockedInCampaign)){
+        if(Varsr.showAllSectors || alwaysUnlocked || (unlocked() && unlockedInCampaign)){
             description = Core.bundle.get("sector." + name + ".description");
             details = Core.bundle.get("sector." + name + ".details");
         }

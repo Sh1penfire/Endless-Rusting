@@ -28,7 +28,7 @@ public class RustingBullets implements ContentList{
     private static float trueBulletSpeed = 0;
 
     public static Cons<Bullet>
-        homing, noStopHoming, velbasedHoming, velbasedHomingFlame, homingFlame, homingOwner, homingBuildingsAroundOwner;
+        homing, noStopHoming, velbasedHoming, velbasedHomingTrue, velbasedHomingFlame, homingFlame, homingOwner, homingBuildingsAroundOwner;
 
     public static BulletType
         //basic bullets
@@ -108,6 +108,30 @@ public class RustingBullets implements ContentList{
         };
 
         velbasedHoming = bullet -> {
+
+            if(!(bullet.owner instanceof Ranged) || bullet.time < bullet.type.homingDelay) return;
+
+            trueBulletSpeed = bullet.type.speed;
+            Tmp.v1.set(bullet.x, bullet.y);
+            //handle modded cases of bullet owners first
+            if(bullet.owner instanceof Targeting){
+                Tmp.v1.set(((Targeting) bullet.owner).targetPos());
+            }
+            else if(bullet.owner instanceof TurretBuild) {
+                Tmp.v1.set(((TurretBuild) bullet.owner).targetPos.x, ((TurretBuild) bullet.owner).targetPos.y);
+            }
+            else if (bullet.owner instanceof Unitc){
+                Tmp.v1.set(((Unitc) bullet.owner).aimX(), ((Unitc) bullet.owner).aimY());
+            }
+            Tmp.v3.set(((Posc) bullet.owner()).x(), ((Posc) bullet.owner()).y());
+            Tmp.v1.sub(Tmp.v3).clamp(0, ((Ranged) bullet.owner).range()).add(Tmp.v3);
+            bullet.vel.add(Tmp.v2.trns(bullet.angleTo(Tmp.v1), bullet.type.homingPower * Time.delta)).clamp(0, trueBulletSpeed);
+            if(bullet.dst(Tmp.v3.x, Tmp.v3.y) >= ((Ranged) bullet.owner).range() + trueBulletSpeed + 3) bullet.time += bullet.lifetime/100 * Time.delta;
+
+            //essentualy goes to owner aim pos, without stopping homing
+        };
+
+        velbasedHomingTrue = bullet -> {
 
             if(!(bullet.owner instanceof Ranged) || bullet.time < bullet.type.homingDelay) return;
 
