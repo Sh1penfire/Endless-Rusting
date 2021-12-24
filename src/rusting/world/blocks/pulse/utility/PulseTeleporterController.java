@@ -16,7 +16,7 @@ import rusting.content.Fxr;
 import rusting.content.RustingAchievements;
 import rusting.interfaces.PrimitiveControlBlock;
 import rusting.world.blocks.pulse.distribution.PulseCanal.PulseCanalBuild;
-import rusting.world.blocks.pulse.utility.PulseFlowSplitter.PulseFlowSplitterBuild;
+import rusting.world.blocks.pulse.distribution.PulseFlowSplitter.PulseFlowSplitterBuild;
 
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;

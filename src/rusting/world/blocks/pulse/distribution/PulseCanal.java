@@ -4,15 +4,12 @@ import arc.Core;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
-import arc.struct.Queue;
 import arc.struct.Seq;
-import arc.util.*;
-import mindustry.entities.Puddles;
+import arc.util.Eachable;
+import arc.util.Time;
 import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
-import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
-import mindustry.type.Liquid;
 import mindustry.world.Tile;
 import rusting.interfaces.*;
 import rusting.interfaces.block.PulseCanalc;
@@ -20,14 +17,11 @@ import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.utility.PulseTeleporterController.PulseTeleporterControllerBuild;
 
 public class PulseCanal extends PulseBlock {
-    public TextureRegion topRegion, liquidRegion, baseRegion, shineRegion, fullRegion;
+    public TextureRegion topRegion, baseRegion, shineRegion, fullRegion;
 
-    protected final static Queue<PulseCanalBuild> canalQueue = new Queue<>();
-
-    public final int timerFlow = timers++;
     public float pulsePressure;
 
-    public float reloadTime = 5;
+    public float reloadTime = 1;
 
     public PulseCanal(String name) {
         super(name);
@@ -37,8 +31,8 @@ public class PulseCanal extends PulseBlock {
         connectable = false;
         liquidCapacity = 16f;
         liquidPressure = 1.025f;
-        pulsePressure = 0.4f;
-        pulseStorage = 40;
+        pulsePressure = 10f;
+        pulseStorage = 15;
         hasLiquids = true;
     }
 
@@ -48,7 +42,6 @@ public class PulseCanal extends PulseBlock {
         baseRegion = Core.atlas.find(name + "-base", region);
         shineRegion = Core.atlas.find(name + "-shine", Core.atlas.find("empty"));
         topRegion = Core.atlas.find(name + "-top", Core.atlas.find("empty"));
-        liquidRegion = Core.atlas.find(name + "-liquid", Core.atlas.find("empty"));
         fullRegion = Core.atlas.find(name + "-full", region);
     }
 
@@ -74,18 +67,12 @@ public class PulseCanal extends PulseBlock {
     private static PulseCornerpiece corner = null;
 
     public class PulseCanalBuild extends PulseBlockBuild implements PulseCanalc {
-        public float smoothLiquid = 0;
+        public float smoothPulse = 0;
         public float reload = 0;
 
         public Seq<PulseInstantTransportation> connected = new Seq<PulseInstantTransportation>();
 
         public Tile canalEnding = tile;
-
-        @Override
-        public boolean acceptLiquid(Building source, Liquid liquid){
-            return source instanceof PulseCanalc && liquids.current() == liquid || liquids.currentAmount() < 0.2f
-                    && canReceive(source);
-        }
 
         @Override
         public void onProximityUpdate() {
@@ -96,30 +83,27 @@ public class PulseCanal extends PulseBlock {
         @Override
         public void updateTile(){
             if(canalEnding != null){
-                if((liquids.total() > 0.001f || pulseModule.pulse >= movePulseAm()) && reload >= reloadTime){
-                    //leak go br
-                    customMoveLiquidForward(true, liquids.current());
-                    reload = 0;
+                if(pulseModule.pulse >= moveAmount() && reload >= reloadTime){
+                    for (float i = reloadTime; i < reload; i++) {
+                        movePulse();
+                        reload -= 1;
+                    }
                 }else{
                     reload += Time.delta;
                 }
             }
-            smoothLiquid = Mathf.lerpDelta(smoothLiquid, liquids.currentAmount() / liquidCapacity, 0.05f);
+            smoothPulse = Mathf.lerpDelta(smoothPulse, chargef(), 0.05f);
         }
 
-        public float movePulseAm(){return (pulseStorage + (canOverload ? overloadCapacity : 0)) * pulsePressure/60 * Time.delta;}
+        public float moveAmount(){
+            return (pulseStorage + (canOverload ? overloadCapacity : 0)) * pulsePressure/60 * Time.delta * chargef();
+        }
 
-        public float customMoveLiquidForward(boolean leaks, Liquid liquid) {
+        public void movePulse() {
             Building next = canalEnding.build;
-            if (next != null) {
-                if(pulseModule.pulse >= movePulseAm() && ((PulseCanalc) next).receivePulse(movePulseAm(), this)) removePulse(movePulseAm());
-                return moveLiquid(next, liquid);
-            } else if (!next.block().solid && !next.block().hasLiquids) {
-                float leakAmount = liquids.get(liquid) / 1.5F;
-                Puddles.deposit(next.tile, tile, liquid, leakAmount);
-                liquids.remove(liquid, leakAmount);
+            if(next != null && ((PulseCanalc) next).receivePulse(moveAmount(), this)) {
+                removePulse(moveAmount());
             }
-            return 0;
         }
 
         public Tile next(){
@@ -134,13 +118,18 @@ public class PulseCanal extends PulseBlock {
             return ((int) (t.build.angleTo(this)/90) + 1) % 2 == (rotation + 1) % 2;
         }
 
+        public boolean behindRotational(Tile t){
+            return ((int) t.build.angleTo(this)/90) == rotation;
+        }
+
         @Override
         public boolean canConnect(Building b){
             return b instanceof PulseCanalc && (!b.block.rotate || b.rotation == rotation && adjacentRotational(b.tile));
         }
 
+        @Override
         public boolean canReceive(Building b){
-            return canConnect(b);
+            return b instanceof PulseCanalc && behindRotational(b.tile);
         }
 
         @Override
@@ -158,10 +147,9 @@ public class PulseCanal extends PulseBlock {
         @Override
         public void draw() {
             Draw.rect(baseRegion, x, y, rotation * 90);
-            Drawf.liquid(liquidRegion, x, y, smoothLiquid, liquids.current().color, rotation * 90);
-            Draw.color(chargeColourStart, chargeColourEnd, chargef());
-            Draw.alpha(chargef());
-            Draw.rect(chargeRegion, x, y, rotation * 90);
+            Draw.color(chargeColourStart, chargeColourEnd, smoothPulse);
+            Draw.alpha(smoothPulse);
+            Draw.rect(pulseRegion, x, y, rotation * 90);
             Draw.color();
             Draw.alpha(0.15f);
             Draw.rect(shineRegion, x, y, 270);

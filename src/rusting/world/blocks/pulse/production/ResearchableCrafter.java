@@ -1,4 +1,4 @@
-package rusting.world.blocks.production;
+package rusting.world.blocks.pulse.production;
 
 import arc.graphics.g2d.TextureRegion;
 import arc.struct.Seq;

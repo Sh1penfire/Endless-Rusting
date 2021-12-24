@@ -136,9 +136,13 @@ public class Varsr implements Loadable {
 
         Events.on(Trigger.update.getClass(), e -> {
             music.update();
-            sectors.update();
             if(Vars.state.isPaused()) return;
+            sectors.update();
+
+            //lerp player elevation for visual effects
             if(Vars.player.unit() != null) lerpedPlayerElevation = Mathf.lerp(lerpedPlayerElevation, Vars.player.unit().elevation, 0.1f);
+
+            //handle speedupBullets from SpeedupAbility
             SpeedupAbility.speedupBullets.each(b -> {
                 SpeedupAbility.speedupBullets.remove(b);
                 if(Mathf.chance(0.15f * Time.delta)) Fxr.blackened.at(b.x, b.y);
@@ -150,11 +154,13 @@ public class Varsr implements Loadable {
     }
 
     public static void begin(){
-        Varsr.research.setupGameResearch();
+        research.setupGameResearch();
+        //sectors.readNodes();
     }
 
     public static void end(){
-        Varsr.research.saveGameResearch();
+        research.saveGameResearch();
+        //sectors.writeNodes();
     }
 
     public static void debug(){
@@ -186,28 +192,8 @@ public class Varsr implements Loadable {
             "[red] N O  E S C A P I N G  U S\nC O M E  A N D  S U F F E R  W I T H  U S"
         );
 
-        Vars.mods.getScripts().runConsole("importPackage(java.lang);");
-        //Vars.mods.getScripts().runConsole("importPackage(java.awt);");
-        Vars.mods.getScripts().runConsole("importPackage(Packages.rhino);");
-        //credits to GlenFolker
-        Vars.mods.getScripts().runConsole(
-        "function importl(name){\n" +
-            "\n" +
-            "let constr = Class.forName(\"rhino.NativeJavaPackage\").getDeclaredConstructor(java.lang.Boolean.TYPE, java.lang.String, ClassLoader);\n" +
-            "constr.setAccessible(true);\n" +
-            "\n" +
-            "let p = constr.newInstance(true, name, Vars.mods.mainLoader());\n" +
-            "\n" +
-            "let scope = Reflect.get(Vars.mods.getScripts(), \"scope\");\n" +
-            "Reflect.invoke(ScriptableObject, p, \"setParentScope\", [scope], [Scriptable]);\n" +
-            "\n" +
-            "importPackage(p); \n"+
-            "\n" +
-            "}"
-        );
-        Vars.mods.getScripts().runConsole("importl(\"rusting\")");
-        Vars.mods.getScripts().runConsole("importl(\"rusting.content\")");
-        Vars.mods.getScripts().runConsole("importl(\"rusting.ctype\")");
+        //Scriptable c = Reflect.get(Scriptable.class, Vars.mods.getScripts(), "context");
+        //Package pack = c.getParentScope().;
     }
 
     public static void logStack(ItemStack[] stack){
@@ -219,12 +205,5 @@ public class Varsr implements Loadable {
             name += stack[i].item + " " + stack[0].amount + "|";
         };
         Log.info(name);
-    }
-
-    public void stateChangeBegin() {
-    }
-
-    public void stateChangeEnd() {
-
     }
 }

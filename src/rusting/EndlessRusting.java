@@ -9,23 +9,27 @@ import arc.struct.Seq;
 import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
+import mindustry.core.Version;
 import mindustry.game.EventType;
 import mindustry.game.EventType.FileTreeInitEvent;
 import mindustry.game.EventType.Trigger;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.mod.Mod;
+import mindustry.mod.Scripts;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 import rusting.content.*;
-import rusting.game.nodes.action.EffectEventNode;
-import rusting.game.nodes.conditional.TimedEventNode;
 import rusting.graphics.Drawr;
 import rusting.graphics.RustedShaders;
 import rusting.type.statusEffect.CrystalStatusEffect;
 
 public class EndlessRusting extends Mod{
+
+    //note: as this is a v6 mod with all due respects Anuke: I'm so sorry
+    private static Seq<String> blacklist = null;
+    private static Seq<String> whitelist = null;
 
     public static String modname = "endless-rusting";
 
@@ -35,6 +39,13 @@ public class EndlessRusting extends Mod{
     private static Seq<StatusEffect> whitelistedStuns = Seq.with(StatusEffects.unmoving);
 
     public EndlessRusting(){
+        if(Version.isAtLeast("135")) {
+            blacklist = Reflect.get(Scripts.class, "blacklist");
+            blacklist.clear();
+            whitelist = Reflect.get(Scripts.class, "blacklist");
+            whitelist.clear();
+        }
+
         Varsr.music.init();
 
         Events.on(FileTreeInitEvent.class, e -> {
@@ -81,25 +92,6 @@ public class EndlessRusting extends Mod{
 
         Events.on(Trigger.update.getClass(), e -> {
             if(Core.input.keyTap(KeyCode.f2)) Varsr.ui.achievements.show();
-            if(Core.input.keyTap(KeyCode.f3)){
-                Varsr.sectors.nodes.clear();
-                //test
-                Varsr.sectors.nodes.addAll(
-                        new TimedEventNode(){{
-                            time = 5;
-                            targetTime = 250;
-                            active = true;
-                            activates.add(1);
-                        }},
-                        new EffectEventNode(){{
-                       }}
-                );
-
-                Log.info(Varsr.sectors.writeNodes());
-
-                Varsr.sectors.readNodes();
-
-            }
         });
     }
 

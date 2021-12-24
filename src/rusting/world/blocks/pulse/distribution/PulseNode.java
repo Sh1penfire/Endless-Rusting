@@ -1,8 +1,8 @@
 package rusting.world.blocks.pulse.distribution;
 
+import arc.Core;
 import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.*;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
@@ -13,8 +13,7 @@ import arc.util.io.Writes;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.Team;
 import mindustry.gen.Building;
-import mindustry.graphics.Drawf;
-import mindustry.graphics.Pal;
+import mindustry.graphics.*;
 import mindustry.world.Tile;
 import mindustry.world.meta.Stat;
 import rusting.Varsr;
@@ -42,12 +41,18 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
     public float laserRange = 15;
     //Colour of the laser
     public Color laserColor = Palr.pulseLaser;
+    //speed that the node opens and closes
+    public float closeSpeed = 0.01f;
+    //rely on closed caps or not
+    public boolean close = true;
 
     //used as a placeholder to avoid unnecessary variable creation
     protected static BuildPlan otherReq;
 
     private static int tmpInteger = 0;
     private static float tmpFloat = 0;
+
+    public TextureRegion closedRegion, shineRegion, topRegion;
 
     public PulseNode(String name) {
         super(name);
@@ -108,6 +113,14 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
     }
 
     @Override
+    public void load() {
+        super.load();
+        closedRegion = Core.atlas.find(name + "-closed", region);
+        shineRegion = Core.atlas.find(name + "-shine", Core.atlas.find("clear"));
+        topRegion = Core.atlas.find(name + "-top", Core.atlas.find("clear"));
+    }
+
+    @Override
     public void setStats(){
         super.setStats();
         this.stats.add(Stat.range, laserRange);
@@ -132,7 +145,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
         if(tile != null && laserRange > 0 && connectionsPotential > 0) {
             Lines.stroke(1f);
             Draw.color(Pal.placing);
-            Drawf.circles(x * tilesize + offset, y * tilesize + offset, (float) (laserRange * tilesize));
+            Drawf.circles(x * tilesize + offset, y * tilesize + offset, laserRange * tilesize);
         }
     }
 
@@ -141,7 +154,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
         if(req.config instanceof Point2[]){
             Point2[] ps = (Point2[]) req.config;
             for(Point2 point : ps){
-                if(point != null && req != null) {
+                if(point != null) {
                     int px = req.x + point.x, py = req.y + point.y;
                     otherReq = null;
                     list.each(other -> {
@@ -184,6 +197,8 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
         public Seq<Integer> previousConnections = new Seq();
         public float reload = 0;
 
+        public float closed = 0;
+
         public void dropped(){
             connections.clear();
         }
@@ -213,7 +228,14 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
 
         @Override
         public void updateTile() {
-            super.updateTile();
+            pulseModule.pulse = Math.max(pulseModule.pulse - powerLoss * (1 - closed), 0);
+            if(overloaded()) overloadEffect();
+            //if theres more than one connection, lerp to one. Otherwise, lerp to 0. All this extra stuf is nescecary because no devide by 0
+            //*sigh* I tried to use bitwise opperators for this but my brain died halfway through
+            if(connections.size == 0){
+                closed = Math.min(closed + Time.delta * closeSpeed, 1);
+            }
+            else closed = Math.max(closed - Time.delta * closeSpeed, 0);
 
             connections.each(l -> {
                 Building j = world.build(l);
@@ -233,6 +255,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
 
             if(connections.size >= connectionsPotential) previousConnections.clear();
 
+            if(closed > 0.15f && close) return;
             if(reload >= pulseReloadTime && chargef(true) >= minRequiredPulsePercent) {
                 interactConnected();
                 reload = 0;
@@ -267,8 +290,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             float scl = Mathf.absin(Time.time, 4f, 1f);
 
             Drawf.circles(x, y, tile.block().size * tilesize / 2f + 1f + scl);
-            Drawf.circles(x, y, (float) (laserRange * tilesize));
-
+            Drawf.circles(x, y, laserRange * tilesize);
 
             previousConnections.each(l -> {
                 Tmp.v1.set(Point2.x(l) * 8, Point2.y(l) * 8);
@@ -287,12 +309,18 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
 
         @Override
         public void draw() {
-            super.draw();
+            Draw.rect(region, x, y, 0);
+            Draw.z(Layer.power + 0.1f);
             connections.each(l -> {
                 Building other = world.build(l);
                 if(other == null || other.isNull() || !other.isAdded() || !(other instanceof PulseBlockc)) return;
-                drawLaser((PulseBlockc) other, laserColor);
+                //draw with less alpha if node is opening
+                drawLaser((PulseBlockc) other, Tmp.c1.set(laserColor).a(1 - closed * closed));
             });
+            Draw.alpha(closed);
+            Draw.rect(topRegion, x, y, 0);
+            Draw.alpha(closed * 0.15f);
+            Draw.rect(shineRegion, x, y, 0);
         }
 
         @Override
@@ -309,7 +337,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
 
         @Override
         public byte version() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -324,6 +352,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             for (int i = 0; i < previousConnections.size; i++) {
                 w.d(previousConnections.get(i));
             }
+            w.f(closed);
         }
 
         @Override
@@ -346,6 +375,9 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
                     rpos = ((int) r.d());
                     previousConnections.add(rpos);
                 }
+            }
+            if(revision >= 2){
+                closed = r.f();
             }
         }
     }

@@ -8,8 +8,14 @@ import mindustry.game.EventType.Trigger;
 import mindustry.gen.Building;
 import mindustry.world.Tile;
 import rusting.world.blocks.environment.UpdateFloor;
+import rusting.world.blocks.pulse.PulseBoulder.PulseBoulderBuild;
 
 public class Worldr {
+
+    public Seq<Tile> udpateTiles = Seq.with();
+    //make the use of Vars.indexer unescecary
+    public Seq<Tile> geodeTiles = Seq.with();
+    public Seq<PulseBoulderBuild> geodeBuildings = Seq.with();
 
     public Worldr(){
 
@@ -25,11 +31,17 @@ public class Worldr {
             udpateTiles.clear();
             Vars.world.tiles.eachTile(t -> {
                 if(t.floor() instanceof UpdateFloor) udpateTiles.add(t);
+                if(t.build instanceof PulseBoulderBuild) {
+                    //if it already contains the build's tile it must have already added the build aswel
+                    if(!geodeTiles.contains(t.build.tile)) {
+                        geodeTiles.add(t.build.tile);
+                        geodeBuildings.add((PulseBoulderBuild) t.build);
+                    }
+                }
             });
         });
     }
 
-    public Seq<Tile> udpateTiles = Seq.with();
     private boolean returnBool = false;
 
     public boolean onTile(Building building, Seq<Integer> list){

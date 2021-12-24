@@ -9,7 +9,6 @@ import arc.math.geom.Vec2;
 import arc.util.*;
 import mindustry.core.Version;
 import mindustry.type.Weapon;
-import rusting.Varsr;
 import rusting.math.Mathr;
 
 import java.lang.reflect.InvocationTargetException;

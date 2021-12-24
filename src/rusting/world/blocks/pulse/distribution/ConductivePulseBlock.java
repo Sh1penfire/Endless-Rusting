@@ -1,6 +1,10 @@
 package rusting.world.blocks.pulse.distribution;
 
+import arc.Core;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureRegion;
 import arc.util.Time;
+import mindustry.graphics.Layer;
 import mindustry.world.meta.Stat;
 import rusting.interfaces.Pulsec;
 import rusting.world.blocks.pulse.PulseBlock;
@@ -15,9 +19,21 @@ public class ConductivePulseBlock extends PulseBlock {
     public float burstSpacing = 0;
     //How much energy is transmitted
     public float energyTransmission = 1;
+    //how fast rotato
+    public float rotationSpeed = 3;
+
+    public TextureRegion rotatorRegion, shineRegion, topRegion;
 
     public ConductivePulseBlock(String name) {
         super(name);
+    }
+
+    @Override
+    public void load() {
+        super.load();
+        rotatorRegion = Core.atlas.find(name + "-rotator", region);
+        shineRegion = Core.atlas.find(name + "-shine", Core.atlas.find("clear"));
+        topRegion = Core.atlas.find(name + "-top", Core.atlas.find("clear"));
     }
 
     @Override
@@ -28,6 +44,7 @@ public class ConductivePulseBlock extends PulseBlock {
 
     public class ConductivePulseBlockBuild extends PulseBlock.PulseBlockBuild {
         public float reload = 0;
+        private float visualRotation = 0;
 
         @Override
         public void updateTile(){
@@ -37,6 +54,7 @@ public class ConductivePulseBlock extends PulseBlock {
                 addPulseAdjacent();
             }
             else reload += pulseEfficiency() * Time.delta;
+            visualRotation = (visualRotation + Time.delta * rotationSpeed * chargef()) % 360;
         }
 
         public void addPulseAdjacent(){
@@ -49,6 +67,16 @@ public class ConductivePulseBlock extends PulseBlock {
                     }
                 }
             });
+        }
+
+        @Override
+        public void draw() {
+            Draw.rect(region, x, y, 0);
+            Draw.z(Layer.blockOver + 0.1f);
+            Draw.rect(rotatorRegion, x, y, visualRotation);
+            Draw.rect(topRegion, x, y, 0);
+            Draw.alpha(0.15f);
+            Draw.rect(shineRegion, x, y, 0);
         }
     }
 }

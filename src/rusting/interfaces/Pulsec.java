@@ -1,10 +1,11 @@
 package rusting.interfaces;
 
+import arc.math.geom.Position;
 import arc.util.Nullable;
 import mindustry.gen.Building;
 import rusting.world.modules.PulseModule;
 
-public interface Pulsec {
+public interface Pulsec extends Position {
 
     default boolean canReceivePulse(float pulse, Pulsec source){
         return false;
@@ -31,12 +32,16 @@ public interface Pulsec {
         pulseModule().pulse += pulse;
     }
 
-    default void removePulse(float pulse){
-        removePulse(pulse, null);
+    //returns how much pulse was removed
+    default float removePulse(float pulse){
+        return removePulse(pulse, null);
     }
 
-    default void removePulse(float pulse, @Nullable Building building){
+    default float removePulse(float pulse, @Nullable Building building){
+        float before = pulseModule().pulse;
         pulseModule().pulse -= pulse;
+        normalizePulse();
+        return before - pulseModule().pulse;
     }
 
     default void normalizePulse(){}

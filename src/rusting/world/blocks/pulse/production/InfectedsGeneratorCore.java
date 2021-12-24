@@ -178,10 +178,10 @@ public class InfectedsGeneratorCore extends PulseGenerator{
         public void draw() {
             Draw.reset();
             Draw.rect(baseRegion, x, y);
-            if(chargeRegion != Core.atlas.find("error")) {
+            if(pulseRegion != Core.atlas.find("error")) {
                 Draw.color(chargeColourStart, chargeColourEnd, chargef());
                 Draw.alpha(chargef()/0.35f);
-                Draw.rect(chargeRegion, x, y);
+                Draw.rect(pulseRegion, x, y);
                 Draw.reset();
                 Draw.z(Layer.block);
             }
@@ -198,7 +198,7 @@ public class InfectedsGeneratorCore extends PulseGenerator{
                 if(Core.settings.getBool("settings.er.pulseglare")){
                     for(int i = 1; i < 6; i++) {
                         Draw.alpha(Math.min(Mathf.absin(totalProgress, 1, 1/i), 0.25f * warmup));
-                        Draw.rect(heatRegion, x, y, chargeRegion.height * (1 + i/6 )/ 4, chargeRegion.width * (1 + i/6 )/ 4, 270);
+                        Draw.rect(heatRegion, x, y, pulseRegion.height * (1 + i/6 )/ 4, pulseRegion.width * (1 + i/6 )/ 4, 270);
                     }
                 }
             }

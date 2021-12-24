@@ -238,16 +238,6 @@ public class PulseTurret extends ReloadTurret implements ResearchableBlock {
             normalizePulse();
         }
 
-        public void removePulse(float pulse){
-            removePulse(pulse, null);
-        }
-
-        public void removePulse(float pulse, @Nullable Building building){
-            float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
-            pulseModule.pulse -= pulse;
-            normalizePulse();
-        }
-
         public void normalizePulse(){
             float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
             pulseModule.pulse = Math.max(Math.min(pulseModule.pulse, storage), 0);

@@ -1815,7 +1815,7 @@ public class RustingBullets implements ContentList{
         }};
 
         buulasteltSmallHarpoon = new BlockHarpoonBulletType(0, 5, EndlessRusting.modname + "-bulastelt-small-harpoon") {{
-            consUpdate = velbasedHoming;
+            consUpdate = velbasedHomingTrue;
             trueSpeed = 3.15f;
             lifetime = 450;
             width = 8;

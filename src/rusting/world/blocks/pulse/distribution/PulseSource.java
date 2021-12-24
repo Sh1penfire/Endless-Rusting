@@ -9,6 +9,7 @@ import static mindustry.Vars.world;
 public class PulseSource extends PulseNode{
     public PulseSource(String name) {
         super(name);
+        close = false;
     }
 
     public class PulseSourceBuild extends PulseNodeBuild{

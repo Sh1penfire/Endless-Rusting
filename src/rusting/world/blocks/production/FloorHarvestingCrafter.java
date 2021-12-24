@@ -5,8 +5,9 @@ import arc.struct.Seq;
 import mindustry.content.Items;
 import mindustry.type.ItemStack;
 import mindustry.world.blocks.environment.Floor;
+import rusting.world.blocks.pulse.production.ResearchableCrafter;
 
-public class FloorHarvestingCrafter extends ResearchableCrafter{
+public class FloorHarvestingCrafter extends ResearchableCrafter {
     //used in functions
     private FloorHarvest returnHarvest = null;
 

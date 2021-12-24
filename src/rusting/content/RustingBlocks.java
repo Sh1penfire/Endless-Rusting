@@ -37,15 +37,14 @@ import rusting.world.blocks.defense.turret.power.PanelTurret;
 import rusting.world.blocks.environment.*;
 import rusting.world.blocks.logic.UnbreakableMessageBlock;
 import rusting.world.blocks.power.AttributeBurnerGenerator;
-import rusting.world.blocks.production.ConditionalDrill;
-import rusting.world.blocks.production.ResearchableCrafter;
+import rusting.world.blocks.production.*;
 import rusting.world.blocks.pulse.PulseBlock;
+import rusting.world.blocks.pulse.PulseBoulder;
 import rusting.world.blocks.pulse.crafting.PulseCondensary;
 import rusting.world.blocks.pulse.crafting.PulseGenericCrafter;
 import rusting.world.blocks.pulse.defense.*;
 import rusting.world.blocks.pulse.distribution.*;
-import rusting.world.blocks.pulse.production.InfectedsGeneratorCore;
-import rusting.world.blocks.pulse.production.PulseGenerator;
+import rusting.world.blocks.pulse.production.*;
 import rusting.world.blocks.pulse.unit.*;
 import rusting.world.blocks.pulse.utility.*;
 import rusting.world.draw.*;
@@ -97,8 +96,10 @@ public class RustingBlocks implements ContentList{
         //distribution
         terraConveyor,
         //pulse
+        //Natural Sources
+        melonaleumGeode, largeMelonaleumGeode, hugeMelonaleumGeode, giganticMelonaleumGeode, humungousMelonaleumGeond,
         //Pulse collection
-        pulseCollector, pulseGenerator, infectedsGeneratorCore,
+        pulseInceptionPoint, pulseCollector, pulseGenerator, infectedsGeneratorCore,
         //Nodes
         pulseNode, pulseTesla,
         //Storage
@@ -749,7 +750,36 @@ public class RustingBlocks implements ContentList{
 
         //region pulse
 
-        //Generates pulse. Requires some sort of Siphon to collect the pulse.
+        //a small geode containing a lot of Pulse. Destroyable for it's Melonaleum crystals (the less Pulse is siphoned the more crystals drop on the floor for collection) but the more volatile the Geode is
+        melonaleumGeode = new PulseBoulder("melonaleum-geode"){{
+            category = Category.power;
+            buildVisibility = BuildVisibility.sandboxOnly;
+
+            health = 250;
+            pulseStorage = 650;
+            selfDamage = 0.25f;
+
+            passiveEffect = Fxr.craeWeaversResidue;
+            effectChance = 0.08f;
+            hideFromUI();
+        }};
+
+        //endregion pulessource
+
+        //region collection
+
+        pulseInceptionPoint = new PulseSapper("pulse-inception-point") {{
+            category = Category.power;
+            buildVisibility = BuildVisibility.sandboxOnly;
+
+            health = 250;
+            collectSpeed = 0.1f;
+            pulseStorage = 7;
+
+            hideFromUI();
+        }};
+
+        //Collects pulse. Requires some sort of Siphon to collect the pulse.
         pulseCollector = new PulseGenerator("pulse-collector"){{
             requirements(Category.power, with(Items.copper, 35, Items.coal, 15, Items.titanium, 10));
             centerResearchRequirements(false, with());
@@ -765,7 +795,7 @@ public class RustingBlocks implements ContentList{
             laserOffset = 4;
         }};
 
-        //Generates pulse. Quite good at storing pulse, but requires additional fuel. Needs Pulse to kickstart the process.
+        //Rapidly collects pulse. Quite good at storing pulse. Needs Pulse to kickstart the process.
         pulseGenerator = new PulseGenerator("pulse-generator"){{
             requirements(Category.power, with(Items.copper, 90, Items.silicon, 55, Items.titanium, 45));
             centerResearchRequirements(true, with(Items.copper, 350,  Items.coal, 125, Items.graphite, 95, Items.titanium, 225, RustingItems.melonaleum, 85));

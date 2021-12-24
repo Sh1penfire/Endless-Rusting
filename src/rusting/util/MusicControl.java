@@ -10,11 +10,10 @@ import arc.func.Boolf;
 import arc.func.Boolp;
 import arc.math.Mathf;
 import arc.struct.*;
-import arc.util.*;
+import arc.util.Log;
+import arc.util.Nullable;
 import mindustry.core.GameState;
-import mindustry.core.GameState.State;
 import mindustry.game.EventType;
-import mindustry.game.EventType.StateChangeEvent;
 import mindustry.type.SectorPreset;
 import rusting.game.ERSectorPreset;
 import rusting.util.MusicControl.MusicSecController.MusicSecSegment;
@@ -175,12 +174,17 @@ public class MusicControl {
 
         });
 
+
+        /*
+
         Events.on(StateChangeEvent.class, e -> {
             if(e.to == State.playing && e.from == State.menu){
                 setupSector();
             }
             else if(e.to == State.menu) currentMusicSector = null;
         });
+
+         */
     }
 
     public void setupSector(){

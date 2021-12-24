@@ -1,15 +1,11 @@
 package rusting.game;
 
 import arc.Core;
-import arc.Events;
 import arc.assets.Loadable;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.Vars;
-import mindustry.core.GameState.State;
-import mindustry.game.EventType;
-import mindustry.game.EventType.StateChangeEvent;
 import mindustry.io.JsonIO;
 import rusting.Varsr;
 import rusting.game.nodes.EventNode;
@@ -38,20 +34,11 @@ public class ScriptedSectorHandler implements Loadable {
     //sector it's attached to
     private ScriptedSector sector;
 
-    //whether currently handling a sector
-    private boolean attached = false;
+    //placeholder variable for if it should save
+    private boolean save = false;
 
     public ScriptedSectorHandler(){
-        Events.on(EventType.ClientLoadEvent.class, e -> {
-            registerEvents();
-        });
-    }
-
-    protected void registerEvents() {
-        Events.on(StateChangeEvent.class, e -> {
-            if (e.to == State.playing && e.from == State.menu) readNodes();
-            else if (!Vars.headless && e.to == State.menu && e.from == State.playing) writeNodes();
-        });
+        
     }
 
     public NodeSupplier getNode(String key){
@@ -65,6 +52,7 @@ public class ScriptedSectorHandler implements Loadable {
             return;
         };
         try {
+            Log.info(json);
             String[] types = json.split("\\|");
             for (int i = 1; i < types.length; i++) {
                 //split string into the name of the node, and it's sotred json
@@ -75,6 +63,7 @@ public class ScriptedSectorHandler implements Loadable {
                 nodes.add(node);
                 if (node.active) activeNodes.add(node);
             }
+            active = true;
         } catch (Error e) {
             Log.err(e);
             Vars.state.rules.tags.put("er.sectorevents", "");
@@ -90,6 +79,8 @@ public class ScriptedSectorHandler implements Loadable {
             });
             Vars.state.rules.tags.put("er.sectorevents", completeEntry);
             nodes.clear();
+            activeNodes.clear();
+            Log.info(completeEntry);
             return completeEntry;
         }
         catch (Error e){
@@ -100,8 +91,16 @@ public class ScriptedSectorHandler implements Loadable {
 
     public void update(){
         if(!active) return;
+
+        save = false;
         activeNodesClone = activeNodes.copy();
         activeNodesClone.each(n -> {
+            n.update();
+
+            //it's already saved, don't save nodes again
+            if(!save && n.shouldSave()) {
+                save = true;
+            }
             if(!n.alwaysActive && n.finished()){
                 for(int i = 0; i < n.activates.size; i++){
                     try {
@@ -119,6 +118,7 @@ public class ScriptedSectorHandler implements Loadable {
                 activeNodes.remove(n);
             }
         });
+        if(save) writeNodes();
     }
 
     public void draw(){

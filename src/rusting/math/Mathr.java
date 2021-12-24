@@ -70,7 +70,7 @@ public class Mathr {
     }
 
     //reflects a Seq of points across a line
-    public static Seq<Vec2> reflectRect(Seq<Vec2> map, double reflectionX, double reflectionY, double width, double height){
+    public static Seq<Vec2> reflectRects(Seq<Vec2> map, double reflectionX, double reflectionY, double width, double height){
         Seq<Vec2> stencil = new Seq();
         //intelij stop giving me errors, nice is.
         final int[] index = {0};
@@ -79,5 +79,47 @@ public class Mathr {
                 index[0]++;
         });
         return stencil;
+    }
+
+    public static int status (int x) {
+        return (x >> 0) - (x << 0);
+    }
+
+    //length of a number for
+    public static int length(double number){
+        int size = 0;
+        while(number % 1 != 0){
+            number *= 10;
+            size++;
+        }
+        return size;
+    }
+
+    //I question why or how
+    public static int greaterInt(int a, int b){
+        return (a >> b) * a + (a << b) * b;
+    }
+
+    public static int smallerInt(int a, int b){
+        return (a << b) * a + (a >> b) * b;
+    }
+
+    //linearly moves one float towards another by a set amount, not going over or below to at the end.
+    public static float towards(double from, double to, double amount){
+        //not sure doing this branchless is good, but I hope my code is readable
+        int intwiseFrom, intwiseTo;
+        int size1 = length(from), size2 = length(to);
+        //find greater size
+        int size = greaterInt(size1, size2);
+
+        //turn numbers into ints without making decimals irrelevant
+        intwiseFrom = (int) (from * size);
+        intwiseTo = (int) (from * size);
+        double smallest, largest;
+        smallest = smallerInt(intwiseFrom, intwiseTo);
+        largest = greaterInt(intwiseFrom, intwiseTo);
+
+        //to - from is to find if to is greater than from (from being smaller would return a positve number making from needing to move up) or to being smaller.
+        return (float) Mathf.clamp(from + amount * status((int) (to - from)), smallest, largest);
     }
 }

@@ -1,6 +1,7 @@
 package rusting.world.blocks.pulse.distribution;
 
 import mindustry.world.meta.Stat;
+import rusting.interfaces.Pulsec;
 
 //preferably used for batteries since syphons are unlocked later
 public class PulseSiphon extends PulseNode {
@@ -36,11 +37,10 @@ public class PulseSiphon extends PulseNode {
 
         public void syphonPulseAdjacent() {
             proximity().each(l -> {
-                if (l instanceof PulseBlockBuild && ((PulseBlockBuild) l).chargef() > 0) {
-                    float energyTransmitted = Math.min(((PulseBlockBuild) l).pulseModule.pulse, siphonAmount);
-                    if (canReceivePulse(energyTransmitted, this) && ((PulseBlockBuild) l).chargef() > chargef()) {
-                        ((PulseBlockBuild) l).removePulse(energyTransmitted, this);
-                        addPulse(energyTransmitted);
+                if (l instanceof Pulsec && ((Pulsec) l).chargef() > 0) {
+                    float energyTransmitted = Math.min(((Pulsec) l).pulseModule().pulse, siphonAmount);
+                    if (canReceivePulse(energyTransmitted, this) && ((Pulsec) l).chargef() > chargef()) {
+                        addPulse(((Pulsec) l).removePulse(energyTransmitted, this));
                     }
                 }
             });

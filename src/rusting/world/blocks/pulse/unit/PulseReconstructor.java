@@ -128,14 +128,14 @@ public class PulseReconstructor extends PulseUnitBlock{
         public void draw(){
             Draw.rect(region, x, y);
 
-            if(chargeRegion != Core.atlas.find("error")) {
+            if(pulseRegion != Core.atlas.find("error")) {
                 Draw.color(chargeColourStart, chargeColourEnd, chargef());
                 Draw.alpha(alphaDraw);
-                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (chargeRegion.width + yOffset)/4, (chargeRegion.height + xOffset)/4, 270);
+                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (pulseRegion.width + yOffset)/4, (pulseRegion.height + xOffset)/4, 270);
                 Draw.alpha(chargef());
-                Draw.rect(chargeRegion, x, y, 270);
+                Draw.rect(pulseRegion, x, y, 270);
                 Draw.alpha((float) (chargef() * 0.5));
-                Draw.rect(chargeRegion, x, y, (float) (chargeRegion.height * 1.5/4), (float) (chargeRegion.width * 1.5/4), 270);
+                Draw.rect(pulseRegion, x, y, (float) (pulseRegion.height * 1.5/4), (float) (pulseRegion.width * 1.5/4), 270);
             }
 
             Draw.reset();

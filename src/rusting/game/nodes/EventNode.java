@@ -1,7 +1,9 @@
 package rusting.game.nodes;
 
 import arc.struct.IntSeq;
+import arc.struct.Queue;
 import mindustry.io.JsonIO;
+import rusting.game.actions.EventAction;
 
 public class EventNode {
 
@@ -10,6 +12,8 @@ public class EventNode {
 
     //whether node is always active
     public boolean alwaysActive = false;
+
+    public Queue<EventAction> eventQueue = new Queue<EventAction>();
 
     //while node is active, update gets called
     public void update(){
@@ -37,5 +41,10 @@ public class EventNode {
     //called when the game is being exited on client side, write the json and the name of the node here. No localization required for node names, as that'll break things
     public String write(String write){
         return write + "|" + type() + "!" + JsonIO.json.toJson(this, getClass());
+    }
+
+    //when returning true, save the nodes to Vars.state.rules.tags. Nodes are automaticaly saved upon being finished, so unless nescecary don't overide
+    public boolean shouldSave(){
+        return false;
     }
 }

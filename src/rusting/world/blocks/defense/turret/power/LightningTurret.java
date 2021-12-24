@@ -240,7 +240,7 @@ public class LightningTurret extends PulseBlock {
             Draw.z(Layer.turret);
             Draw.rect(region, x, y, rotation - 90);
 
-            if(chargeRegion != Core.atlas.find("error")) {
+            if(pulseRegion != Core.atlas.find("error")) {
 
                 Draw.color(chargeColourStart, chargeColourEnd, chargef());
 
@@ -248,20 +248,20 @@ public class LightningTurret extends PulseBlock {
                 if(Core.settings.getBool("settings.er.additivepulsecolours")) Draw.blend(Blending.additive);
 
                 Draw.draw(Layer.turret, () -> {
-                    Drawr.drawPulseRegion(chargeRegion, x, y, rotation, Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd, chargef()), chargef(false));
+                    Drawr.drawPulseRegion(pulseRegion, x, y, rotation, Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd, chargef()), chargef(false));
                 });
 
                 Draw.alpha(alphaDraw);
                 if(!highdraw) Draw.alpha(Draw.getColor().a * Draw.getColor().a);
-                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (chargeRegion.width + yOffset)/4, (chargeRegion.height + xOffset)/4, rotation);
+                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (pulseRegion.width + yOffset)/4, (pulseRegion.height + xOffset)/4, rotation);
 
                 Draw.alpha(chargef());
                 Draw.alpha(Draw.getColor().a * Draw.getColor().a);
-                Draw.rect(chargeRegion, x, y, rotation);
+                Draw.rect(pulseRegion, x, y, rotation);
 
                 if(Core.settings.getBool("settings.er.pulseglare")){
                     Draw.alpha(chargef() * chargef() * 0.5f);
-                    Draw.rect(chargeRegion, x, y, chargeRegion.height * 1.5f/4, chargeRegion.width * 1.5f/4, rotation);
+                    Draw.rect(pulseRegion, x, y, pulseRegion.height * 1.5f/4, pulseRegion.width * 1.5f/4, rotation);
                 }
             }
             Draw.reset();

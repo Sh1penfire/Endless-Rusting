@@ -5,7 +5,7 @@ import arc.graphics.g2d.TextureRegion;
 
 //god send help
 public class PulseCanalTunnel extends PulseCanal{
-    TextureRegion tunnelRegion, topOutputRegion, chargeOutputRegion, liquidOutputRegion, baseOutputRegion, shineOutputRegion;
+    TextureRegion tunnelRegion, topOutputRegion, chargeOutputRegion, baseOutputRegion, shineOutputRegion;
 
     public PulseCanalTunnel(String name) {
         super(name);
@@ -18,12 +18,10 @@ public class PulseCanalTunnel extends PulseCanal{
         tunnelRegion = Core.atlas.find(name);
 
         //load input regions
-        chargeRegion = Core.atlas.find(name + "-input-charged");
+        pulseRegion = Core.atlas.find(name + "-input-charged");
         baseRegion = Core.atlas.find(name + "-input-base", region);
         shineRegion = Core.atlas.find(name + "-input-shine", Core.atlas.find("empty"));
         topRegion = Core.atlas.find(name + "-input-top", Core.atlas.find("empty"));
-        liquidRegion = Core.atlas.find(name + "-input-liquid", Core.atlas.find("empty"));
-
         fullRegion = Core.atlas.find(name + "-input-full", region);
 
         //load output regions
@@ -31,7 +29,6 @@ public class PulseCanalTunnel extends PulseCanal{
         baseOutputRegion = Core.atlas.find(name + "-output-base", region);
         shineOutputRegion = Core.atlas.find(name + "-output-shine", Core.atlas.find("empty"));
         topOutputRegion = Core.atlas.find(name + "-output-top", Core.atlas.find("empty"));
-        liquidOutputRegion = Core.atlas.find(name + "-output-liquid", Core.atlas.find("empty"));
     }
 
     public class PulseCanalTunnelBuild extends PulseCanalBuild{

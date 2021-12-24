@@ -81,7 +81,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
     //whether crux has infinite resources. PVP excluded
     public boolean cruxInfiniteConsume = false;
     //regions for charge and shake
-    public TextureRegion chargeRegion, shakeRegion;
+    public TextureRegion pulseRegion, shakeRegion;
     //colours for charge
     public Color chargeColourStart, chargeColourEnd;
 
@@ -130,7 +130,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
     public void load(){
         super.load();
-        chargeRegion = Core.atlas.find(name + "-charged");
+        pulseRegion = Core.atlas.find(name + "-charged", Core.atlas.find(name + "-pulse"));
         shakeRegion = Core.atlas.find(name + "-shake");
     }
 
@@ -314,19 +314,10 @@ public class PulseBlock extends Block implements ResearchableBlock {
             normalizePulse();
         }
 
-        public void removePulse(float pulse){
-            removePulse(pulse, null);
-        }
-
-        public void removePulse(float pulse, @Nullable Building building){
-            float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
-            pulseModule.pulse -= pulse;
-            normalizePulse();
-        }
-
         public void normalizePulse(){
             float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
-            pulseModule.pulse = Math.max(Math.min(pulseModule.pulse, storage), 0);
+            pulseModule.pulse = Mathf.clamp(pulseModule.pulse, 0, storage);
+            SpriteBatch s = null;
         }
 
         public void overloadEffect(){
@@ -399,7 +390,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
         public void draw(){
             super.draw();
-            if(chargeRegion != Core.atlas.find("error")) {
+            if(pulseRegion != Core.atlas.find("error")) {
 
                 Draw.color(chargeColourStart, chargeColourEnd, chargef());
 
@@ -407,20 +398,20 @@ public class PulseBlock extends Block implements ResearchableBlock {
                 if(Core.settings.getBool("settings.er.additivepulsecolours")) Draw.blend(Blending.additive);
 
                 Draw.draw(Layer.blockOver, () -> {
-                    Drawr.drawPulseRegion(chargeRegion, x, y, 0, Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd, chargef()), chargef(false));
+                    Drawr.drawPulseRegion(pulseRegion, x, y, 0, Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd, chargef()), chargef(false));
                 });
 
                 Draw.alpha(alphaDraw);
                 if(!highdraw) Draw.alpha(Draw.getColor().a * Draw.getColor().a);
-                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (chargeRegion.width + yOffset)/4, (chargeRegion.height + xOffset)/4, 270);
+                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (pulseRegion.width + yOffset)/4, (pulseRegion.height + xOffset)/4, 270);
 
                 Draw.alpha(chargef());
                 Draw.alpha(Draw.getColor().a * Draw.getColor().a);
-                Draw.rect(chargeRegion, x, y, 270);
+                Draw.rect(pulseRegion, x, y, 270);
 
                 if(Core.settings.getBool("settings.er.pulseglare")){
                     Draw.alpha(chargef() * chargef() * 0.5f);
-                    Draw.rect(chargeRegion, x, y, chargeRegion.height * 1.5f/4, chargeRegion.width * 1.5f/4, 270);
+                    Draw.rect(pulseRegion, x, y, pulseRegion.height * 1.5f/4, pulseRegion.width * 1.5f/4, 270);
                 }
             }
             Draw.reset();
