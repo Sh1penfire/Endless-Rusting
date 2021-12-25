@@ -27,10 +27,6 @@ import rusting.type.statusEffect.CrystalStatusEffect;
 
 public class EndlessRusting extends Mod{
 
-    //note: as this is a v6 mod with all due respects Anuke: I'm so sorry
-    private static Seq<String> blacklist = null;
-    private static Seq<String> whitelist = null;
-
     public static String modname = "endless-rusting";
 
     public static RustedSettingAdder settingAdder = new RustedSettingAdder();
@@ -39,12 +35,6 @@ public class EndlessRusting extends Mod{
     private static Seq<StatusEffect> whitelistedStuns = Seq.with(StatusEffects.unmoving);
 
     public EndlessRusting(){
-        if(Version.isAtLeast("135")) {
-            blacklist = Reflect.get(Scripts.class, "blacklist");
-            blacklist.clear();
-            whitelist = Reflect.get(Scripts.class, "blacklist");
-            whitelist.clear();
-        }
 
         Varsr.music.init();
 
