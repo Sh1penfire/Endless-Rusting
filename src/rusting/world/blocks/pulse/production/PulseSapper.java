@@ -34,9 +34,9 @@ public class PulseSapper extends PulseBlock {
     rotationSpeed = 1.85f;
 
     //doesn't affect the mount; affects it's ability to send Pulse through canals
-    public float reloadTime = 15;
+    public float reloadTime = 60;
     //affects how much Pulse is distributed per tick
-    public float pulsePressure = 3.5f;
+    public float pulsePressure = 10;
 
     TextureRegion baseRegion;
 
@@ -82,7 +82,7 @@ public class PulseSapper extends PulseBlock {
                 switch (mode){
                     case 0: {
                         if(Varsr.world.geodeTiles.size > 0) {
-                            tmppTiles = Varsr.world.geodeTiles.sort(t -> t.dst(this)).copy();//.filter(t -> t.build instanceof Pulsec && ((Pulsec) t.build).pulseModule().pulse > collectThreshold);
+                            tmppTiles = Varsr.world.geodeTiles.sort(t -> t.dst(this)).copy().filter(t -> t.build instanceof Pulsec && ((Pulsec) t.build).pulseModule().pulse > collectThreshold);
                             if(tmppTiles.size > 0) source = (Pulsec) tmppTiles.get(0).build;
                         }
                     }
@@ -125,7 +125,7 @@ public class PulseSapper extends PulseBlock {
 
         @Override
         public boolean canReceive(Building b) {
-            return b instanceof PulseCanalc;
+            return false;
         }
 
         @Override

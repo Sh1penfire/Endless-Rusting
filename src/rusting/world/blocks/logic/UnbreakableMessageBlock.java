@@ -15,7 +15,7 @@ public class UnbreakableMessageBlock extends MessageBlock {
 
     @Override
     public boolean canBreak(Tile tile) {
-        return Vars.state.isEditor();
+        return Vars.state.isEditor() || Vars.state.rules.infiniteResources;
     }
 
     public class UnbreakableMessageBlockBuild extends MessageBuild{

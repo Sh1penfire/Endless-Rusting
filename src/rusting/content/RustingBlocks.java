@@ -758,6 +758,7 @@ public class RustingBlocks implements ContentList{
             health = 250;
             pulseStorage = 650;
             selfDamage = 0.25f;
+            pulseProduction = 0.075f;
 
             passiveEffect = Fxr.craeWeaversResidue;
             effectChance = 0.08f;
@@ -774,7 +775,8 @@ public class RustingBlocks implements ContentList{
 
             health = 250;
             collectSpeed = 0.1f;
-            pulseStorage = 7;
+            pulseStorage = 15;
+            pulsePressure = 10;
 
             hideFromUI();
         }};
@@ -1874,15 +1876,15 @@ public class RustingBlocks implements ContentList{
         //region, *sigh* logic
 
         mhemLog = new UnbreakableMessageBlock("mhem-log"){{
-            buildVisibility = BuildVisibility.shown;
+            buildVisibility = BuildVisibility.sandboxOnly;
         }};
 
         raehLog = new UnbreakableMessageBlock("raeh-log"){{
-            buildVisibility = BuildVisibility.shown;
+            buildVisibility = BuildVisibility.sandboxOnly;
         }};
 
         fraeLog = new UnbreakableMessageBlock("frae-log"){{
-            buildVisibility = BuildVisibility.shown;
+            buildVisibility = BuildVisibility.sandboxOnly;
         }};
 
         halsinteLamp = new LightBlock("halsinte-lamp"){{
