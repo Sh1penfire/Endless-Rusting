@@ -20,12 +20,14 @@ public class ModSounds {
     }
 
     public static Sound
-            harpoonLaunch = new Sound()
+            harpoonLaunch = new Sound(),
+            whoosh = new Sound()
             ;
 
     public static void load() {
         if(Vars.headless) return;
 
         harpoonLaunch = loadSound("chain-launch");
+        whoosh = loadSound("whoosh");
     }
 }

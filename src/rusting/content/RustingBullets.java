@@ -4,7 +4,8 @@ import arc.func.Cons;
 import arc.graphics.Color;
 import arc.math.*;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.ctype.ContentList;
@@ -15,12 +16,12 @@ import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.logic.Ranged;
 import mindustry.world.blocks.defense.turrets.Turret.TurretBuild;
-import rusting.EndlessRusting;
 import rusting.entities.bullet.*;
 import rusting.graphics.GraphicEffects;
 import rusting.interfaces.Targeting;
 import rusting.math.Mathr;
 
+import static rusting.EndlessRusting.modname;
 import static rusting.content.RustingStatusEffects.*;
 
 public class RustingBullets implements ContentList{
@@ -53,6 +54,8 @@ public class RustingBullets implements ContentList{
         craeLightRoundaboutRight, craeLightRoundaboutLeft, saltyLightRoundaboutRight, saltyLightRoundaboutLeft, denseLightRoundaboutLeft, denseLightRoundaboutRight,
         //glaivs
         craeLightGlaive, denseLightGlaive, pulsenLightGlaive, craeLightGlaiveRight, craeLightGlaiveLeft, saltyLightGlaive,
+        //artillary bolts
+        saltyBolt,
         //instant bouncing bullets
         horizonInstalt, nummingInstalt, timelessInstalt, gunnersInstalt,
         //laser bullets
@@ -910,7 +913,7 @@ public class RustingBullets implements ContentList{
 
         //anti building weavers
         raehWeaver = new BounceBulletType(0.001f, 135, "bullet"){{
-            consUpdate = velbasedHoming;
+            consUpdate = velbasedHomingTrue;
             trueSpeed = 8;
             drag = 0.05f;
 
@@ -1503,6 +1506,27 @@ public class RustingBullets implements ContentList{
             trailLength = 7;
         }};
 
+        saltyBolt = new BasicBulletType(2, 450, modname + "-hailsite-bolt"){{
+            width = 8;
+            height = 10;
+            lifetime = 60;
+            shrinkX = 0;
+            shrinkY = 0;
+            splashDamage = 15;
+            splashDamageRadius = 85;
+            hitShake = 5;
+            hitEffect = Fxr.instaltSummonerExplosionLarge;
+            despawnEffect = Fxr.instaltSummonerExplosion;
+            frontColor = Color.white;
+            fragBullets = 9;
+            fragBullet = saltyShard;
+            trailEffect = Fxr.salty;
+            scaleVelocity = true;
+            hitSound = Sounds.explosionbig;
+            hitSoundPitch = 1.25f;
+            hitSoundVolume = 5;
+        }};
+
         celsiusLance = new LaserBulletType(45){{
             colors = new Color[]{Color.sky, Palr.chillDecalDark, Palr.chillDecalLight, Color.white};
             width = 9;
@@ -1803,7 +1827,7 @@ public class RustingBullets implements ContentList{
             keepVelocity = false;
         }};
 
-        cameoSmallHarpoon = new BlockHarpoonBulletType(10.15f, 32, EndlessRusting.modname + "-cameo-small-harpoon") {{
+        cameoSmallHarpoon = new BlockHarpoonBulletType(10.15f, 32, modname + "-cameo-small-harpoon") {{
             lifetime = 28.4f;
             homingPower = 0.05f;
             width = 32;
@@ -1814,7 +1838,7 @@ public class RustingBullets implements ContentList{
             bleedEffect = causticBurning;
         }};
 
-        buulasteltSmallHarpoon = new BlockHarpoonBulletType(0, 5, EndlessRusting.modname + "-bulastelt-small-harpoon") {{
+        buulasteltSmallHarpoon = new BlockHarpoonBulletType(0, 5, modname + "-bulastelt-small-harpoon") {{
             consUpdate = velbasedHomingTrue;
             trueSpeed = 3.15f;
             lifetime = 450;
@@ -1829,7 +1853,7 @@ public class RustingBullets implements ContentList{
             dischargeLightning = false;
         }};
 
-        melonaleumSmallHarpoon = new BlockHarpoonBulletType(3, 13, EndlessRusting.modname + "-melomae-harpoon"){{
+        melonaleumSmallHarpoon = new BlockHarpoonBulletType(3, 13, modname + "-melomae-harpoon"){{
             lifetime = 68.4f;
             homingPower = 0.05f;
             width = 8;

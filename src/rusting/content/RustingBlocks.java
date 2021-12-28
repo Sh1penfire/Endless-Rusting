@@ -68,7 +68,7 @@ public class RustingBlocks implements ContentList{
         //damaged frae plating
         damagedFraePlating, damagedFraePlating2,
         //pailean
-        paileanStolnen, paileanPathen, paileanWallen, paileanBarreren,
+        paileanStolnen, paileanSanden, paileanPathen, paileanWallen, paileanBarreren,
         //ebrin, drier pailean blocks
         ebrinDrylon,
         //saline, slaty blocks
@@ -143,7 +143,7 @@ public class RustingBlocks implements ContentList{
         //pannel turrets
         prikend, prsimdeome, prefraecon, rangi, pafleaver,
         //drylon
-        spraien,
+        spraien, glare,
         //platonic elements represented by four turrets.
         octain, triagon, cuin, icosahen,
         //other elemental turrets, wiht names relating to gemstones
@@ -364,6 +364,12 @@ public class RustingBlocks implements ContentList{
             speedMultiplier = 0.95f;
             variants = 3;
             attributes.set(Attribute.water, -0.85f);
+            wall = paileanWallen;
+        }};
+
+        paileanSanden = new Floor("pailean-sanden"){{
+            speedMultiplier = 0.75f;
+            variants = 3;
             wall = paileanWallen;
         }};
 
@@ -1740,6 +1746,34 @@ public class RustingBlocks implements ContentList{
             range = 110f;
             health = 250;
             flags = EnumSet.of(BlockFlag.turret, BlockFlag.extinguisher);
+        }};
+
+        glare = new BerthaTurret("glare"){{
+            category = Category.turret;
+            shootType = RustingBullets.saltyBolt;
+            buildVisibility = BuildVisibility.sandboxOnly;
+            size = 3;
+            health = 8000;
+
+            shots = 5;
+            inaccuracy = 0.5f;
+            burstSpacing = 2;
+
+            range = 1350;
+            restitution = 0.0075f;
+            cooldown = 0.0025f;
+            reloadTime = 420;
+            maxCharge = 3600;
+            xOffset = 4.5f;
+            shellReloadOffset = 2.75f;
+            yOffset = 0.75f;
+            recoilAmount = 5;
+
+            shellRecoil = 1.5f;
+            shootSound = Sounds.shootBig;
+
+            heatColor = Color.orange;
+            canOverdrive = false;
         }};
 
         refract = new ItemTurret("refract"){{

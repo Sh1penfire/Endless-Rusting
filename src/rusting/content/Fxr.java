@@ -715,30 +715,30 @@ public class Fxr{
         });
     }),
 
-    instaltSummonerExplosionLarge = new Effect(85, e -> {
+    instaltSummonerExplosionLarge = new Effect(105, e -> {
         color(Pal.bulletYellowBack);
 
         e.scaled(25, i -> {
             stroke(3f * i.fout());
-            Lines.circle(e.x, e.y, 5f + i.fin() * 55f);
+            Lines.circle(e.x, e.y, 5f + i.fin() * 75f);
 
         });
 
         e.scaled(9, i -> {
-            stroke(4f * i.fout());
-            Lines.circle(e.x, e.y, 3f + i.fin() * 75f);
+            stroke(5f * i.fout());
+            Lines.circle(e.x, e.y, 3f + i.fin() * 105f);
         });
 
         color(Color.gray);
 
-        randLenVectors(e.id, 12, 2f + 43f * e.finpow(), (x, y) -> {
-            Fill.circle(e.x + x, e.y + y, e.fout() * 4.5f + 0.55f);
+        randLenVectors(e.id, 15, 2f + 43f * e.finpow(), (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 5.5f + 0.55f);
         });
 
         color(Pal.bulletYellow);
         stroke(e.fout());
 
-        randLenVectors(e.id + 1, 9, 1f + 33f * e.finpow(), (x, y) -> {
+        randLenVectors(e.id + 1, 12, 1f + 43f * e.finpow(), (x, y) -> {
             lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 5f);
         });
     }),

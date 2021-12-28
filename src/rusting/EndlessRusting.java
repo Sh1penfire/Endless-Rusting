@@ -2,6 +2,7 @@ package rusting;
 
 import arc.Core;
 import arc.Events;
+import arc.KeyBinds.Axis;
 import arc.graphics.Color;
 import arc.input.KeyCode;
 import arc.math.Mathf;
@@ -9,21 +10,21 @@ import arc.struct.Seq;
 import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
-import mindustry.core.Version;
 import mindustry.game.EventType;
-import mindustry.game.EventType.FileTreeInitEvent;
-import mindustry.game.EventType.Trigger;
+import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.Call;
+import mindustry.input.Binding;
 import mindustry.mod.Mod;
-import mindustry.mod.Scripts;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 import rusting.content.*;
-import rusting.graphics.Drawr;
-import rusting.graphics.RustedShaders;
+import rusting.graphics.*;
+import rusting.math.Mathr;
 import rusting.type.statusEffect.CrystalStatusEffect;
+
+import static arc.Core.scene;
 
 public class EndlessRusting extends Mod{
 
@@ -42,17 +43,22 @@ public class EndlessRusting extends Mod{
             ModSounds.load();
             Core.app.post(RustedShaders::load);
         });
+        registerKeybinds();
+
         Core.settings.defaults("er.drawtrails", true);
         Core.settings.defaults("er.advancedeffects", true);
 
         Events.on(EventType.ClientLoadEvent.class,
             e -> {
+                Graphicsr.loadReplacementCursors();
                 setup();
             }
         );
 
         Events.on(EventType.ContentInitEvent.class, e -> {
             Varsr.content.init();
+            Log.info(Mathr.status(-5));
+            Log.info(Mathr.status(69));
         });
 
         Events.on(EventType.UnitCreateEvent.class,
@@ -79,10 +85,6 @@ public class EndlessRusting extends Mod{
                 }
             }
         );
-
-        Events.on(Trigger.update.getClass(), e -> {
-            if(Core.input.keyTap(KeyCode.f2)) Varsr.ui.achievements.show();
-        });
     }
 
     private void callNukestorm(int groups, int missiles, boolean useSpawnerPos, float rotation, float x, float y, float anglefromSky){
@@ -158,5 +160,16 @@ public class EndlessRusting extends Mod{
         Varsr.content.createContent();
         Color.cyan.set(Palr.pulseChargeEnd);
         Color.sky.set(Palr.pulseChargeStart);
+    }
+
+    public void registerKeybinds(){
+        Axis repsawn = Core.keybinds.get(Binding.respawn);
+        Events.on(Trigger.update.getClass(), e -> {
+            if(!scene.hasField() && !scene.hasDialog()){
+                if(Core.input.keyTap(KeyCode.f2)) Varsr.ui.achievements.show();
+                if(Core.input.keyTap(repsawn.key)) Graphicsr.resetCursors();
+                if(Core.input.keyTap(KeyCode.b)) Graphicsr.corsairCursor();
+            }
+        });
     }
 }

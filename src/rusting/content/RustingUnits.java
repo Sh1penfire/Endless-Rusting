@@ -942,7 +942,7 @@ public class RustingUnits implements ContentList{
         EntityMapping.nameMap.put("diaphysis", SpecialWeaponsSpider::new);
         diaphysis = new SpecialWeaponsUnitType("diaphysis"){{
             hitSize = 15;
-            health = 3500;
+            health = 4500;
             armor = 9;
             speed = 0.5f;
             accel = 0.65f;
@@ -961,12 +961,13 @@ public class RustingUnits implements ContentList{
             itemCapacity = 125;
             commandLimit = 5;
 
-            visualElevation = 0.65f;
-            groundLayer = Layer.legUnit;
+            visualElevation = 0.25f;
+            groundLayer = Layer.legUnit - 1f;
 
             constructor = SpecialWeaponsSpider::new;
 
             singleTarget = false;
+            defaultController = GroundAI::new;
 
             specialWeapons.addAll(new SpecialBulletWeapon(modname + "-diaphysis-harpoon-launcher"){{
                 bulletType = RustingBullets.stingrayShard;
@@ -990,7 +991,7 @@ public class RustingUnits implements ContentList{
                     bullet = RustingBullets.raehWeaver;
                     shots = 3;
                     reload = 120;
-                    recoil = 5;
+                    recoil = 4;
                     alternate = false;
                     top = false;
                     x = 0f;
