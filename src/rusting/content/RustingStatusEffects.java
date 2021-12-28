@@ -46,23 +46,23 @@ public class RustingStatusEffects implements ContentList {
 
         //reacts with a lot of status effects to create others
         //the statement above me is a lie
-        fuesin = new StatusEffect("fuesin"){{
+        fuesin = new ConsStatusEffect("fuesin"){{
             init(() -> {
                 if(Version.number > 6) return;
-                affinity(macrosis, ((unit, time, newTime, result) -> {
+                transitioning(macrosis, ((unit, time, newTime) -> {
                     unit.damagePierce(transitionDamage);
                     unit.apply(macotagus, time * 3);
-                    result.set(fuesin, 0);
+                    unit.unapply(this);
                 }));
-                affinity(StatusEffects.freezing, ((unit, time, newTime, result) -> {
+                transitioning(StatusEffects.freezing, ((unit, time, newTime) -> {
                     unit.damagePierce(transitionDamage);
                     unit.apply(StatusEffects.wet, time * 3);
-                    result.set(fuesin, 0);
+                    unit.unapply(this);
                 }));
-                affinity(StatusEffects.burning, ((unit, time, newTime, result) -> {
+                transitioning(StatusEffects.burning, ((unit, time, newTime) -> {
                     unit.damagePierce(transitionDamage);
                     unit.apply(StatusEffects.melting, time * 3);
-                    result.set(fuesin, 0);
+                    unit.unapply(this);
                 }));
             });
         }};
