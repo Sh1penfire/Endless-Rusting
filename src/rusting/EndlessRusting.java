@@ -167,8 +167,8 @@ public class EndlessRusting extends Mod{
         Events.on(Trigger.update.getClass(), e -> {
             if(!scene.hasField() && !scene.hasDialog()){
                 if(Core.input.keyTap(KeyCode.f2)) Varsr.ui.achievements.show();
-                if(Core.input.keyTap(repsawn.key)) Graphicsr.resetCursors();
-                if(Core.input.keyTap(KeyCode.b)) Graphicsr.corsairCursor();
+                //if(Core.input.keyTap(repsawn.key)) Graphicsr.resetCursors();
+                //if(Core.input.keyTap(KeyCode.b)) Graphicsr.corsairCursor();
             }
         });
     }
