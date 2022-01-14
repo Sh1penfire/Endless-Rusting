@@ -61,7 +61,7 @@ public class RustingWeathers implements ContentList{
             attrs.set(Attribute.water, 0.35f);
         }};
 
-        pulesweptGround = new BlindingParticleWeather("pulseswept-ground"){{
+        pulesweptGround = new PowerDisablingParticleWeather("pulseswept-ground"){{
             color = Palr.pulseBullet;
             blindingColor = Palr.darkerPulseChargeStart;
             drawNoise = true;

@@ -4,7 +4,6 @@ import arc.Core;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
-import arc.struct.Seq;
 import arc.util.Eachable;
 import arc.util.Time;
 import mindustry.entities.units.BuildPlan;
@@ -16,8 +15,9 @@ import rusting.interfaces.block.PulseCanalc;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.utility.PulseTeleporterController.PulseTeleporterControllerBuild;
 
+//Todo: this is a mess and I regret most things
 public class PulseCanal extends PulseBlock {
-    public TextureRegion topRegion, baseRegion, shineRegion, fullRegion;
+    public TextureRegion[] topRegion, baseRegion, shineRegion, fullRegion;
 
     public float pulsePressure;
 
@@ -39,22 +39,35 @@ public class PulseCanal extends PulseBlock {
     @Override
     public void load() {
         super.load();
-        baseRegion = Core.atlas.find(name + "-base", region);
-        shineRegion = Core.atlas.find(name + "-shine", Core.atlas.find("empty"));
-        topRegion = Core.atlas.find(name + "-top", Core.atlas.find("empty"));
-        fullRegion = Core.atlas.find(name + "-full", region);
+        //Todo: make all of this a single Array
+        baseRegion = new TextureRegion[]{
+                Core.atlas.find(name + "-base", region),
+                Core.atlas.find(name + "-base-input", region)
+        };
+        shineRegion = new TextureRegion[]{
+                Core.atlas.find(name + "-shine", region),
+                Core.atlas.find(name + "-shine-input", region)
+        };
+        topRegion = new TextureRegion[]{
+                Core.atlas.find(name + "-top", region),
+                Core.atlas.find(name + "-top-input", region)
+        };
+        fullRegion = new TextureRegion[]{
+                Core.atlas.find(name + "-full", region),
+                Core.atlas.find(name + "-full-input", region)
+        };
     }
 
     @Override
     public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list){
-        Draw.rect(baseRegion, req.drawx(), req.drawy(), req.rotation * 90);
+        Draw.rect(baseRegion[0], req.drawx(), req.drawy(), req.rotation * 90);
 
         Draw.alpha(0.15f);
-        Draw.rect(shineRegion, req.drawx(), req.drawy(), 270);
+        Draw.rect(shineRegion[0], req.drawx(), req.drawy(), 270);
         Draw.alpha(1);
         Draw.z(Layer.blockOver + 0.1f);
 
-        Draw.rect(topRegion, req.drawx(), req.drawy(), req.rotation * 90);
+        Draw.rect(topRegion[0], req.drawx(), req.drawy(), req.rotation * 90);
     }
 
     public static PulseCanalBuild asCanal(Building build){
@@ -70,14 +83,17 @@ public class PulseCanal extends PulseBlock {
         public float smoothPulse = 0;
         public float reload = 0;
 
-        public Seq<PulseInstantTransportation> connected = new Seq<PulseInstantTransportation>();
-
+        public Tile canalInput = tile;
         public Tile canalEnding = tile;
+
+        public int input = 0;
 
         @Override
         public void onProximityUpdate() {
             super.onProximityUpdate();
             canalEnding = next();
+            canalInput = behind();
+            input = canalInput != null ? 0 : 1;
         }
 
         @Override
@@ -106,9 +122,17 @@ public class PulseCanal extends PulseBlock {
             }
         }
 
+        public Tile behind(){
+            Tile behind = tile.nearby((rotation + 2) % 3);
+            if(behind.build instanceof PulseCanalc && ((PulseCanalc) behind.build).canConnect(this) && canReceive(behind.build)){
+                return behind;
+            }
+            return null;
+        }
+
         public Tile next(){
             Tile next = tile.nearby(rotation);
-            if(next.build instanceof PulseCanalBuild && canConnect(next.build) && ((PulseCanalBuild) next.build).canReceive(this)){
+            if(next.build instanceof PulseCanalc && canConnect(next.build) && ((PulseCanalc) next.build).canReceive(this)){
                 return next;
             }
             return null;
@@ -119,17 +143,17 @@ public class PulseCanal extends PulseBlock {
         }
 
         public boolean behindRotational(Tile t){
-            return ((int) t.build.angleTo(this)/90) == rotation;
+            return ((int) t.build.angleTo( this)/90) == rotation;
         }
 
         @Override
         public boolean canConnect(Building b){
-            return b instanceof PulseCanalc && (!b.block.rotate || b.rotation == rotation && adjacentRotational(b.tile));
+            return b instanceof PulseCanalc && (!b.block.rotate || b.rotation == rotation && adjacentRotational(b.tile)) && canalInput instanceof PulseCanalc || canalInput == null && b instanceof Pulsec;
         }
 
         @Override
         public boolean canReceive(Building b){
-            return b instanceof PulseCanalc && behindRotational(b.tile);
+            return b instanceof Pulsec && behindRotational(b.tile);
         }
 
         @Override
@@ -142,21 +166,23 @@ public class PulseCanal extends PulseBlock {
         public void placed() {
             super.placed();
             canalEnding = next();
+            canalInput = behind();
+            input = canalInput != null ? 1 : 0;
         }
 
         @Override
         public void draw() {
-            Draw.rect(baseRegion, x, y, rotation * 90);
+            Draw.rect(baseRegion[input], x, y, rotation * 90);
             Draw.color(chargeColourStart, chargeColourEnd, smoothPulse);
             Draw.alpha(smoothPulse);
             Draw.rect(pulseRegion, x, y, rotation * 90);
             Draw.color();
             Draw.alpha(0.15f);
-            Draw.rect(shineRegion, x, y, 270);
+            Draw.rect(shineRegion[input], x, y, 270);
             Draw.alpha(1);
             Draw.z(Layer.blockOver + 0.1f);
 
-            Draw.rect(topRegion, x, y, rotation * 90);
+            Draw.rect(topRegion[input], x, y, rotation * 90);
         }
     }
 }

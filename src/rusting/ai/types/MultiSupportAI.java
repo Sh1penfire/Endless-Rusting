@@ -247,10 +247,6 @@ public class MultiSupportAI extends FlyingAI {
         return returnBool;
     }
 
-    public boolean moveAndHeal(boolean healBuildings, boolean healUnits, boolean mining, boolean attacking){
-        return false;
-    }
-
     @Override
     protected boolean invalid(Teamc target) {
         return !(target instanceof Building && ((Building) target).damaged()) && super.invalid(target);
@@ -259,7 +255,6 @@ public class MultiSupportAI extends FlyingAI {
     public Teamc findTarget(float x, float y, float range, boolean air, boolean ground) {
         boolean attack = Varsr.switches.getSwitchHolder(unit.type, unit.team, RustingAISwitches.attackSwitch).isOn;
         boolean mine = Varsr.switches.getSwitchHolder(unit.type, unit.team, RustingAISwitches.mineSwitch).isOn;
-        boolean healUnit = Varsr.switches.getSwitchHolder(unit.type, unit.team, RustingAISwitches.healUnitSwitch).isOn;
         boolean healBlock = Varsr.switches.getSwitchHolder(unit.type, unit.team, RustingAISwitches.healBlockSwitch).isOn;
 
         if(!attack && !mine && healBlock){

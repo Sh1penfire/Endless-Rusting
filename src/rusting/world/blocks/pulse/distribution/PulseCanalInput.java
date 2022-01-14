@@ -51,14 +51,14 @@ public class PulseCanalInput extends PulseCanal {
 
     @Override
     public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list){
-        Draw.rect(baseRegion, req.drawx(), req.drawy(), req.rotation * 90);
+        Draw.rect(baseRegion[0], req.drawx(), req.drawy(), req.rotation * 90);
 
         Draw.alpha(0.15f);
-        Draw.rect(shineRegion, req.drawx(), req.drawy(), 270);
+        Draw.rect(shineRegion[0], req.drawx(), req.drawy(), 270);
         Draw.alpha(1);
         Draw.z(Layer.blockOver + 0.1f);
 
-        Draw.rect(topRegion, req.drawx(), req.drawy(), req.rotation * 90);
+        Draw.rect(topRegion[0], req.drawx(), req.drawy(), req.rotation * 90);
     }
 
     public class PulseCanalInputBuild extends PulseCanalBuild implements rusting.interfaces.PulseCanalInput, PrimitiveControlBlock {

@@ -7,7 +7,7 @@ import rusting.game.nodes.EventNode;
 @Deprecated
 public class ScriptedSector extends ERSectorPreset {
 
-    //set after playing map, read only when necessary
+    //set after playing map, readMount only when necessary
     public final Seq<EventNode> nodes = new Seq();
 
     public ScriptedSector(String name, Planet planet, int sector) {

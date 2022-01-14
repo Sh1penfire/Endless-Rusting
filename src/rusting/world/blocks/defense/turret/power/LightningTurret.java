@@ -2,16 +2,13 @@ package rusting.world.blocks.defense.turret.power;
 
 import arc.Core;
 import arc.audio.Sound;
-import arc.graphics.Blending;
+import arc.func.Floatp;
 import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.TextureRegion;
-import arc.math.Angles;
-import arc.math.Mathf;
+import arc.graphics.g2d.*;
+import arc.math.*;
 import arc.math.geom.Vec2;
 import arc.struct.Seq;
-import arc.util.Nullable;
-import arc.util.Tmp;
+import arc.util.*;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
@@ -25,7 +22,6 @@ import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
 import mindustry.world.blocks.ControlBlock;
 import rusting.content.Fxr;
-import rusting.graphics.Drawr;
 import rusting.interfaces.Targeting;
 import rusting.world.blocks.pulse.PulseBlock;
 
@@ -55,6 +51,10 @@ public class LightningTurret extends PulseBlock {
 
     private static boolean anyNearby = false;
     private static Seq<Healthc> all = new Seq<>();
+    private static int seed = 0;
+
+    private static Rand rand = new Rand();
+    private static float precent = 0;
 
     public TextureRegion baseRegion;
 
@@ -87,6 +87,9 @@ public class LightningTurret extends PulseBlock {
 
         public Vec2 lightningPos = new Vec2();
 
+        public Seq<Posc> lightningPoses = Seq.with();
+        public Seq<Posc> replacementLightningPoses = Seq.with();
+
         @Nullable
         public BlockUnitc unit;
 
@@ -94,6 +97,9 @@ public class LightningTurret extends PulseBlock {
         public Posc target;
 
         public float recoil = 0;
+
+        //seed of the arc's rand
+        private int arcSeed = 0;
 
         @Override
         public Unit unit(){
@@ -143,6 +149,12 @@ public class LightningTurret extends PulseBlock {
         }
 
         protected void shoot() {
+
+            boolean advanced = Core.settings.getBool("advancedeffects");
+
+            arcSeed++;
+
+            lightningPoses.clear();
 
             Tmp.v1.set(x, y);
             float rx = Tmp.v1.x, ry = Tmp.v1.y;
@@ -200,7 +212,7 @@ public class LightningTurret extends PulseBlock {
                     hitEffect.at(rx, ry, angleTo(other), color);
                 }
 
-                damageEffect.at(lightningPos.x, lightningPos.y, 0f, color, new VisualLightningHolder(){
+                if(advanced) damageEffect.at(lightningPos.x, lightningPos.y, 0f, color, new VisualLightningHolder(){
 
                     @Override
                     public LightningTurret owner() {
@@ -218,6 +230,8 @@ public class LightningTurret extends PulseBlock {
                         return unitPos;
                     }
                 });
+
+                else lightningPoses.add(other);
             }
 
             if(anyNearby) {
@@ -239,32 +253,76 @@ public class LightningTurret extends PulseBlock {
 
             Draw.z(Layer.turret);
             Draw.rect(region, x, y, rotation - 90);
+            //hell.
 
-            if(pulseRegion != Core.atlas.find("error")) {
+            boolean advanced = Core.settings.getBool("advancedeffects");
 
-                Draw.color(chargeColourStart, chargeColourEnd, chargef());
+            if(advanced) return;
 
-                boolean highdraw = false;
-                if(Core.settings.getBool("settings.er.additivepulsecolours")) Draw.blend(Blending.additive);
+            Draw.z(Layer.effect);
 
-                Draw.draw(Layer.turret, () -> {
-                    Drawr.drawPulseRegion(pulseRegion, x, y, rotation, Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd, chargef()), chargef(false));
-                });
+            replacementLightningPoses.clear();
+            replacementLightningPoses.addAll(lightningPoses).each(pos -> {
 
-                Draw.alpha(alphaDraw);
-                if(!highdraw) Draw.alpha(Draw.getColor().a * Draw.getColor().a);
-                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (pulseRegion.width + yOffset)/4, (pulseRegion.height + xOffset)/4, rotation);
-
-                Draw.alpha(chargef());
-                Draw.alpha(Draw.getColor().a * Draw.getColor().a);
-                Draw.rect(pulseRegion, x, y, rotation);
-
-                if(Core.settings.getBool("settings.er.pulseglare")){
-                    Draw.alpha(chargef() * chargef() * 0.5f);
-                    Draw.rect(pulseRegion, x, y, pulseRegion.height * 1.5f/4, pulseRegion.width * 1.5f/4, rotation);
+                if(dst(pos) > range || pos.isNull() || !pos.isAdded()) {
+                    lightningPoses.remove(pos);
+                    return;
                 }
-            }
-            Draw.reset();
+                seed += 1;
+                seed %= 1000;
+
+                //get the start and ends of the lightning, then the distance between them
+                float tx = lightningPos.x, ty = lightningPos.y, dst = Mathf.dst(pos.getX(), pos.getY(), tx, ty);
+
+                Tmp.v3.set(pos).sub(lightningPos).nor();
+                float normx = Tmp.v3.x, normy = Tmp.v3.y;
+
+                rand.setSeed(seed + (int) Time.time * 100);
+
+                float arcWidth = rand.range(dst * (arc));
+
+                float angle = lightningPos.angleTo(pos);
+
+                Floatp arcX = () -> {
+                    return Mathf.sinDeg(precent * 180) * arcWidth;
+                };
+
+                int links = Mathf.ceil(dst / width);
+                float spacing = dst / links;
+                float interval = 0.5f + Mathf.sin(0.5f, 1f);
+
+                Lines.stroke((2 + 0.75f * interval) * (1 - reload/reloadTime));
+                Draw.color(Color.white, color, interval);
+
+                //begin the line
+                Lines.beginLine();
+
+                Lines.linePoint(lightningPos.x, lightningPos.y);
+
+                //use replacement just in case
+                rand.setSeed(arcSeed + replacementLightningPoses.indexOf(pos));
+
+                for(int i = 0; i < links; i++){
+                    float nx, ny;
+                    if(i == links - 1){
+                        //line at end
+                        nx = pos.getX();
+                        ny = pos.getY();
+                    }else{
+                        float len = (i + 1) * spacing;
+                        rand.setSeed(seed + i);
+                        Tmp.v3.setToRandomDirection().scl(width/2);
+                        precent = ((float) (i + 1))/links;
+
+                        nx = tx + normx * len + Tmp.v3.x + Tmp.v4.set(0, arcX.get()).rotate(angle).x;
+                        ny = ty + normy * len + Tmp.v3.y + Tmp.v4.y;
+                    }
+
+                    Lines.linePoint(nx, ny);
+                }
+
+                Lines.endLine();
+            });
         }
 
         @Override

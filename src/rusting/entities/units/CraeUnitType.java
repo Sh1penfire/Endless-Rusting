@@ -19,7 +19,7 @@ import rusting.entities.units.flying.CraeUnitEntity;
 
 import static mindustry.Vars.state;
 
-public class CraeUnitType extends AutospriteUnitType {
+public class CraeUnitType extends BaseUnitType {
 
     public float pulseStorage = 0;
     public float overloadedOpacity = 0.3f;
@@ -32,6 +32,11 @@ public class CraeUnitType extends AutospriteUnitType {
     public Color chargeColourStart, chargeColourEnd;
 
     public TextureRegion pulseRegion, shakeRegion;
+
+    @Override
+    public void init() {
+        super.init();
+    }
 
     @Override
     public void load() {

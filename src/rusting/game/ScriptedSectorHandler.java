@@ -31,9 +31,6 @@ public class ScriptedSectorHandler implements Loadable {
     //register custom nodes to strings, why am I making this it's not like some mod is going to use ER as a dependanc-
     public ObjectMap<String, NodeSupplier> nodeRegistery = ObjectMap.of();
 
-    //sector it's attached to
-    private ScriptedSector sector;
-
     //placeholder variable for if it should save
     private boolean save = false;
 

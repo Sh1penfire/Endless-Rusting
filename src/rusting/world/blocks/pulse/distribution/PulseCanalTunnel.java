@@ -17,12 +17,14 @@ public class PulseCanalTunnel extends PulseCanal{
         region = Core.atlas.find(name + "-input");
         tunnelRegion = Core.atlas.find(name);
 
+        /*
         //load input regions
         pulseRegion = Core.atlas.find(name + "-input-charged");
         baseRegion = Core.atlas.find(name + "-input-base", region);
         shineRegion = Core.atlas.find(name + "-input-shine", Core.atlas.find("empty"));
         topRegion = Core.atlas.find(name + "-input-top", Core.atlas.find("empty"));
         fullRegion = Core.atlas.find(name + "-input-full", region);
+         */
 
         //load output regions
         chargeOutputRegion = Core.atlas.find(name + "-output-charged");

@@ -1,6 +1,5 @@
 package rusting.content;
 
-import arc.files.Fi;
 import arc.graphics.Color;
 import arc.struct.*;
 import mindustry.content.*;
@@ -37,7 +36,7 @@ import rusting.world.blocks.defense.turret.power.PanelTurret;
 import rusting.world.blocks.environment.*;
 import rusting.world.blocks.logic.UnbreakableMessageBlock;
 import rusting.world.blocks.power.AttributeBurnerGenerator;
-import rusting.world.blocks.production.*;
+import rusting.world.blocks.production.ConditionalDrill;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.PulseBoulder;
 import rusting.world.blocks.pulse.crafting.PulseCondensary;
@@ -97,7 +96,7 @@ public class RustingBlocks implements ContentList{
         terraConveyor,
         //pulse
         //Natural Sources
-        melonaleumGeode, largeMelonaleumGeode, hugeMelonaleumGeode, giganticMelonaleumGeode, humungousMelonaleumGeond,
+        melonaleumGeode, largeMelonaleumGeode, hugeMelonaleumGeode, giganticMelonaleumGeode, humungousMelonaleumGeond, amogusMelonaledumDio,
         //Pulse collection
         pulseInceptionPoint, pulseCollector, pulseGenerator, infectedsGeneratorCore,
         //Nodes
@@ -119,7 +118,7 @@ public class RustingBlocks implements ContentList{
         //particle spawning
         smallParticleSpawner,
         //storage
-        fraeCore,
+        fraeCore, craeCore,
         //endregion storage
         //turrets
         //environment/turrets
@@ -572,8 +571,6 @@ public class RustingBlocks implements ContentList{
             consumes.liquid(Liquids.water, 0.1235f);
         }};
 
-        Fi d = new Fi("");
-
         cameoPaintMixer = new ResearchableCrafter("cameo-paint-mixer"){{
             requirements(Category.crafting, with(Items.lead, 145, Items.graphite, 75, Items.titanium, 45, RustingItems.bulastelt, 65));
             centerResearchRequirements(true, ItemStack.with(Items.silicon, 355, RustingItems.halsinte, 135, RustingItems.bulastelt, 65));
@@ -771,20 +768,16 @@ public class RustingBlocks implements ContentList{
             hideFromUI();
         }};
 
-        //endregion pulessource
-
         //region collection
 
         pulseInceptionPoint = new PulseSapper("pulse-inception-point") {{
-            category = Category.power;
-            buildVisibility = BuildVisibility.sandboxOnly;
+            requirements(Category.power, with(Items.lead, 10, Items.titanium, 5, Items.graphite, 4));
+            centerResearchRequirements(false, with());
 
             health = 250;
             collectSpeed = 0.1f;
             pulseStorage = 15;
             pulsePressure = 10;
-
-            hideFromUI();
         }};
 
         //Collects pulse. Requires some sort of Siphon to collect the pulse.
@@ -823,6 +816,7 @@ public class RustingBlocks implements ContentList{
             minRequiredPulsePercent = 0.35f;
         }};
 
+        /*
         //note: used as a replacement for scripted sector events
         infectedsGeneratorCore = new InfectedsGeneratorCore("infecteds-generator-core"){{
             requirements(Category.power, with(Items.lead, 450, Items.titanium, 650, Items.metaglass, 350, RustingItems.melonaleum, 350, RustingItems.gelChip, 540));
@@ -842,6 +836,10 @@ public class RustingBlocks implements ContentList{
             laserRange = 55;
             minRequiredPulsePercent = 0.35f;
         }};
+
+         */
+
+        //endregion collection
 
         //Loses power fast, but is great at transmitting pulses to far blocks.
         pulseNode = new PulseNode("pulse-node"){{
@@ -914,13 +912,12 @@ public class RustingBlocks implements ContentList{
             pulseStorage = 240;
             canOverload = false;
             minRequiredPulsePercent = 0.45f;
-            customConsumes.pulse = 55;
-            consumes.liquid(Liquids.water, 0.075f);
-            consumes.items(ItemStack.with(Items.coal, 15, Items.sand, 3));
+            customConsumes.pulse = 14;
+            craftTime = 75;
 
-            craftTime = 285;
+            consumes.items(ItemStack.with(Items.coal, 4, Items.sand, 2));
 
-            outputItem = new ItemStack(Items.graphite, 9);
+            outputItems = ItemStack.with(Items.graphite, 2, Items.silicon, 1);
         }};
 
         pulseCondensary = new PulseCondensary("pulse-melonaleum-condensery"){{
@@ -938,7 +935,7 @@ public class RustingBlocks implements ContentList{
             itemCapacity = 70;
 
             consumes.liquid(RustingLiquids.melomae, 1.725f);
-            outputItem = new ItemStack(RustingItems.melonaleum, 35);
+            outputItems = ItemStack.with(RustingItems.melonaleum, 35);
         }};
 
         pulseMelomaeMixer = new PulseGenericCrafter("pulse-melomae-mixer"){{
@@ -970,13 +967,13 @@ public class RustingBlocks implements ContentList{
             pulseStorage = 350;
             canOverload = false;
             minRequiredPulsePercent = 0.45f;
-            customConsumes.pulse = 13.5f;
+            customConsumes.pulse = 45;
             consumes.liquid(RustingLiquids.melomae, 0.16f);
             consumes.items(ItemStack.with(RustingItems.bulastelt, 2, RustingItems.halsinte, 3, Items.lead, 1));
             craftTime = 85;
             liquidCapacity = 75;
 
-            outputItem = new ItemStack(RustingItems.gelChip, 3);
+            outputItems = ItemStack.with(RustingItems.gelChip, 3);
         }};
 
         pulseBarrier = new PulseBarrier("pulse-barrier"){{
@@ -1033,15 +1030,12 @@ public class RustingBlocks implements ContentList{
         }};
 
         pulseFlowSplitter = new PulseFlowSplitter("pulse-flow-splitter"){{
+            requirements(Category.power, with(Items.lead, 4, Items.titanium, 3));
             hideFromUI();
         }};
 
         pulseCanal = new PulseCanal("pulse-canal"){{
-            hideFromUI();
-        }};
-
-        pulseInputTerminal = new PulseCanalInput("pulse-canal-input-terminal"){{
-            requirements(Category.distribution, with(Items.titanium, 7, Items.silicon, 5, RustingItems.melonaleum, 5, RustingItems.cameoShardling, 8));
+            requirements(Category.power, with(Items.lead, 2, Items.titanium, 1));
             hideFromUI();
         }};
 
@@ -1077,6 +1071,19 @@ public class RustingBlocks implements ContentList{
             unitCapModifier = 13;
         }};
 
+        //Todo: fully flesh this out
+        craeCore = new CoreBlock("crae-core"){{
+            requirements(Category.effect, BuildVisibility.editorOnly, with(Items.copper, 1000, Items.lead, 800));
+            alwaysUnlocked = false;
+
+            unitType = RustingUnits.duoly;
+            health = 2100;
+            itemCapacity = 6500;
+            size = 3;
+
+            unitCapModifier = 13;
+        }};
+
         archangel = new DysfunctionalMonolith("archangel"){{
             requirements(Category.effect, with(Items.copper, 300, Items.lead, 115, Items.metaglass, 50, Items.titanium, 45));
             centerResearchRequirements(with(Items.copper, 350,  Items.coal, 95, Items.graphite, 55, Items.titanium, 225));
@@ -1085,14 +1092,14 @@ public class RustingBlocks implements ContentList{
             health = 135 * size * size;
             projectile = RustingBullets.craeWeaver;
             projectileChanceModifier = 0;
-            reloadTime = 85;
+            reloadTime = 125;
             shots = 2;
             bursts = 3;
             burstSpacing = 3;
             inaccuracy = 5;
-            customConsumes.pulse = 15;
+            customConsumes.pulse = 65;
             cruxInfiniteConsume = false;
-            pulseStorage = 70;
+            pulseStorage = 140;
             overloadCapacity = 30;
             powerLoss = 0;
             minRequiredPulsePercent = 0;
@@ -1101,6 +1108,7 @@ public class RustingBlocks implements ContentList{
 
         contingent = new PulsePreciseLaserTurret("contingent"){{
             category = Category.effect;
+            buildVisibility = BuildVisibility.sandboxOnly;
             size = 3;
             health = 155 * size * size;
         }};
@@ -1669,14 +1677,15 @@ public class RustingBlocks implements ContentList{
             canOverload = false;
             pulseStorage = 125;
 
-            customConsumes.pulse = 6;
+            customConsumes.pulse = 7.875f;
 
             range = 145;
             lightning = 4;
             healPercent = 0.15f;
 
             shootCone = 65;
-            reloadTime = 12;
+            reloadTime = 35;
+            damage = 15;
 
             shootSound = Sounds.spark;
 

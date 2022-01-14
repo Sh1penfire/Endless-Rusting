@@ -2,6 +2,7 @@ package rusting.world.blocks.pulse.crafting;
 
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.scene.ui.layout.Table;
 import arc.struct.EnumSet;
 import arc.util.Nullable;
 import arc.util.io.Reads;
@@ -10,13 +11,14 @@ import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.gen.Sounds;
 import mindustry.type.*;
+import mindustry.ui.ItemDisplay;
 import mindustry.world.meta.*;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.draw.DrawPulseBlock;
 
 public class PulseGenericCrafter extends PulseBlock {
     public @Nullable
-    ItemStack outputItem;
+    ItemStack[] outputItems;
     public @Nullable
     LiquidStack outputLiquid;
 
@@ -57,8 +59,15 @@ public class PulseGenericCrafter extends PulseBlock {
         super.setStats();
         stats.add(Stat.productionTime, craftTime / 60f, StatUnit.seconds);
 
-        if(outputItem != null){
-            stats.add(Stat.output, outputItem);
+        if(outputItems != null){
+            stats.add(Stat.output, new StatValue() {
+                @Override
+                public void display(Table table) {
+                    for(ItemStack stack : outputItems){
+                        table.add(new ItemDisplay(stack.item, stack.amount, false)).padRight(5);
+                    }
+                }
+            });
         }
 
         if(outputLiquid != null){
@@ -73,7 +82,7 @@ public class PulseGenericCrafter extends PulseBlock {
 
     @Override
     public boolean outputsItems(){
-        return outputItem != null;
+        return outputItems != null;
     }
 
     public class PulseGenericCrafterBuild extends PulseBlockBuild{
@@ -93,8 +102,12 @@ public class PulseGenericCrafter extends PulseBlock {
 
         @Override
         public boolean shouldConsume(){
-            if(outputItem != null && items.get(outputItem.item) + outputItem.amount > itemCapacity){
-                return false;
+            if(outputItems != null){
+                for(ItemStack output : outputItems){
+                    if(items.get(output.item) + output.amount > itemCapacity){
+                        return false;
+                    }
+                }
             }
             return (outputLiquid == null || !(liquids.get(outputLiquid.liquid) >= liquidCapacity - 0.001f)) && enabled;
         }
@@ -102,46 +115,43 @@ public class PulseGenericCrafter extends PulseBlock {
         @Override
         public void updateTile(){
             super.updateTile();
-            if(consValid() && customConsumeValid()){
+                if(consValid() && customConsumeValid()){
 
-                progress += getProgressIncrease(craftTime);
-                totalProgress += delta() * pulseEfficiency();
-                warmup = Mathf.approachDelta(warmup, 1f, warmupSpeed);
+                    progress += getProgressIncrease(craftTime);
+                    totalProgress += delta();
+                    warmup = Mathf.approachDelta(warmup, 1f, warmupSpeed);
 
-                if(Mathf.chanceDelta(updateEffectChance)){
-                    updateEffect.at(getX() + Mathf.range(size * 4f), getY() + Mathf.range(size * 4));
+                    if(Mathf.chanceDelta(updateEffectChance)){
+                        updateEffect.at(x + Mathf.range(size * 4f), y + Mathf.range(size * 4));
+                    }
+                }else{
+                    warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
                 }
-            }
-            else{
-                warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
-            }
 
-            if(progress >= 1f){
-                consume();
-                customConsume();
+                if(progress >= 1f){
+                    craft();
+                }
 
-                if(outputItem != null){
-                    for(int i = 0; i < outputItem.amount; i++){
-                        offload(outputItem.item);
+                dumpOutputs();
+        }
+
+        public void craft(){
+            consume();
+
+            if(outputItems != null){
+                for(ItemStack output : outputItems){
+                    for(int i = 0; i < output.amount; i++){
+                        offload(output.item);
                     }
                 }
-
-                if(outputLiquid != null){
-                    handleLiquid(this, outputLiquid.liquid, outputLiquid.amount);
-                }
-
-                craftEffect.at(x, y);
-                progress %= 1f;
-                craft();
-            }
-
-            if(outputItem != null && timer(timerDump, dumpTime / timeScale)){
-                dump(outputItem.item);
             }
 
             if(outputLiquid != null){
-                dumpLiquid(outputLiquid.liquid);
+                handleLiquid(this, outputLiquid.liquid, outputLiquid.amount);
             }
+
+            craftEffect.at(x, y);
+            progress %= 1f;
         }
 
         @Override
@@ -154,9 +164,16 @@ public class PulseGenericCrafter extends PulseBlock {
             return cons.valid() & customConsumeValid();
         }
 
-        //called whenever an item is crafted, here for convenience sake
-        public void craft(){
+        public void dumpOutputs(){
+            if(outputItems != null && timer(timerDump, dumpTime / timeScale)){
+                for(ItemStack output : outputItems){
+                    dump(output.item);
+                }
+            }
 
+            if(outputLiquid != null){
+                dumpLiquid(outputLiquid.liquid);
+            }
         }
 
         @Override

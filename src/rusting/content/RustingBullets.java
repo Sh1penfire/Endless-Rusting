@@ -4,8 +4,7 @@ import arc.func.Cons;
 import arc.graphics.Color;
 import arc.math.*;
 import arc.struct.Seq;
-import arc.util.Time;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.ctype.ContentList;
@@ -15,6 +14,7 @@ import mindustry.entities.bullet.*;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.logic.Ranged;
+import mindustry.mod.Mods.LoadedMod;
 import mindustry.world.blocks.defense.turrets.Turret.TurretBuild;
 import rusting.entities.bullet.*;
 import rusting.graphics.GraphicEffects;
@@ -26,10 +26,33 @@ import static rusting.content.RustingStatusEffects.*;
 
 public class RustingBullets implements ContentList{
 
+    //Todo: finish finding bullets via their name, id, relatiiveId and stats
+    public static BulletType findBullet(String modname, int id, int relativeId){
+        Log.info(modname);
+        Log.info(id);
+        Log.info(relativeId);
+        LoadedMod mod = Vars.mods.getMod(modname);
+        Log.info(mod);
+        if(mod == null){
+            Log.info("no mod found");
+            Log.info(Vars.content.bullet(id));
+            return Vars.content.bullet(id);
+        }
+        //note that this works even with vanilla bullets, as there should only be one case in which a bullet's mod will be null
+        Seq<BulletType> bullets = Vars.content.bullets().copy().filter(b -> b.minfo.mod == mod);
+        BulletType relativeIdBullet =  bullets.get(Integer.valueOf(relativeId));
+        Log.info("mod found");
+        Log.info(relativeIdBullet);
+        return relativeIdBullet;
+    }
+
     private static float trueBulletSpeed = 0;
 
     public static Cons<Bullet>
-        homing, noStopHoming, velbasedHoming, velbasedHomingTrue, velbasedHomingFlame, homingFlame, homingOwner, homingBuildingsAroundOwner;
+        homing, noStopHoming,
+            velbasedHoming, velbasedHomingTrue, velbasedHomingDespawn,
+            velbasedHomingFlame, homingFlame,
+            homingOwner, homingBuildingsAroundOwner;
 
     public static BulletType
         //basic bullets
@@ -156,6 +179,21 @@ public class RustingBullets implements ContentList{
             if(bullet.dst(Tmp.v3.x, Tmp.v3.y) >= ((Ranged) bullet.owner).range() + trueBulletSpeed + 3) bullet.time += bullet.lifetime/100 * Time.delta;
 
             //essentualy goes to owner aim pos, without stopping homing
+        };
+
+        velbasedHomingDespawn = bullet -> {
+
+            if(!(bullet.owner instanceof Ranged) || bullet.time < bullet.type.homingDelay) return;
+
+            if(bullet.fdata() != 1) {
+                velbasedHomingTrue.get(bullet);
+            }
+            else{
+                bullet.remove();
+            }
+            if(bullet.within(Tmp.v1.x, Tmp.v1.y, bullet.hitSize)){
+                bullet.fdata = 1;
+            }
         };
 
         velbasedHomingFlame = bullet -> {
@@ -331,7 +369,7 @@ public class RustingBullets implements ContentList{
             bounciness = 0.45;
         }};
 
-        craeShard = new BounceBulletType(4, 5, "bullet"){{
+        craeShard = new BounceBulletType(4, 7, "bullet"){{
             width = 7;
             height = 8;
             lifetime = 15;
@@ -904,6 +942,8 @@ public class RustingBullets implements ContentList{
             trailChance = 0.15f;
             trailLength = 8;
             trailWidth = 5;
+            fragBullet = craeShard;
+            fragBullets = 3;
             weaveMag = 2;
             weaveScale = 5;
             homingPower = 0.125f;
@@ -913,7 +953,7 @@ public class RustingBullets implements ContentList{
 
         //anti building weavers
         raehWeaver = new BounceBulletType(0.001f, 135, "bullet"){{
-            consUpdate = velbasedHomingTrue;
+            consUpdate = velbasedHomingDespawn;
             trueSpeed = 8;
             drag = 0.05f;
 

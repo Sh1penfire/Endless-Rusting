@@ -2,8 +2,8 @@ package rusting.graphics;
 
 import arc.Core;
 import arc.Graphics;
-import arc.Graphics.Cursor;
 import arc.Graphics.Cursor.SystemCursor;
+import arc.backend.sdl.SdlGraphics;
 import arc.graphics.Pixmap;
 import arc.graphics.Pixmap.PixmapFilter;
 import arc.graphics.Pixmaps;
@@ -20,9 +20,10 @@ public class Graphicsr {
     public static ObjectMap<Boolean, SystemCursor> replaced = ObjectMap.of();
 
     //clones of the original cursors
-    public static ObjectMap<SystemCursor, ReplacementCursor> clones = ObjectMap.of();
+    public static ObjectMap<SystemCursor, SdlGraphics.SdlCursor> clones = ObjectMap.of();
 
     public static void loadReplacementCursors(){
+        if(Core.app.isAndroid()) return;
         //setup clones so that the cursors that are set can be returned to normal
         arrowClone.set(SystemCursor.arrow);
         ibeamClone.set(SystemCursor.ibeam);
@@ -32,7 +33,7 @@ public class Graphicsr {
         verticalResizeClone.set(SystemCursor.verticalResize);
 
         //load modded cursors
-        corsair.set(newCursor("corsair"));
+        corsair.set(newCursor("corsair", 1));
 
         clones.putAll(
             ObjectMap.of(
@@ -46,7 +47,8 @@ public class Graphicsr {
         );
     }
 
-    public enum ReplacementCursor implements Graphics.Cursor {
+
+    public enum ReplacementCursor{
         arrowClone,
         ibeamClone,
         corsshairClone,
@@ -55,6 +57,7 @@ public class Graphicsr {
         verticalResizeClone,
         corsair
         ;
+
         protected Graphics.Cursor cursor;
 
         private ReplacementCursor() {
@@ -66,18 +69,17 @@ public class Graphicsr {
         }
 
         public void dispose() {
-            if (this.cursor != null && !(this.cursor instanceof Graphics.Cursor.SystemCursor)) {
+            if (this.cursor != null && !(this.cursor instanceof SdlGraphics.SdlCursor)) {
                 this.cursor.dispose();
                 this.cursor = null;
             }
-
         }
     }
 
     //Sets arrow to a corsair.
     public static void corsairCursor(){
         SystemCursor.arrow.set(corsair.cursor);
-        Core.graphics.cursor(corsair);
+        Core.graphics.cursor(corsair.cursor);
     }
 
     //Reset all cursors which have been replaced with mod's cursor to normal.
@@ -88,14 +90,14 @@ public class Graphicsr {
     }
 
     //Instead of searching the vanilla directory, search the modded one. Scale handled automatically.
-    public static Cursor newCursor(String filename){
-        int scale = cursorScale();
+    public static SdlGraphics.SdlCursor newCursor(String filename, int scaleOffset){
+        int scale = cursorScale() * scaleOffset;
         Pixmap base = Core.atlas.getPixmap(modname + "-" + filename).crop();
         if(cursorScale() != 1 && !OS.isAndroid && !OS.isIos) {
             Pixmap result = Pixmaps.scale(base, base.getWidth() * scale, base.getHeight() * scale, PixmapFilter.nearestNeighbour);
             base.dispose();
-            return Core.graphics.newCursor(result, result.getWidth() / 2, result.getHeight() / 2);
+            return (SdlGraphics.SdlCursor) Core.graphics.newCursor(result, result.getWidth() / 2, result.getHeight() / 2);
         }
-        else return Core.graphics.newCursor(base, base.getWidth()/2, base.getHeight()/2);
+        else return (SdlGraphics.SdlCursor) Core.graphics.newCursor(base, base.getWidth()/2, base.getHeight()/2);
     }
 }

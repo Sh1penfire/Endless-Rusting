@@ -15,7 +15,6 @@ import mindustry.game.EventType.Trigger;
 import mindustry.gen.Building;
 import mindustry.type.ItemStack;
 import mindustry.world.Tile;
-import mindustry.world.meta.BuildVisibility;
 import rusting.ai.AISwitches;
 import rusting.content.Fxr;
 import rusting.content.RustingAchievements;
@@ -165,21 +164,12 @@ public class Varsr implements Loadable {
 
     public static void debug(){
         Vars.enableConsole = true;
+        /*
         Vars.content.blocks().each(b -> {
             if(b.name.contains("endless-rusting") && b.buildVisibility == BuildVisibility.hidden && b.synthetic()) b.buildVisibility = BuildVisibility.shown;
         });
-        /*
-        RustingBlocks.pafleaver.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.cuin.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.desalinationMixer.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.pulseTeleporterController.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.pulseFlowSplitter.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.pulseCanal.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.pulseInputTerminal.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.pulseMotar.buildVisibility = BuildVisibility.shown;
-        RustingBlocks.horaNoctis.buildVisibility = BuildVisibility.hidden;
-        RustingBlocks.holocaust.buildVisibility = BuildVisibility.hidden;
         */
+
         defaultRandomQuotes = Seq.with(
             "[cyan] Welcome back " + username,
             "[sky] This is my message to my master\n" +

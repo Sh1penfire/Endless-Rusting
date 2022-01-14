@@ -35,7 +35,7 @@ public class PulseSapper extends PulseBlock {
 
     //doesn't affect the mount; affects it's ability to send Pulse through canals
     public float reloadTime = 60;
-    //affects how much Pulse is distributed per tick
+    //affects how much Pulse is distributed each time it distributes
     public float pulsePressure = 10;
 
     TextureRegion baseRegion;
@@ -113,8 +113,9 @@ public class PulseSapper extends PulseBlock {
                     distributeTo.add((PulseCanalc) next.build);
                 }
             }
+
             distributeTo.each(build -> {
-                build.addPulse(removePulse(pulsePressure/distributeTo.size));
+                if(build.receivePulse(pulsePressure/distributeTo.size, this)) removePulse(pulsePressure/distributeTo.size);
             });
         }
 
@@ -130,7 +131,7 @@ public class PulseSapper extends PulseBlock {
 
         @Override
         public boolean canReceivePulse(float pulse, Pulsec build){
-            return build instanceof PulseCanalc && pulse + pulseModule.pulse < pulseStorage + (canOverload ? overloadCapacity : 0);
+            return false;
         }
 
         @Override

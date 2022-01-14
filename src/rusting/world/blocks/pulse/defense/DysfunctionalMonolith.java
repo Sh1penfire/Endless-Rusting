@@ -76,9 +76,9 @@ public class DysfunctionalMonolith extends PulseBlock {
         public Vec2 holloPos = new Vec2(x, y);
         @Nullable
         public Posc target = null;
-        //whether reading is finished, and whetehr to find a target based on read id
+        //whether reading is finished, and whetehr to find a target based on readMount id
         public boolean finishedRead = false, previousTargetFound = false;
-        //for finding which type of target after read
+        //for finding which type of target after readMount
         public int switchCase = 2;
         //target id
         @Nullable

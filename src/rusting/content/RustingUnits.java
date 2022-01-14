@@ -31,12 +31,12 @@ import rusting.ai.types.MultiSupportAI;
 import rusting.entities.abilities.*;
 import rusting.entities.bullet.*;
 import rusting.entities.units.*;
-import rusting.entities.units.flying.CraeUnitEntity;
-import rusting.entities.units.flying.StingrayUnitEntity;
+import rusting.entities.units.flying.*;
 import rusting.entities.units.mech.BaseUnit;
 import rusting.entities.units.spider.BaseSpiderEntity;
 import rusting.entities.units.spider.SpecialWeaponsSpider;
-import rusting.entities.units.weapons.SpecialBulletWeapon;
+import rusting.entities.units.weapons.*;
+import rusting.entities.units.weapons.mounts.*;
 import rusting.interfaces.Targeting;
 
 import static arc.graphics.g2d.Draw.color;
@@ -44,7 +44,7 @@ import static rusting.EndlessRusting.modname;
 import static rusting.content.RustingAISwitches.*;
 
 public class RustingUnits implements ContentList{
-    //Steal from BetaMindy
+
     private static Entry<Class<? extends Entityc>, Prov<? extends Entityc>>[] types = new Entry[]{
             prov(youshoudntbehere.class, youshoudntbehere::new),
             prov(StingrayUnitEntity.class, StingrayUnitEntity::new),
@@ -52,7 +52,8 @@ public class RustingUnits implements ContentList{
             prov(BaseUnitEntity.class, BaseUnitEntity::new),
             prov(BaseUnit.class, BaseUnit::new),
             prov(BaseSpiderEntity.class, BaseSpiderEntity::new),
-            prov(SpecialWeaponsSpider.class, SpecialWeaponsSpider::new)
+            prov(SpecialWeaponsSpider.class, SpecialWeaponsSpider::new),
+            prov(SpecialWeaponsFlying.class, SpecialWeaponsFlying::new)
     };
 
     private static ObjectIntMap<Class<? extends Entityc>> idMap = new ObjectIntMap<>();
@@ -61,6 +62,7 @@ public class RustingUnits implements ContentList{
      * Internal function to flatmap {@code Class -> Prov} into an {@link Entry}.
      * @author GlennFolker
      */
+
     private static <T extends Entityc> Entry<Class<T>, Prov<T>> prov(Class<T> type, Prov<T> prov){
         Entry<Class<T>, Prov<T>> entry = new Entry<>();
         entry.key = type;
@@ -70,60 +72,82 @@ public class RustingUnits implements ContentList{
 
     /**
      * Setups all entity IDs and maps them into {@link EntityMapping}.
-     * @author GlennFolker
+     * Find all free ids to map to, then put the Entry(s) from types into the idMap. Starts searching after the last known index of a vanilla Entry
      */
 
     private static void setupID(){
-        for(
-                int i = 0,
-                j = 0,
-                len = EntityMapping.idMap.length;
+        int start = 33;
+        int[] free = new int[types.length - 1];
+        for (int i = start, j = 0; i < EntityMapping.idMap.length; i++) {
+            if(EntityMapping.idMap[i] == null) free[j++] = i;
+            if(j > free.length - 1) break;
+        }
 
-                i < len;
-
-                i++
-        ){
-            if(EntityMapping.idMap[i] == null){
-                idMap.put(types[j].key, i);
-                EntityMapping.idMap[i] = types[j].value;
-
-                if(++j >= types.length) break;
-            }
+        for (int i = 0; i < free.length; i++) {
+            idMap.put(types[i].key, free[i]);
+            EntityMapping.idMap[free[i]] = types[i].value;
         }
     }
 
-    /**
-     * Retrieves the class ID for a certain entity type.
-     * @author GlennFolker
-     */
+
     public static <T extends Entityc> int classID(Class<T> type){
         return idMap.get(type, -1);
     }
 
-    public static CraeUnitType
-        duono, duoly, duanga;
     public static UnitType
+        //support Pulse
+        duono, duoly, duanga,
+        //hunter Pulse
+        posobility, austute,
+        //Acrilimyal's drone army
+        observantly, kindling, sharpen,
+        //Forgotten unit family
         marrow, metaphys, ribigen, spinascene, trumpedoot,
         diaphysis,
-        fahrenheit, celsius, kelvin;
-    public static UnitType
-        pulseBarrenBezerker;
-    public static UnitType
-        stingray;
-    //Acrimynal's drone army
-    public static AcriUnitType
-        observantly, kindling, sharpen;
-    //crux
-    public static UnitType
-        fusee;
-    public static UnitType
-        SYSTEM_DELETED_UNIT;
+        //Pulse ground tree
+        fahrenheit, celsius, kelvin,
+        //walls
+        pulseBarrenBezerker,
+        //boss units
+        stingray,
+        //crux units
+        fusee,
+        //something
+        SYSTEM_DELETED_UNIT,
+        //player's unit
+        player;
 
     @Override
     public void load() {
         setupID();
 
-        EntityMapping.nameMap.put("duono", CraeUnitEntity::new);
+        /*
+        player = new UnitType("player"){{
+            //Placeholder unit type
+        }};
+
+         */
+
+        MountType.registry.put(
+                "default",
+                UnitMount::new
+        );
+
+        MountType.registry.put(
+                "shoot",
+                ShootUnitMount::new
+        );
+
+        MountType.registry.put(
+                "bullet",
+                BulletUnitMount::new
+        );
+
+        MountType.registry.put(
+                "pointlaser",
+                PointLaserUnitMount::new
+        );
+
         duono = new CraeUnitType("duono"){{
 
             defaultController = MultiSupportAI::new;
@@ -165,7 +189,6 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("duoly", CraeUnitEntity::new);
         duoly = new CraeUnitType("duoly"){{
             defaultController = MultiSupportAI::new;
 
@@ -203,7 +226,6 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("duanga", CraeUnitEntity::new);
         duanga = new CraeUnitType("duanga"){{
             defaultController = MultiSupportAI::new;
 
@@ -262,9 +284,33 @@ public class RustingUnits implements ContentList{
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duoly);
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duanga);
 
+        austute = new SpecialWeaponsUnitType("austute"){{
+            flying = true;
+            lowAltitude = true;
+            speed = 1.2f;
+            accel = 0.5f;
+            drag = 0.05f;
+            weapons.add(
+                    new Weapon("clear") {{
+                        bullet = new ConsBulletType(0.001f, 0, "clear"){{
+                            range = 280;
+                            useRange = true;
+                        }};
+                        shots = 0;
+                    }}
+            );
+            specialMounts.add(
+                    new PointLaserMountType("austute-laser"){{
+                        reload = 75;
+                        rotateSpeed = 0;
+                    }}
+            );
+            constructor = SpecialWeaponsFlying::new;
+            defaultController = MultiSupportAI::new;
+        }};
 
-        EntityMapping.nameMap.put("fahrenheit", BaseUnit::new);
-        fahrenheit = new UnitType("fahrenheit"){{
+
+        fahrenheit = new BaseUnitType("fahrenheit"){{
 
             flying = false;
             canBoost = true;
@@ -345,8 +391,7 @@ public class RustingUnits implements ContentList{
             }
         });
 
-        EntityMapping.nameMap.put("celsius", BaseUnit::new);
-        celsius = new UnitType("celsius"){{
+        celsius = new BaseUnitType("celsius"){{
             flying = false;
             canBoost = true;
             hitSize = 11;
@@ -462,8 +507,7 @@ public class RustingUnits implements ContentList{
 
         }};
 
-        EntityMapping.nameMap.put("kelvin", BaseUnit::new);
-        kelvin = new UnitType("kelvin"){{
+        kelvin = new BaseUnitType("kelvin"){{
 
             flying = false;
             canBoost = true;
@@ -603,8 +647,7 @@ public class RustingUnits implements ContentList{
 
         }};
 
-        EntityMapping.nameMap.put("pulse-barren-bezerker", BaseUnit::new);
-        pulseBarrenBezerker = new UnitType("pulse-barren-bezerker"){{
+        pulseBarrenBezerker = new BaseUnitType("pulse-barren-bezerker"){{
             health = 85;
             armor = 5;
             drawCell = false;
@@ -642,8 +685,7 @@ public class RustingUnits implements ContentList{
             immunities.addAll(StatusEffects.unmoving, RustingStatusEffects.balancedPulsation);
         }};
 
-        EntityMapping.nameMap.put("marrow", BaseUnit::new);
-        marrow = new UnitType("marrow"){{
+        marrow = new BaseUnitType("marrow"){{
             hitSize = 8;
             health = 215;
             armor = 1;
@@ -685,8 +727,7 @@ public class RustingUnits implements ContentList{
 
         }};
 
-        EntityMapping.nameMap.put("metaphys", BaseUnit::new);
-        metaphys = new UnitType("metaphys"){{
+        metaphys = new BaseUnitType("metaphys"){{
             hitSize = 10;
             health = 830;
             armor = 4;
@@ -731,8 +772,7 @@ public class RustingUnits implements ContentList{
 
         }};
 
-        EntityMapping.nameMap.put("ribigen", BaseUnit::new);
-        ribigen = new UnitType("ribigen"){{
+        ribigen = new BaseUnitType("ribigen"){{
             hitSize = 13;
             health = 1235;
             armor = 10;
@@ -802,8 +842,7 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("spinascene", BaseUnit::new);
-        spinascene = new UnitType("spinascene"){{
+        spinascene = new BaseUnitType("spinascene"){{
             hitSize = 24;
             health = 9760;
             armor = 13;
@@ -873,8 +912,7 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("trumpedoot", BaseUnit::new);
-        trumpedoot = new UnitType("trumpedoot"){{
+        trumpedoot = new BaseUnitType("trumpedoot"){{
             hitSize = 28;
             health = 29500;
             armor = 19;
@@ -939,7 +977,6 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("diaphysis", SpecialWeaponsSpider::new);
         diaphysis = new SpecialWeaponsUnitType("diaphysis"){{
             hitSize = 15;
             health = 4500;
@@ -969,7 +1006,8 @@ public class RustingUnits implements ContentList{
             singleTarget = false;
             defaultController = GroundAI::new;
 
-            specialWeapons.addAll(new SpecialBulletWeapon(modname + "-diaphysis-harpoon-launcher"){{
+            specialMounts.addAll(
+                new BulletMountType(modname + "-diaphysis-harpoon-launcher"){{
                 bulletType = RustingBullets.stingrayShard;
                 y = -5;
                 x = 0;
@@ -990,14 +1028,16 @@ public class RustingUnits implements ContentList{
                 new Weapon(modname + "-diaphysis-backwards-launcher"){{
                     bullet = RustingBullets.raehWeaver;
                     shots = 3;
+                    shotDelay = 5;
                     reload = 120;
+                    inaccuracy = 5;
                     recoil = 4;
                     alternate = false;
                     top = false;
                     x = 0f;
                     y = 0f;
-                    shootX = 6.5f;
-                    shootY = -3.25f;
+                    shootX = 8.5f;
+                    shootY = -12.5f;
                     shootSound = Sounds.bang;
                     soundPitchMax = 0.5f;
                     soundPitchMin = 0.35f;
@@ -1006,8 +1046,7 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("guardian-sulphur-stingray", StingrayUnitEntity::new);
-        stingray = new UnitType("guardian-sulphur-stingray"){{
+        stingray = new BaseUnitType("guardian-sulphur-stingray"){{
             health = 6500;
             armor = 2;
             rotateSpeed = 3.65f;
@@ -1025,7 +1064,7 @@ public class RustingUnits implements ContentList{
             constructor = StingrayUnitEntity::new;
             if(Version.number < 7) defaultController = BossStingrayAI::new;
             else defaultController = FlyingAI::new;
-            //yadayadablahblahblah nobody can read this sh1p
+            //yadayadablahblahblah nobody can readMount this sh1p
             abilities.addAll(
                 new RegenerationAbility(0.75f)
             );
@@ -1124,7 +1163,33 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("observantly", BaseUnitEntity::new);
+        fusee = new BaseUnitType("fusee"){{
+            flying = true;
+            lowAltitude = true;
+            circleTarget = true;
+            health = 350;
+            armor = 2;
+
+            speed = 2.5f;
+            accel = 0.5f;
+            drag = 0.15f;
+
+            constructor = BaseUnitEntity::new;
+
+            weapons.add(
+                    new Weapon("clear"){{
+                        rotate = false;
+                        mirror = false;
+                        bullet = RustingBullets.shortPyraFlame;
+                        reload = 6;
+                        shootSound = Sounds.flame2;
+                        shots = 1;
+                        x = 0;
+                        shootY = 8;
+                    }}
+            );
+        }};
+
         observantly = new AcriUnitType("observantly"){{
 
             flying = true;
@@ -1180,7 +1245,6 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("kindling", BaseUnitEntity::new);
         kindling = new AcriUnitType("kindling"){{
             flying = true;
 
@@ -1205,7 +1269,6 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("kindling", BaseUnitEntity::new);
         sharpen = new AcriUnitType("sharpen"){{
             flying = true;
             circleTarget = true;
@@ -1273,8 +1336,7 @@ public class RustingUnits implements ContentList{
             );
         }};
 
-        EntityMapping.nameMap.put("SYSTEM_DELETED_UNIT", youshoudntbehere::new);
-        SYSTEM_DELETED_UNIT = new UnitType("SYSTEM_DELETED_UNIT"){{
+        SYSTEM_DELETED_UNIT = new BaseUnitType("SYSTEM_DELETED_UNIT"){{
             health = 50000;
             armor = 10;
             speed = 2;

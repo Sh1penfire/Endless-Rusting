@@ -4,7 +4,7 @@ import arc.func.Func2;
 import arc.struct.Seq;
 import rusting.Varsr;
 
-//A format for information, and is read based on the type of format. Load method used to define actual name, and icon for ui.
+//A format for information, and is readMount based on the type of format. Load method used to define actual name, and icon for ui.
 public class DataFormat extends UnlockableERContent{
 
     //Data formats which you can convert to. Method of preventing converting to an incompatible datatype.

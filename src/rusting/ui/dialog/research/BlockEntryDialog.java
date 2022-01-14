@@ -68,7 +68,6 @@ public class BlockEntryDialog extends CustomBaseDialog {
 
                 if (map.size == 0) continue;
 
-                //TODO check
                 if (stats.useCategories) {
                     table.add("@category." + cat.name()).color(Pal.accent).fillX();
                     table.row();
