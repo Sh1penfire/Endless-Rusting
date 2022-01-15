@@ -1185,7 +1185,7 @@ public class RustingUnits implements ContentList{
                         shootSound = Sounds.flame2;
                         shots = 1;
                         x = 0;
-                        shootY = 8;
+                        shootY = 5.25f;
                     }}
             );
         }};

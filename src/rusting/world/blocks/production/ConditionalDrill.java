@@ -6,7 +6,6 @@ import mindustry.type.Item;
 import mindustry.world.Tile;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.production.Drill;
-import rusting.Varsr;
 
 //placeable only on certain tiles, outputs a certain item. Essentially custom drop system;
 public class ConditionalDrill extends Drill {
@@ -31,7 +30,6 @@ public class ConditionalDrill extends Drill {
     public Item getDrop(Tile tile) {
         returnItem = null;
         drops.each(d -> {
-            if(!Varsr.debug && d.debug) return;
             //why tf would you put something harder than what the drill can mine in the item drop pool anyways
             if(d.floors.contains(tile.floor())) returnItem = d.item;
         });

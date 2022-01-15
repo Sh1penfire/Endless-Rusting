@@ -33,7 +33,7 @@ public class RustedContentLoader {
             new ERContentType("unused"),
             new ERContentType("capsule"),
             new ERContentType("researchType"),
-            new ERContentType("unlockableAchievement"),
+            new ERContentType("achievement"),
             new ERContentType("logicFormat"),
             new ERContentType("aiSwitch")
     );

@@ -15,9 +15,9 @@ import mindustry.game.EventType.Trigger;
 import mindustry.gen.Building;
 import mindustry.type.ItemStack;
 import mindustry.world.Tile;
+import mindustry.world.meta.BuildVisibility;
 import rusting.ai.AISwitches;
-import rusting.content.Fxr;
-import rusting.content.RustingAchievements;
+import rusting.content.*;
 import rusting.core.RustedContentLoader;
 import rusting.core.Rusting;
 import rusting.core.holder.ItemScoreHolder;
@@ -27,6 +27,7 @@ import rusting.game.*;
 import rusting.ui.RustingUI;
 import rusting.util.MusicControl;
 import rusting.world.Worldr;
+import rusting.world.blocks.defense.turret.BerthaTurret;
 import rusting.world.blocks.pulse.distribution.PulseCanal.PulseCanalBuild;
 import rusting.world.format.holder.FormatHolder;
 import rusting.world.research.RustingResearch;
@@ -154,21 +155,24 @@ public class Varsr implements Loadable {
 
     public static void begin(){
         research.setupGameResearch();
-        //sectors.readNodes();
+        sectors.readNodes();
     }
 
     public static void end(){
         research.saveGameResearch();
-        //sectors.writeNodes();
+        sectors.writeNodes();
+    }
+
+    public static void flare(){
+        Vars.enableConsole = true;
+        ((BerthaTurret) RustingBlocks.glare).stateRegion = Core.atlas.find(RustingBlocks.glare.name + "-state-alternate");
     }
 
     public static void debug(){
         Vars.enableConsole = true;
-        /*
         Vars.content.blocks().each(b -> {
             if(b.name.contains("endless-rusting") && b.buildVisibility == BuildVisibility.hidden && b.synthetic()) b.buildVisibility = BuildVisibility.shown;
         });
-        */
 
         defaultRandomQuotes = Seq.with(
             "[cyan] Welcome back " + username,

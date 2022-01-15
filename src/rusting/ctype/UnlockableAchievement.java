@@ -22,6 +22,6 @@ public class UnlockableAchievement extends UnlockableERContent{
 
     @Override
     public ERContentType getContentType() {
-        return Varsr.content.getContentType("unlockableAchievement");
+        return Varsr.content.getContentType("achievement");
     }
 }

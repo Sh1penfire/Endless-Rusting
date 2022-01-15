@@ -42,19 +42,19 @@ public class PulseCanal extends PulseBlock {
         //Todo: make all of this a single Array
         baseRegion = new TextureRegion[]{
                 Core.atlas.find(name + "-base", region),
-                Core.atlas.find(name + "-base-input", region)
+                Core.atlas.find(name + "-input-base", region)
         };
         shineRegion = new TextureRegion[]{
                 Core.atlas.find(name + "-shine", region),
-                Core.atlas.find(name + "-shine-input", region)
+                Core.atlas.find(name + "-input-shine", region)
         };
         topRegion = new TextureRegion[]{
                 Core.atlas.find(name + "-top", region),
-                Core.atlas.find(name + "-top-input", region)
+                Core.atlas.find(name + "-input-top", region)
         };
         fullRegion = new TextureRegion[]{
                 Core.atlas.find(name + "-full", region),
-                Core.atlas.find(name + "-full-input", region)
+                Core.atlas.find(name + "-input-full", region)
         };
     }
 
@@ -86,14 +86,14 @@ public class PulseCanal extends PulseBlock {
         public Tile canalInput = tile;
         public Tile canalEnding = tile;
 
-        public int input = 0;
+        public int input = 1;
 
         @Override
         public void onProximityUpdate() {
             super.onProximityUpdate();
             canalEnding = next();
             canalInput = behind();
-            input = canalInput != null ? 0 : 1;
+            input = canalInput == null ? 1 : 0;
         }
 
         @Override
@@ -123,7 +123,7 @@ public class PulseCanal extends PulseBlock {
         }
 
         public Tile behind(){
-            Tile behind = tile.nearby((rotation + 2) % 3);
+            Tile behind = tile.nearby((rotation + 2) % 4);
             if(behind.build instanceof PulseCanalc && ((PulseCanalc) behind.build).canConnect(this) && canReceive(behind.build)){
                 return behind;
             }
@@ -148,27 +148,24 @@ public class PulseCanal extends PulseBlock {
 
         @Override
         public boolean canConnect(Building b){
-            return b instanceof PulseCanalc && (!b.block.rotate || b.rotation == rotation && adjacentRotational(b.tile)) && canalInput instanceof PulseCanalc || canalInput == null && b instanceof Pulsec;
+            return b instanceof PulseCanalc && (!b.block.rotate || b.rotation == rotation && adjacentRotational(b.tile));
+        }
+
+        @Override
+        public boolean connectableTo() {
+            return input == 1;
         }
 
         @Override
         public boolean canReceive(Building b){
-            return b instanceof Pulsec && behindRotational(b.tile);
+            return b instanceof Pulsec && behindRotational(b.tile) || input == 1;
         }
 
         @Override
         public boolean canReceivePulse(float pulse, Pulsec build) {
-            return super.canReceivePulse(pulse, build) && (build instanceof PulseCanalc || build == this) && canReceive(((PulseBlockc) build).tile().build);
+            return super.canReceivePulse(pulse, build) && (build instanceof PulseCanalc || build == this) && canReceive(((PulseCanalc) build).tile().build);
         }
         //Vars.world.buildWorld(Core.input.mouseWorld().x, Core.input.mouseWorld().y).setupEnding()
-
-        @Override
-        public void placed() {
-            super.placed();
-            canalEnding = next();
-            canalInput = behind();
-            input = canalInput != null ? 1 : 0;
-        }
 
         @Override
         public void draw() {

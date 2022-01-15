@@ -1141,7 +1141,6 @@ public class RustingBullets implements ContentList{
         float bulletRange = 875;
 
         infectedGeneratorCoreNuke = new BulletSpawnBulletType(0, Float.MAX_VALUE, "none"){
-
             @Override
             public void update(Bullet b){
                 {
@@ -1151,14 +1150,13 @@ public class RustingBullets implements ContentList{
                         bulletFinpow = Interp.pow3Out.apply(b.fin());
                         Groups.unit.intersect(b.x - bulletRange * bulletFinpow, b.y - bulletRange * bulletFinpow, bulletRange * 2 * bulletFinpow, bulletRange * 2 * bulletFinpow).each(u -> {
                             if(b.dst(u) > bulletRange * bulletFinpow) return;
-                            u.damagePierce((u.type.hitSize * u.type.hitSize * u.type.hitSize)/12000 * Time.delta * (1 - bulletFinpow) * b.dst(u)/bulletRange);
+                            u.damagePierce(1.5f + Mathf.clamp((u.type.hitSize * u.type.hitSize * u.type.hitSize)/12000, 0, 100) * Time.delta * (1 - bulletFinpow) * b.dst(u)/bulletRange);
                             u.impulse(Tmp.v1.trns(b.angleTo(u), b.dst(u)/bulletRange * 10));
                             if(Mathf.chance(0.35)) Fxr.craeWeaverShards.at(u.x, u.y);
                         });
                     }
                 };
             }
-
             {
             lifetime = 1700;
             drawSize = 0;

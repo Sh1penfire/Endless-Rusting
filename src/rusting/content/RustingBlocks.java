@@ -816,8 +816,6 @@ public class RustingBlocks implements ContentList{
             minRequiredPulsePercent = 0.35f;
         }};
 
-        /*
-        //note: used as a replacement for scripted sector events
         infectedsGeneratorCore = new InfectedsGeneratorCore("infecteds-generator-core"){{
             requirements(Category.power, with(Items.lead, 450, Items.titanium, 650, Items.metaglass, 350, RustingItems.melonaleum, 350, RustingItems.gelChip, 540));
             centerResearchRequirements(true, with(Items.titanium, 1500, Items.metaglass, 2340, RustingItems.gelChip, 950, RustingItems.melonaleum, 1250));
@@ -837,11 +835,24 @@ public class RustingBlocks implements ContentList{
             minRequiredPulsePercent = 0.35f;
         }};
 
-         */
-
         //endregion collection
 
         //Loses power fast, but is great at transmitting pulses to far blocks.
+
+        pulseCanal = new PulseCanal("pulse-canal"){{
+            requirements(Category.power, with(Items.lead, 2, Items.titanium, 1));
+            centerResearchRequirements(false, with());
+        }};
+
+        pulseFlowSplitter = new PulseFlowSplitter("pulse-flow-splitter"){{
+            requirements(Category.power, with(Items.lead, 4, Items.titanium, 3));
+            centerResearchRequirements(false, with());
+        }};
+
+        pulseCanalTunnel = new PulseCanalTunnel("pulse-tunnel-dock"){{
+            hideFromUI();
+        }};
+
         pulseNode = new PulseNode("pulse-node"){{
             requirements(Category.power, with(Items.copper, 5, Items.lead, 4, Items.titanium, 3));
             centerResearchRequirements(true, with(Items.copper, 120, Items.lead, 95, Items.titanium, 65));
@@ -1022,25 +1033,6 @@ public class RustingBlocks implements ContentList{
             healPercent = 26;
             healPercentFalloff = healPercent/3;
             overdrivePercent = 0.65f;
-        }};
-
-        pulseTeleporterController = new PulseTeleporterController("pulse-teleporter-controller"){{
-            pulseStorage = 1000;
-            hideFromUI();
-        }};
-
-        pulseFlowSplitter = new PulseFlowSplitter("pulse-flow-splitter"){{
-            requirements(Category.power, with(Items.lead, 4, Items.titanium, 3));
-            hideFromUI();
-        }};
-
-        pulseCanal = new PulseCanal("pulse-canal"){{
-            requirements(Category.power, with(Items.lead, 2, Items.titanium, 1));
-            hideFromUI();
-        }};
-
-        pulseCanalTunnel = new PulseCanalTunnel("pulse-canal-tunnel"){{
-            hideFromUI();
         }};
 
         smallParticleSpawner = new PulseParticleSpawner("small-particle-spawner"){{
@@ -1911,7 +1903,7 @@ public class RustingBlocks implements ContentList{
 
         pulseDistributor = new PulsePoint("pulse-distributor"){{
             requirements(Category.units, with(Items.lead, 465, Items.metaglass, 245, Items.pyratite, 85, Items.titanium, 85));
-
+            hideFromUI();
         }};
 
         //endregion
