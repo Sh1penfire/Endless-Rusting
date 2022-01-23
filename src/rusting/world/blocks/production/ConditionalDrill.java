@@ -14,9 +14,9 @@ public class ConditionalDrill extends Drill {
     //allows you to mine default ores
     public boolean canMineDefault = false;
 
-    public Seq<ItemModule> drops = new Seq<ItemModule>();
+    public Seq<ItemDrop> drops = new Seq<ItemDrop>();
 
-    public static class ItemModule{
+    public static class ItemDrop{
         public Item item = Items.coal;
         public Seq<Floor> floors = new Seq<Floor>();
         public boolean debug = false;
@@ -24,6 +24,26 @@ public class ConditionalDrill extends Drill {
 
     public ConditionalDrill(String name) {
         super(name);
+    }
+
+    @Override
+    public void setStats() {
+        super.setStats();
+        /*
+        stats.add(Stat.output, table -> {
+            table.row();
+            table.add("Mineable Blocks");
+            table.image().width(180);
+            ItemDrop tmpDrop = null;
+            for (int i = 0; i < drops.size; i++){
+                tmpDrop = drops.get(i);
+                tmpDrop.floors.each(f -> {
+                    table
+                });
+            }
+        });
+
+         */
     }
 
     @Override

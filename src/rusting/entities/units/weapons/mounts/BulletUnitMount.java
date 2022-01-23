@@ -1,5 +1,6 @@
 package rusting.entities.units.weapons.mounts;
 
+import arc.util.Log;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
@@ -37,11 +38,14 @@ public class BulletUnitMount extends ShootUnitMount{
     }
 
     @Override
-    public void write(Writes w) {
-        super.write(w);
+    protected void writeMount(Writes w) {
+        super.writeMount(w);
+
         w.str(bulletType.minfo.mod != null ? bulletType.minfo.mod.name : "");
         w.s(bulletType.id);
         w.s(Vars.content.bullets().copy().filter(b -> b.minfo.mod == bulletType.minfo.mod).get(0).id);
+
+        Log.info("wrote from mount");
     }
 
     @Override
@@ -49,6 +53,8 @@ public class BulletUnitMount extends ShootUnitMount{
         super.readMount(r, revision);
 
         bulletType = RustingBullets.findBullet(r.str(), r.s(), r.s());
+
+        Log.info("finished reading mount");
     }
 }
 

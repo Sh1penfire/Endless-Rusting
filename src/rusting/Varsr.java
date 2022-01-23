@@ -155,12 +155,12 @@ public class Varsr implements Loadable {
 
     public static void begin(){
         research.setupGameResearch();
-        sectors.readNodes();
+        //sectors.readNodes();
     }
 
     public static void end(){
         research.saveGameResearch();
-        sectors.writeNodes();
+        //sectors.writeNodes();
     }
 
     public static void flare(){

@@ -68,17 +68,17 @@ public class UnitMount {
     }
 
     public void write(Writes w){
-        boolean attached = type != null;
+        boolean attached = type == null;
         w.bool(attached);
 
-        if(attached) {
+        if(!attached) {
             w.i(type.position);
             writeFirst(w);
             writeWeapon(w);
             return;
         }
 
-        //if the type is null assume that no valid type has been found
+        //if the type is null assume that no weapon has been found
         w.str(name);
         writeFirst(w);
         writeMount(w);

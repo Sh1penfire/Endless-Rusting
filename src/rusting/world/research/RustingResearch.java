@@ -179,8 +179,7 @@ public class RustingResearch {
 
     public Building getCenter(Seq<ResearchType> types, Team team){
         Boolf<ResearchCenter> centercons = c -> {
-            Seq<ResearchType> reearchSeq = Seq.with();
-            reearchSeq.set(types);
+            Seq<ResearchType> reearchSeq = types.copy();
             c.researchTypes().each(r -> {
                 if(reearchSeq.contains(r)) reearchSeq.remove(r);
             });

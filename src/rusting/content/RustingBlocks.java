@@ -715,19 +715,19 @@ public class RustingBlocks implements ContentList{
             size = 2;
             tier = 2;
             drops = Seq.with(
-                new ItemModule(){{
+                new ItemDrop(){{
                     item = RustingItems.taconite;
                     floors = Seq.with(Blocks.stone.asFloor(), Blocks.craters.asFloor(), Blocks.basalt.asFloor());
                 }},
-                new ItemModule(){{
+                new ItemDrop(){{
                     item = Items.sand;
                     floors = Seq.with(Blocks.sand.asFloor(), Blocks.darksand.asFloor(), Blocks.sandWater.asFloor(), Blocks.darksandWater.asFloor());
                 }},
-                new ItemModule(){{
+                new ItemDrop(){{
                     item = Items.coal;
                     floors = Seq.with(Blocks.charr.asFloor());
                 }},
-                new ItemModule(){{
+                new ItemDrop(){{
                     item = RustingItems.halsinte;
                     floors = Seq.with(Blocks.salt.asFloor(), salineStolnene.asFloor());
                 }}

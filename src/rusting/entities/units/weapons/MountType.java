@@ -58,6 +58,7 @@ public class MountType {
 
     //called upon a new mount being initialized
     public void init(UnitMount mount){
+        mount.type = this;
         mount.x = x;
         mount.y = y;
         mount.rotationSpeed = rotateSpeed;

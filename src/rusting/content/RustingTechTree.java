@@ -11,6 +11,7 @@ import mindustry.ctype.ContentList;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType;
 import mindustry.type.ItemStack;
+import mindustry.type.SectorPreset;
 import rusting.Varsr;
 import rusting.game.RustedObjectives.DestroyBlocksObjective;
 
@@ -306,7 +307,7 @@ public class RustingTechTree implements ContentList {
                         node(sulphuricSea, Seq.with(new SectorComplete(volenChannels), new SectorComplete(crystallineCrags), new SectorComplete(pulsatingGroves), new Research(triagon), new Research(steamGenerator), new Research(laserDrill), new Objective() {
                             @Override
                             public boolean complete() {
-                                return true;//crystallineCrags.unlockedNow();
+                                return sectorComplete(volenChannels) && sectorComplete(crystallineCrags) && sectorComplete(pulsatingGroves);
                             }
 
                             @Override
@@ -394,5 +395,9 @@ public class RustingTechTree implements ContentList {
 
     private static void debugNode(UnlockableContent content, Runnable children){
         node(content, ItemStack.with(), null, true, children);
+    }
+
+    private static boolean sectorComplete(SectorPreset preset){
+        return preset.sector.save != null && (!preset.sector.isAttacked() || preset.sector.info.wasCaptured) && preset.sector.hasBase();
     }
 }
