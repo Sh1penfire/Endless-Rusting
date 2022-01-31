@@ -43,7 +43,7 @@ public class EndlessRusting extends Mod{
             ModSounds.load();
             Core.app.post(RustedShaders::load);
         });
-        registerKeybinds();
+        //registerKeybinds();
 
         Core.settings.defaults("er.drawtrails", true);
         Core.settings.defaults("er.advancedeffects", true);
