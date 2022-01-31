@@ -162,6 +162,7 @@ public class EndlessRusting extends Mod{
         Color.sky.set(Palr.pulseChargeStart);
     }
 
+    /*
     public void registerKeybinds(){
         Axis repsawn = Core.keybinds.get(Binding.respawn);
         Events.on(Trigger.update.getClass(), e -> {
@@ -172,4 +173,5 @@ public class EndlessRusting extends Mod{
             }
         });
     }
+    */
 }
