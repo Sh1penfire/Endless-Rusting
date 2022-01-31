@@ -52,10 +52,10 @@ public class UnitMount {
 
     //always called
     public void read(Reads r, byte revision, boolean attached){
+        if(attached) readMount(r, revision);
 
         reload = r.f();
         rotation = r.f();
-        if(attached) readMount(r, revision);
 
     }
 
@@ -73,15 +73,15 @@ public class UnitMount {
 
         if(!attached) {
             w.i(type.position);
-            writeFirst(w);
             writeWeapon(w);
+            writeFirst(w);
             return;
         }
 
         //if the type is null assume that no weapon has been found
         w.str(name);
-        writeFirst(w);
         writeMount(w);
+        writeFirst(w);
     }
 
     //stuf that's always written first, like reload and such

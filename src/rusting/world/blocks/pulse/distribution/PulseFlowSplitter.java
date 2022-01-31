@@ -6,6 +6,7 @@ import arc.util.*;
 import mindustry.Vars;
 import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
+import mindustry.gen.Entityc;
 import mindustry.graphics.Layer;
 import mindustry.world.Tile;
 import rusting.interfaces.Pulsec;
@@ -36,6 +37,13 @@ public class PulseFlowSplitter extends PulseCanal {
 
     public class PulseFlowSplitterBuild extends PulseCanalBuild{
 
+        public Seq<Pulsec> distributeTo = Seq.with();
+
+        @Override
+        public void setupCanal(){
+            findTiles();
+        }
+
         @Override
         public void draw() {
             Draw.rect(baseRegion[0], x, y, 0);
@@ -51,6 +59,18 @@ public class PulseFlowSplitter extends PulseCanal {
             Draw.rect(topRegion[0], x, y, 0);
         }
 
+        public void findTiles(){
+
+            distributeTo.clear();
+
+            for (int i = 0; i < 4; i++) {
+                Tile next = Vars.world.tileWorld(x + Tmp.v1.trns(i * 90, 8).x, y + Tmp.v1.y);
+                if(next.build instanceof Pulsec && !(next.build instanceof PulseCanalc && !((PulseCanalc) next.build).canReceive(this))){
+                    distributeTo.add((Pulsec) next.build);
+                }
+            }
+        }
+
         @Override
         public void updateTile(){
             if(pulseModule.pulse >= moveAmount() && reload >= reloadTime){
@@ -63,15 +83,17 @@ public class PulseFlowSplitter extends PulseCanal {
 
         @Override
         public void movePulse() {
-            for (int i = 0; i < 4; i++) {
-                Tile next = Vars.world.tileWorld(x + Tmp.v1.trns(i * 90, 8).x, y + Tmp.v1.y);
-                if(next.build instanceof Pulsec && ((Pulsec) next.build).canReceivePulse(moveAmount(), this)){
-                    distribute.add((Pulsec) next.build);
+            distribute.clear();
+
+            distributeTo.each(b -> {
+                if(!((Entityc) b).isAdded()) {
+                    distribute.add(b);
+                    return;
                 }
-            }
-            distribute.each(build -> {
-                if(build.receivePulse(moveAmount()/distribute.size, this)) removePulse(moveAmount()/distribute.size);
+                if(b.receivePulse(moveAmount()/distributeTo.size, this)) removePulse(moveAmount()/distributeTo.size);
             });
+
+            distribute.each(b -> distributeTo.remove(b));
         }
 
         @Override

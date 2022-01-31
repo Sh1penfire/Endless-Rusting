@@ -22,6 +22,7 @@ public class RustingAchievements implements ContentList {
 
     @Override
     public void load() {
+
         shardlingSteps = new SectorBasedAchievement( "shardling-steps", 36, RustingPlanets.err) {{
 
         }};

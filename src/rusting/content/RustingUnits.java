@@ -281,7 +281,9 @@ public class RustingUnits implements ContentList{
 
         //make sure ai works, it uses these switches which are toggleable ingame
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duono);
+        Varsr.switches.mineItems.put(duono, Seq.with(Items.copper, Items.titanium, Items.lead, RustingItems.cameoShardling, RustingItems.taconite));
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duoly);
+        Varsr.switches.mineItems.put(duono, Seq.with(Items.titanium, Items.copper, RustingItems.cameoShardling, RustingItems.taconite, Items.lead));
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duanga);
 
         austute = new SpecialWeaponsUnitType("austute"){{

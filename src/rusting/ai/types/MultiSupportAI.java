@@ -2,6 +2,7 @@ package rusting.ai.types;
 
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
+import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Tmp;
 import mindustry.Vars;
@@ -44,6 +45,7 @@ public class MultiSupportAI extends FlyingAI {
     public float pulseGenRange = 0;
     public boolean canGenPulse = false;
     public boolean initializedCstats = false;
+    public Seq<Item> mineItems = Seq.with();
     Item targetItem;
     Tile ore;
 
@@ -64,6 +66,7 @@ public class MultiSupportAI extends FlyingAI {
                 if(pulseAmount > 0 && pulseGenRange > 0) canGenPulse = true;
                 minRepairRange = Math.min(pulseGenRange, minRepairRange);
             }
+            mineItems = Varsr.switches.mineItems.get(unit.type);
         }
     }
 
@@ -194,7 +197,7 @@ public class MultiSupportAI extends FlyingAI {
 
         if (mining) {
             if (mineTimer.get(timerTarget2, 60 * 4) || targetItem == null) {
-                if(core != null) targetItem = unit.team.data().mineItems.min(i -> indexer.hasOre(i) && unit.canMine(i), i -> core.items.get(i));
+                if(core != null) targetItem = mineItems.min(i -> indexer.hasOre(i) && unit.canMine(i), i -> core.items.get(i));
             }
 
             //core full of the target item, do nothing

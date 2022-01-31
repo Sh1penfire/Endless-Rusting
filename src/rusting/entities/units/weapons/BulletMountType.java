@@ -1,5 +1,6 @@
 package rusting.entities.units.weapons;
 
+import arc.util.Log;
 import mindustry.entities.bullet.BulletType;
 import rusting.content.RustingBullets;
 import rusting.entities.units.weapons.mounts.*;
@@ -13,11 +14,13 @@ public class BulletMountType extends ShootMountType {
     }
 
     @Override
-    public void init(UnitMount mount) {
+    public UnitMount init(UnitMount mount) {
         super.init(mount);
+        Log.info("init properly");
         if(mount instanceof BulletUnitMount){
             BulletUnitMount bulletMount = (BulletUnitMount) mount;
             bulletMount.bulletType = bulletType;
         }
+        return mount;
     }
 }

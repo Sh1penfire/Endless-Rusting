@@ -9,6 +9,7 @@ import arc.graphics.Pixmap.PixmapFilter;
 import arc.graphics.Pixmaps;
 import arc.struct.ObjectMap;
 import arc.util.OS;
+import mindustry.gen.Groups;
 
 import static mindustry.ui.Fonts.cursorScale;
 import static rusting.EndlessRusting.modname;

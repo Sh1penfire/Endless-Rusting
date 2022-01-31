@@ -37,8 +37,8 @@ public class ERSectorPreset extends SectorPreset {
     public void loadBundles(){
         unlockedInCampaign = true;
 
-        if(!alwaysUnlocked){
-            unlockedInCampaign = !Vars.enableConsole || Varsr.debug;
+        if(!alwaysUnlocked && !Varsr.debug){
+            unlockedInCampaign = !Vars.enableConsole;
             TechTree.get(this).objectives.each(o -> {
                 if(unlockedInCampaign && !o.complete()) unlockedInCampaign = false;
             });

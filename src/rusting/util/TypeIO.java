@@ -14,7 +14,8 @@ public class TypeIO {
         for (int i = 0; i < weapons; i++) {
             boolean atatched = r.bool();
             Log.info("mount was attached? " + atatched);
-            UnitMount mount = atatched ? MountType.registry.get(r.str()).get() : ((SpecialWeaponsUnitType) (unit.self().type)).specialMounts.get(r.i()).mountType.get();
+            UnitMount mount = atatched ? MountType.registry.get(r.str()).get() : ((SpecialWeaponsUnitType) (unit.self().type)).specialMounts.get(r.i()).createMount();
+
             unit.setupMount(mount);
 
             Log.info("mount is reading");

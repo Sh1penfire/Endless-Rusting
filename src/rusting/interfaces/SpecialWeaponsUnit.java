@@ -19,6 +19,7 @@ public interface SpecialWeaponsUnit {
         type.specialMounts.each(m -> {
             UnitMount mount = m.mountType.get();
             mount.owner = this;
+            m.init(mount);
             sMounts().add(mount);
         });
     }

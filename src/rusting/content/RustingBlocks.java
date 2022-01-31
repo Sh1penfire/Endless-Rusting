@@ -27,6 +27,7 @@ import rusting.core.holder.ShootingPanelHolder;
 import rusting.entities.bullet.BounceBulletType;
 import rusting.entities.bullet.BulletSpawnBulletType;
 import rusting.world.blocks.OverrideColourStaticWall;
+import rusting.world.blocks.PlayerCore;
 import rusting.world.blocks.capsules.CapsuleBlockResearchCenter;
 import rusting.world.blocks.defense.ProjectileAttackWall;
 import rusting.world.blocks.defense.turret.*;
@@ -1064,7 +1065,7 @@ public class RustingBlocks implements ContentList{
         }};
 
         //Todo: fully flesh this out
-        craeCore = new CoreBlock("crae-core"){{
+        craeCore = new PlayerCore("crae-core"){{
             requirements(Category.effect, BuildVisibility.editorOnly, with(Items.copper, 1000, Items.lead, 800));
             alwaysUnlocked = false;
 

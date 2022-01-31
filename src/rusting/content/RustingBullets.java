@@ -1419,7 +1419,7 @@ public class RustingBullets implements ContentList{
             drag = -0.001f;
         }};
 
-        denseLightGlaive = new BoomerangBulletType(1.35f, 35, "endless-rusting-glave-large"){{
+        denseLightGlaive = new BoomerangBulletType(1.35f, 85, "endless-rusting-glave-large"){{
             homingPower = 0.125f;
             homingRange = 8;
             homingDelay = 80;

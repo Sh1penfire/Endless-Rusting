@@ -768,6 +768,13 @@ public class Fxr{
         });
     }),
 
+    blueSpark = new Effect(30, e -> {
+        Draw.color(Palr.pulseBullet, Items.graphite.color, e.fout());
+        Angles.randLenVectors(e.id, 5, 35, 0, 360, (x, y) -> {
+            
+        });
+    }),
+
     skyractureShot = new Effect(25, e -> {
         Draw.alpha(0.75f * e.fout());
         Draw.color(Palr.pulseBullet, Items.titanium.color, e.fout());

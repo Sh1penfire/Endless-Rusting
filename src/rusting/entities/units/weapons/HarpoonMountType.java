@@ -3,8 +3,7 @@ package rusting.entities.units.weapons;
 import arc.func.Cons;
 import arc.math.geom.Vec2;
 import arc.struct.Seq;
-import mindustry.gen.Bullet;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import rusting.entities.units.weapons.mounts.UnitMount;
 
 public class HarpoonMountType extends BulletMountType {
@@ -107,17 +106,12 @@ public class HarpoonMountType extends BulletMountType {
 
     */
 
-    @Override
-    public void init(UnitMount mount) {
-        super.init(mount);
-        setupHarpoon(mount);
-    }
-
     public static HarpoonDataHolder getHarpoonHolder(UnitMount mount){
         return mount.data instanceof HarpoonDataHolder ? (HarpoonDataHolder) mount.data : setupHarpoon(mount);
     }
 
     public static HarpoonDataHolder setupHarpoon(UnitMount mount){
+        UnitEntity
         HarpoonDataHolder harpoon = new HarpoonDataHolder();
         mount.data = harpoon;
         return harpoon;

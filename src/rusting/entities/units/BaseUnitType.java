@@ -20,6 +20,12 @@ public class BaseUnitType extends UnitType {
     }
 
     @Override
+    public void init() {
+        super.init();
+        EntityMapping.nameMap.put(this.name, this.constructor);
+    }
+
+    @Override
     public void load() {
         super.load();
     }

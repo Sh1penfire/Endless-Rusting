@@ -16,7 +16,7 @@ public class ShootMountType extends MountType {
     public float shootX = 0, shootY = 0;
 
     @Override
-    public void init(UnitMount mount) {
+    public UnitMount init(UnitMount mount) {
         super.init(mount);
         if(mount instanceof ShootUnitMount){
             ShootUnitMount shoot = (ShootUnitMount) mount;
@@ -24,5 +24,6 @@ public class ShootMountType extends MountType {
             shoot.shootX = shootX;
             shoot.shootY = shootY;
         }
+        return mount;
     }
 }

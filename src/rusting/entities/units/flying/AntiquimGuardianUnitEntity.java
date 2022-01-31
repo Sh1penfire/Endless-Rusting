@@ -7,7 +7,6 @@ import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import rusting.Varsr;
 import rusting.content.Fxr;
 import rusting.entities.units.BaseUnitEntity;
 
@@ -26,7 +25,7 @@ public class AntiquimGuardianUnitEntity extends BaseUnitEntity {
 
     @Override
     public void kill() {
-        if((Vars.state.isCampaign() || Varsr.debug) && (health >= 1f || updatedHealth >= 1f)) {
+        if(Vars.state.isCampaign() && (health >= 1f || updatedHealth >= 1f)) {
             if(!(this.controller instanceof Player)) Log.info("Nice try. Your going to have to do better than that though.");
             else {
                 Log.info("I shall heed your command. I hope you know what you're doing");

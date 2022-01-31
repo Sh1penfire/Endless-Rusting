@@ -91,6 +91,10 @@ public class PulseCanal extends PulseBlock {
         @Override
         public void onProximityUpdate() {
             super.onProximityUpdate();
+            setupCanal();
+        }
+
+        public void setupCanal(){
             canalEnding = next();
             canalInput = behind();
             input = canalInput == null ? 1 : 0;

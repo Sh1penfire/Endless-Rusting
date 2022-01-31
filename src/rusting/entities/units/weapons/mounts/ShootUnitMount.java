@@ -52,8 +52,8 @@ public class ShootUnitMount extends UnitMount{
     }
 
     @Override
-    public void readMount(Reads r, byte revision) {
-        super.readMount(r, revision);
+    public void read(Reads r, byte revision, boolean attached) {
+        super.read(r, revision, attached);
         reloadTime = r.f();
         shootX = r.f();
         shootY = r.f();

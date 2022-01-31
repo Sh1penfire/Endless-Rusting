@@ -56,12 +56,17 @@ public class MountType {
         fullRegion = Core.atlas.find(name + "-full", region);
     }
 
+    public UnitMount createMount(){
+        return init(mountType.get());
+    }
+
     //called upon a new mount being initialized
-    public void init(UnitMount mount){
+    public UnitMount init(UnitMount mount){
         mount.type = this;
         mount.x = x;
         mount.y = y;
         mount.rotationSpeed = rotateSpeed;
+        return mount;
     }
 
     //override this to draw the weapon
