@@ -111,7 +111,6 @@ public class HarpoonMountType extends BulletMountType {
     }
 
     public static HarpoonDataHolder setupHarpoon(UnitMount mount){
-        UnitEntity
         HarpoonDataHolder harpoon = new HarpoonDataHolder();
         mount.data = harpoon;
         return harpoon;
