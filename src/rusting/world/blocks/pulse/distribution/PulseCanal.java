@@ -29,11 +29,9 @@ public class PulseCanal extends PulseBlock {
         schematicPriority = 10;
         resistance = 0;
         connectable = false;
-        liquidCapacity = 16f;
         liquidPressure = 1.025f;
         pulsePressure = 10f;
         pulseStorage = 15;
-        hasLiquids = true;
     }
 
     @Override
@@ -103,13 +101,8 @@ public class PulseCanal extends PulseBlock {
         @Override
         public void updateTile(){
             if(canalEnding != null){
-                if(pulseModule.pulse >= moveAmount() && reload >= reloadTime){
-                    for (float i = reloadTime; i < reload; i++) {
-                        movePulse();
-                        reload -= 1;
-                    }
-                }else{
-                    reload += Time.delta;
+                if(pulseModule.pulse >= moveAmount()){
+                    movePulse();
                 }
             }
             smoothPulse = Mathf.lerpDelta(smoothPulse, chargef(), 0.05f);
@@ -143,11 +136,11 @@ public class PulseCanal extends PulseBlock {
         }
 
         public boolean adjacentRotational(Tile t){
-            return ((int) (t.build.angleTo(this)/90) + 1) % 2 == (rotation + 1) % 2;
+            return Math.round((t.build.angleTo(this)/90) + 1) % 2 == (rotation + 1) % 2;
         }
 
         public boolean behindRotational(Tile t){
-            return ((int) t.build.angleTo( this)/90) == rotation;
+            return Math.round(t.build.angleTo( this)/90) == rotation;
         }
 
         @Override
@@ -167,7 +160,7 @@ public class PulseCanal extends PulseBlock {
 
         @Override
         public boolean canReceivePulse(float pulse, Pulsec build) {
-            return super.canReceivePulse(pulse, build) && (build instanceof PulseCanalc || build == this) && canReceive(((PulseCanalc) build).tile().build);
+            return super.canReceivePulse(pulse, build) && (input == 1 || (build instanceof PulseCanalc || build == this) && canReceive(((PulseCanalc) build).tile().build));
         }
         //Vars.world.buildWorld(Core.input.mouseWorld().x, Core.input.mouseWorld().y).setupEnding()
 

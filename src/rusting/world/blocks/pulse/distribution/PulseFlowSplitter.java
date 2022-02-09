@@ -21,6 +21,8 @@ public class PulseFlowSplitter extends PulseCanal {
         super(name);
         rotate = false;
         schematicPriority = 10;
+        pulseStorage = 45;
+        pulsePressure = 25;
     }
 
     @Override

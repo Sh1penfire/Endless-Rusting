@@ -171,7 +171,7 @@ public class InfectedsGeneratorCore extends PulseGenerator{
             RustingBullets.infectedGeneratorCoreNuke.create(null, null, x, y, 0f, Float.MAX_VALUE, 0f, 1f, null);
             Fxr.pulseSmoke.at(x, y, 0, new Float[]{range * 8, 5f});
             Fxr.spontaniumCOMBUSTOMTHATSTHESPELLWHICHMAKESANYONEWHOSAYSITEXPLO.at(x, y, Mathf.random(0, 360));
-            Sounds.laserblast.at(x, y, 0.35f);
+            ModSounds.zapHum.at(x, y, 0.35f, 100);
         }
 
         @Override

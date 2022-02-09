@@ -121,11 +121,15 @@ public class Drawr {
     }
 
     public static void drawPulseRegion(TextureRegion region, float x, float y, float rotation, Color drawCol, float alpha){
-        if(RustedShaders.loaded){
+        if(RustedShaders.loaded && Core.settings.getBool("pulseshader")){
             RustedShaders.pulseGradiant.startColor.set(drawCol);
             RustedShaders.pulseGradiant.alpha = alpha;
             Draw.shader(RustedShaders.pulseGradiant);
         }
+        else {
+            Draw.color(drawCol);
+            Draw.alpha(alpha);
+        };
         Draw.rect(region, x, y, rotation);
         Draw.shader();
     }

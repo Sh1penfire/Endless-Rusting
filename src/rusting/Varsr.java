@@ -77,6 +77,28 @@ public class Varsr implements Loadable {
     }
 
     public static void init(){
+        Vars.mods.getScripts().runConsole("importPackage(java.lang);");
+        //Vars.mods.getScripts().runConsole("importPackage(java.awt);");
+        Vars.mods.getScripts().runConsole("importPackage(Packages.rhino);");
+        //credits to GlenFolker
+        Vars.mods.getScripts().runConsole(
+                "function importl(name){\n" +
+                        "\n" +
+                        "let constr = Class.forName(\"rhino.NativeJavaPackage\").getDeclaredConstructor(java.lang.Boolean.TYPE, java.lang.String, ClassLoader);\n" +
+                        "constr.setAccessible(true);\n" +
+                        "\n" +
+                        "let p = constr.newInstance(true, name, Vars.mods.mainLoader());\n" +
+                        "\n" +
+                        "let scope = Reflect.get(Vars.mods.getScripts(), \"scope\");\n" +
+                        "Reflect.invoke(ScriptableObject, p, \"setParentScope\", [scope], [Scriptable]);\n" +
+                        "\n" +
+                        "importPackage(p); \n"+
+                        "\n" +
+                        "}"
+        );
+        Vars.mods.getScripts().runConsole("importl(\"rusting\")");
+        Vars.mods.getScripts().runConsole("importl(\"rusting.content\")");
+        Vars.mods.getScripts().runConsole("importl(\"rusting.ctype\")");
 
         defaultUsername = Core.bundle.get("settings.er.username.default", "the unnamed one");
         username = Core.settings.getString("settings.er.username", defaultUsername);

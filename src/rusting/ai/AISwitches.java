@@ -6,6 +6,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.Vars;
 import mindustry.game.Team;
+import mindustry.gen.Groups;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import rusting.Varsr;

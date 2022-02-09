@@ -1,12 +1,17 @@
 package rusting.world.blocks.pulse.defense;
 
+import arc.Core;
+import arc.graphics.Blending;
 import arc.graphics.Color;
-import arc.graphics.g2d.Fill;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.util.Time;
-import arc.util.Tmp;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import mindustry.content.Liquids;
 import mindustry.gen.Bullet;
+import mindustry.graphics.Layer;
 import rusting.content.Palr;
 import rusting.world.blocks.pulse.PulseBlock;
 
@@ -17,13 +22,24 @@ public class PulseBarrier extends PulseBlock {
     public Color shieldColourStart = Liquids.cryofluid.color, shieldColourEnd = Palr.pulseShieldEnd;
     public float maxShieldAlpha = 0.65f;
 
+    public TextureRegion closedRegion, shineRegion, topRegion;
+
     public PulseBarrier(String name) {
         super(name);
+    }
+
+    @Override
+    public void load() {
+        super.load();
+        closedRegion = Core.atlas.find(name + "-closed", region);
+        shineRegion = Core.atlas.find(name + "-shine", Core.atlas.find("clear"));
+        topRegion = Core.atlas.find(name + "-top", Core.atlas.find("clear"));
     }
 
     public class PulseBarrierBuild extends PulseBlockBuild{
 
         public float shieldAlpha = 0;
+        public float closed = 1;
 
         @Override
         public void update() {
@@ -44,9 +60,34 @@ public class PulseBarrier extends PulseBlock {
 
         @Override
         public void draw() {
-            super.draw();
-            float alpha = chargef(true) * fout(maxShieldAlpha) * fout(maxShieldAlpha);
-            Fill.light(x, y, 10, (size * 8 + 3) + fin(0.8f) * 6, Tmp.c1.set(shieldColourStart).lerp(saturatedColour, chargef(true)).a(alpha), Tmp.c2.set(shieldColourEnd).a(alpha));
+            Draw.rect(region, x, y, 0);
+
+            Draw.z(Layer.blockOver - 1);
+            if(pulseRegion != Core.atlas.find("error")) {
+
+                Draw.color(chargeColourStart, chargeColourEnd, chargef());
+
+                Draw.alpha(chargef());
+                Draw.rect(pulseRegion, x, y, 270);
+
+                Draw.blend(Blending.additive);
+
+                Draw.alpha(chargef() * visualBlendingAlphaMulti);
+                Draw.rect(pulseRegion, x, y, 270);
+
+                if(Core.settings.getBool("settings.er.pulseglare")){
+                    Draw.alpha(chargef() * chargef() * 0.5f);
+                    Draw.rect(pulseRegion, x, y, pulseRegion.height * 1.5f/4, pulseRegion.width * 1.5f/4, 270);
+                }
+                Draw.blend();
+                Draw.color();
+            }
+
+            Draw.z(Layer.blockOver);
+            Draw.alpha((1 - closed) * 0.15f);
+            Draw.rect(shineRegion, x, y, 0);
+            Draw.alpha(closed);
+            Draw.rect(topRegion, x, y, 0);
         }
 
         private float fin(){
@@ -80,6 +121,23 @@ public class PulseBarrier extends PulseBlock {
         //smooth fslope, only forks for scl at 1 or under
         private float fsslope(float scl, float threshold){
             return fslope(scl, threshold) * fslope(scl, threshold);
+        }
+
+        @Override
+        public byte version() {
+            return 1;
+        }
+
+        @Override
+        public void write(Writes w) {
+            super.write(w);
+            w.f(closed);
+        }
+
+        @Override
+        public void read(Reads r, byte revision) {
+            super.read(r, revision);
+            if(revision == 1) closed = r.f();
         }
     }
 }

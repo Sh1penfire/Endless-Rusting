@@ -3,6 +3,7 @@ package rusting.world.blocks.defense.turret.power;
 import arc.Core;
 import arc.audio.Sound;
 import arc.func.Floatp;
+import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
@@ -17,8 +18,7 @@ import mindustry.entities.Effect;
 import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.*;
-import mindustry.graphics.Layer;
-import mindustry.graphics.Pal;
+import mindustry.graphics.*;
 import mindustry.type.StatusEffect;
 import mindustry.world.blocks.ControlBlock;
 import rusting.content.Fxr;
@@ -31,7 +31,7 @@ public class LightningTurret extends PulseBlock {
 
     public int lightning = 3;
     public float damage = 3;
-    public float healPercent = 0, statusDuration = 160;
+    public float healAmount = 0, statusDuration = 160;
     public float shootLength = 5;
     public float shootCone = 55;
     public float reloadTime = 8;
@@ -56,8 +56,9 @@ public class LightningTurret extends PulseBlock {
     private static Rand rand = new Rand();
     private static float precent = 0;
 
-    public TextureRegion baseRegion;
+    public TextureRegion baseRegion, lightRegion;
 
+    public float lightAlpha = 0.45f, lightAlphaBlending = 0.25f, beamLength = 55, beamAlpha = 0.3f, beamWidth = 25;
     protected Vec2 rv = new Vec2();
 
     public interface VisualLightningHolder{
@@ -77,6 +78,7 @@ public class LightningTurret extends PulseBlock {
     public void load() {
         super.load();
         baseRegion = Core.atlas.find("endless-rusting-pulse-base" + size);
+        lightRegion = Core.atlas.find(name + "-light");
     }
 
     public class LightningTurretBuild extends PulseBlockBuild implements ControlBlock, Targeting {
@@ -136,6 +138,7 @@ public class LightningTurret extends PulseBlock {
 
         protected void updateTargeting(){
             target = Units.closestTarget(team, x, y, range, t -> t.isFlying() ? targetAir : targetGround);
+            if(target == null) target = Vars.indexer.findTile(team, x, y, range, b -> b.damaged() && b != this);
         }
 
         protected void updateShooting() {
@@ -191,7 +194,7 @@ public class LightningTurret extends PulseBlock {
                 if (((Teamc) other).team() == team) {
                     if (other.damaged()) {
                         anyNearby = true;
-                        other.heal(healPercent / 100f * other.maxHealth());
+                        other.heal(healAmount);
                         healEffect.at(other);
                         damageEffect.at(rx, ry, 0f, color, other);
                         hitEffect.at(rx, ry, angleTo(other), color);
@@ -253,6 +256,15 @@ public class LightningTurret extends PulseBlock {
 
             Draw.z(Layer.turret);
             Draw.rect(region, x, y, rotation - 90);
+
+            Draw.color(lightColor);
+            Draw.alpha(lightAlpha * chargef());
+            Draw.rect(lightRegion, x, y, rotation - 90);
+            Draw.alpha(lightAlphaBlending * chargef());
+            Draw.blend(Blending.additive);
+            Draw.rect(lightRegion, x, y, rotation - 90);
+            Draw.blend();
+            Drawf.light(team, x, y, x + Tmp.v1.trns(rotation, beamLength).x, y + Tmp.v1.y, beamWidth, lightColor, beamAlpha * chargef());
             //hell.
 
             boolean advanced = Core.settings.getBool("advancedeffects");

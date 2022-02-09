@@ -7,6 +7,7 @@ import mindustry.ctype.ContentList;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Sounds;
+import mindustry.gen.UnitEntity;
 import mindustry.graphics.CacheLayer;
 import mindustry.graphics.Pal;
 import mindustry.type.*;
@@ -14,8 +15,7 @@ import mindustry.world.Block;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.blocks.distribution.Conveyor;
-import mindustry.world.blocks.environment.Floor;
-import mindustry.world.blocks.environment.StaticWall;
+import mindustry.world.blocks.environment.*;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -74,7 +74,8 @@ public class RustingBlocks implements ContentList{
         //saline, slaty blocks
         salineStolnene, salineBarreren,
         //classem
-        classemStolnene, classemPathen, classemPulsen, classemWallen, classemBarrreren,
+        classemStolnene, classemSanden, classemPathen, classemPulsen, classemWallen, classemBarrreren,
+        classemTree, classemTreeDead, classemTreeCrystalline, melonaleumGeodeSmall, melonaleumGeodeLarge,
         //impuren
         impurenSanden,
         //moisten
@@ -412,14 +413,25 @@ public class RustingBlocks implements ContentList{
             wall = classemBarrreren;
         }};
 
+        classemSanden = new Floor("classem-sanden"){{
+            speedMultiplier = 0.85f;
+            variants = 3;
+            itemDrop = Items.sand;
+            emitLight = true;
+            lightColor = new Color(Palr.pulseChargeStart).a(0.05f);
+            lightRadius = 10;
+            attributes.set(Attribute.water, 0.125f);
+            attributes.set(Attribute.heat, -0.05f);
+            wall = classemBarrreren;
+        }};
 
         classemPulsen = new Floor("classem-pulsen"){{
             speedMultiplier = 0.85f;
             variants = 6;
             status = RustingStatusEffects.fuesin;
             emitLight = true;
-            lightColor = new Color(Palr.pulseChargeStart).a(0.19f);
-            lightRadius = 15;
+            lightColor = new Color(Palr.pulseChargeStart).a(0.09f);
+            lightRadius = 25;
             attributes.set(Attribute.water, 0.75f);
             attributes.set(Attribute.heat, -0.55f);
             attributes.set(Attribute.spores, -0.15f);
@@ -431,8 +443,8 @@ public class RustingBlocks implements ContentList{
             variants = 2;
             status = RustingStatusEffects.macrosis;
             emitLight = true;
-            lightColor = new Color(Palr.pulseChargeStart).a(0.25f);
-            lightRadius = 7;
+            lightColor = new Color(Palr.pulseChargeStart).a(0.12f);
+            lightRadius = 25;
             attributes.set(Attribute.water, 1.35f);
             attributes.set(Attribute.heat, -0.35f);
             wall = classemBarrreren;
@@ -487,11 +499,16 @@ public class RustingBlocks implements ContentList{
         }};
 
         classemWallen = new StaticWall("classem-wallen"){{
-            variants = 2;
+            variants = 3;
         }};
 
-        classemBarrreren = new StaticWall("classem-barreren"){{
-            variants = 2;
+        classemBarrreren = new OverrideColourStaticWall("classem-barreren"){{
+            variants = 5;
+            overrideMapColour = Color.valueOf("#2c2f3b");
+        }};
+
+        classemTree = new TreeBlock("classem-tree"){{
+
         }};
 
         moistenWallen = new OverrideColourStaticWall("moisten-wallen"){{
@@ -843,11 +860,13 @@ public class RustingBlocks implements ContentList{
         pulseCanal = new PulseCanal("pulse-canal"){{
             requirements(Category.power, with(Items.lead, 2, Items.titanium, 1));
             centerResearchRequirements(false, with());
+            pulseStorage = 25;
         }};
 
         pulseFlowSplitter = new PulseFlowSplitter("pulse-flow-splitter"){{
             requirements(Category.power, with(Items.lead, 4, Items.titanium, 3));
             centerResearchRequirements(false, with());
+            pulseStorage = 65;
         }};
 
         pulseCanalTunnel = new PulseCanalTunnel("pulse-tunnel-dock"){{
@@ -914,10 +933,9 @@ public class RustingBlocks implements ContentList{
         }};
 
         pulseGraphiteForge = new PulseGenericCrafter("pulse-graphite-forge"){{
-            requirements(Category.crafting, with(Items.lead, 65, Items.graphite, 25, Items.titanium, 35, Items.metaglass, 25));
+            requirements(Category.crafting, with(Items.lead, 65, Items.graphite, 25, Items.titanium, 35));
             centerResearchRequirements(false, with(Items.coal, 125, Items.silicon, 45, Items.metaglass, 65, Items.titanium, 85));
-            drawer = new DrawPulseLiquidCrafter();
-            hasLiquids = true;
+            drawer = new DrawPulseSpinningCrafter();
             size = 2;
             itemCapacity = 30;
             powerLoss = 0.05f;
@@ -1037,10 +1055,10 @@ public class RustingBlocks implements ContentList{
         }};
 
         smallParticleSpawner = new PulseParticleSpawner("small-particle-spawner"){{
-            requirements(Category.effect, with(Items.copper, 300, Items.lead, 115, Items.metaglass, 50, Items.titanium, 45));
-            centerResearchRequirements(with(Items.copper, 350,  Items.coal, 95, Items.graphite, 55, Items.titanium, 225));
+            requirements(Category.effect, with(Items.silicon, 5, Items.graphite, 2, Items.titanium, 10));
+            centerResearchRequirements(false, with());
             flags = EnumSet.of(BlockFlag.generator);
-            effects = new Effect[] {Fx.ballfire, Fx.burning, Fx.fire};
+            effects = new Effect[] {Fxr.blueSpark};
             size = 1;
             health = 35 * size * size;
             projectileChanceModifier = 0;
@@ -1050,6 +1068,10 @@ public class RustingBlocks implements ContentList{
             powerLoss = 0;
             minRequiredPulsePercent = 0;
             canOverload = true;
+            effectFrequency = 0.45f;
+            lightRadius = 145;
+            lightAlpha = 0.3f;
+            lightColor = Palr.pulseBullet;
         }};
 
         fraeCore = new CoreBlock("frae-core"){{
@@ -1097,13 +1119,6 @@ public class RustingBlocks implements ContentList{
             powerLoss = 0;
             minRequiredPulsePercent = 0;
             canOverload = true;
-        }};
-
-        contingent = new PulsePreciseLaserTurret("contingent"){{
-            category = Category.effect;
-            buildVisibility = BuildVisibility.sandboxOnly;
-            size = 3;
-            health = 155 * size * size;
         }};
 
         pulseMotar = new PulsePulsar("pulse-motar"){{
@@ -1670,20 +1685,30 @@ public class RustingBlocks implements ContentList{
             canOverload = false;
             pulseStorage = 125;
 
-            customConsumes.pulse = 7.875f;
+            customConsumes.pulse = 10.875f;
 
             range = 145;
             lightning = 4;
-            healPercent = 0.15f;
+            healAmount = 15;
 
             shootCone = 65;
             reloadTime = 35;
-            damage = 15;
+            damage = 65;
 
             shootSound = Sounds.spark;
-
+            lightColor = Palr.pulseBullet;
+            lightAlpha = 0.65f;
+            beamLength = 35;
             healEffect = Fxr.healingWaterSmoke;
             color = Color.valueOf("#a9e2ea");
+        }};
+
+        contingent = new PulsePreciseLaserTurret("contingent"){{
+            category = Category.effect;
+            buildVisibility = BuildVisibility.sandboxOnly;
+            size = 3;
+            damage = 4.5f;
+            health = 155 * size * size;
         }};
 
         horaNoctis = new AutoreloadItemTurret("hora-noctis"){{

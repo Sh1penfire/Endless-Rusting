@@ -29,7 +29,6 @@ import rusting.content.*;
 import rusting.core.holder.CustomConsumerModule;
 import rusting.core.holder.CustomStatHolder;
 import rusting.ctype.ResearchType;
-import rusting.graphics.Drawr;
 import rusting.interfaces.*;
 import rusting.world.blocks.pulse.utility.PulseResearchBlock;
 import rusting.world.modules.PulseModule;
@@ -60,6 +59,8 @@ public class PulseBlock extends Block implements ResearchableBlock {
     public float baseEfficiency = 0.5f;
     //how long before the charged region draw x and y changes
     public int timeOffset = 1;
+    //the multiplier for the blended region's alpha
+    public float visualBlendingAlphaMulti = 0.15f;
     //if it requires overloading to work, enable. Default should be true;
     public boolean requiresOverload = true;
     //Bool for whether block can overload. Unused by normal pulse block.
@@ -394,25 +395,22 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
                 Draw.color(chargeColourStart, chargeColourEnd, chargef());
 
-                boolean highdraw = false;
-                if(Core.settings.getBool("settings.er.additivepulsecolours")) Draw.blend(Blending.additive);
+                Draw.alpha(chargef());
+                Draw.rect(pulseRegion, x, y, 270);
 
-                Draw.draw(Layer.blockOver, () -> {
-                    Drawr.drawPulseRegion(pulseRegion, x, y, 0, Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd, chargef()), chargef(false));
-                });
+                Draw.blend(Blending.additive);
 
                 Draw.alpha(alphaDraw);
-                if(!highdraw) Draw.alpha(Draw.getColor().a * Draw.getColor().a);
                 Draw.rect(shakeRegion, x + xOffset, y + yOffset, (pulseRegion.width + yOffset)/4, (pulseRegion.height + xOffset)/4, 270);
 
-                Draw.alpha(chargef());
-                Draw.alpha(Draw.getColor().a * Draw.getColor().a);
+                Draw.alpha(chargef() * visualBlendingAlphaMulti);
                 Draw.rect(pulseRegion, x, y, 270);
 
                 if(Core.settings.getBool("settings.er.pulseglare")){
                     Draw.alpha(chargef() * chargef() * 0.5f);
                     Draw.rect(pulseRegion, x, y, pulseRegion.height * 1.5f/4, pulseRegion.width * 1.5f/4, 270);
                 }
+                Draw.blend();
             }
             Draw.reset();
         };

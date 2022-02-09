@@ -283,7 +283,7 @@ public class RustingUnits implements ContentList{
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duono);
         Varsr.switches.mineItems.put(duono, Seq.with(Items.copper, Items.titanium, Items.lead, RustingItems.cameoShardling, RustingItems.taconite));
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duoly);
-        Varsr.switches.mineItems.put(duono, Seq.with(Items.titanium, Items.copper, RustingItems.cameoShardling, RustingItems.taconite, Items.lead));
+        Varsr.switches.mineItems.put(duoly, Seq.with(Items.titanium, Items.copper, RustingItems.cameoShardling, RustingItems.taconite, Items.lead));
         Varsr.switches.putSwitches(Seq.with(attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch), duanga);
 
         austute = new SpecialWeaponsUnitType("austute"){{

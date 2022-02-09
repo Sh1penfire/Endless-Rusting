@@ -323,7 +323,7 @@ public class Fxr{
             Lines.beginLine();
     
             Lines.linePoint(Tmp.v1.x, Tmp.v1.y);
-    
+            float lastx = Tmp.v1.x, lasty = Tmp.v1.y;
             rand.setSeed(e.id);
     
             for(int i = 0; i < links; i++){
@@ -341,7 +341,10 @@ public class Fxr{
                     nx = tx + normx * len + Tmp.v3.x + Tmp.v4.set(0, arcX.get()).rotate(angle).x;
                     ny = ty + normy * len + Tmp.v3.y + Tmp.v4.y;
                 }
-    
+
+                Drawf.light(Team.derelict, lastx, lasty, nx, ny);
+                lastx = nx;
+                lasty = ny;
                 Lines.linePoint(nx, ny);
             }
     
@@ -768,10 +771,24 @@ public class Fxr{
         });
     }),
 
-    blueSpark = new Effect(30, e -> {
+    //used by the particle spawner
+    blueSpark = new Effect(185, e -> {
         Draw.color(Palr.pulseBullet, Items.graphite.color, e.fout());
-        Angles.randLenVectors(e.id, 5, 35, 0, 360, (x, y) -> {
-            
+        Draw.alpha(e.fout() * 0.8f);
+        e.scaled(75, h -> {
+            Angles.randLenVectors(e.id, 5, 35, 0, 360, (x, y) -> {
+                Lines.lineAngle(e.x + x * e.finpow() * 0.25f, e.y + y * e.finpow() * 0.25f, Mathf.angle(x, y), e.finpow() * 3.5f);
+            });
+            Angles.randLenVectors(e.id, 2, 85, 0, 360, (x, y) -> {
+                Lines.lineAngle(e.x + x * e.finpow() * 4.25f, e.y + y * e.finpow() * 4.25f, Mathf.angle(x, y), e.finpow() * 5.5f);
+            });
+        });
+
+        Draw.alpha(Mathf.clamp(e.fout() * 0.3f * 3, 0, 0.8f));
+        Angles.randLenVectors(e.id, 2, 145, 0, 360, (x, y) -> {
+            Angles.randLenVectors(e.id, 1, 145, 0, 360, (x2, y2) -> {
+                Fill.circle(e.x + x + x2 * e.fin(), e.y + y + y2 * e.fin(), Mathf.clamp(e.fslope() * 2.5f * 3, 0, 2.5f));
+            });
         });
     }),
 

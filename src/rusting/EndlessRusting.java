@@ -11,7 +11,8 @@ import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.game.EventType;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.FileTreeInitEvent;
+import mindustry.game.EventType.Trigger;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.input.Binding;
@@ -43,6 +44,10 @@ public class EndlessRusting extends Mod{
             ModSounds.load();
             Core.app.post(RustedShaders::load);
         });
+        registerKeybinds();
+
+        Core.settings.defaults("er.drawtrails", true);
+        Core.settings.defaults("er.advancedeffects", true);
 
         Events.on(EventType.ClientLoadEvent.class,
             e -> {
@@ -158,7 +163,6 @@ public class EndlessRusting extends Mod{
         Color.sky.set(Palr.pulseChargeStart);
     }
 
-    /*
     public void registerKeybinds(){
         Axis repsawn = Core.keybinds.get(Binding.respawn);
         Events.on(Trigger.update.getClass(), e -> {
@@ -169,5 +173,4 @@ public class EndlessRusting extends Mod{
             }
         });
     }
-    */
 }

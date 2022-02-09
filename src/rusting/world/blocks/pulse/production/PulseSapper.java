@@ -10,12 +10,15 @@ import arc.util.*;
 import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.gen.Entityc;
-import mindustry.graphics.Layer;
+import mindustry.graphics.*;
 import mindustry.world.Tile;
+import mindustry.world.meta.Stat;
 import rusting.Varsr;
 import rusting.interfaces.Pulsec;
 import rusting.interfaces.block.PulseCanalc;
 import rusting.world.blocks.pulse.PulseBlock;
+
+import static mindustry.Vars.tilesize;
 
 //saps pulse from the nearest Melonaleum Geode. Alternatively acts as a siphon when upgraded, and boasts offensive capability when upgraded further.
 public class PulseSapper extends PulseBlock {
@@ -38,6 +41,8 @@ public class PulseSapper extends PulseBlock {
     //affects how much Pulse is distributed each time it distributes
     public float pulsePressure = 10;
 
+    public float range = 65;
+
     TextureRegion baseRegion;
 
     public PulseSapper(String name) {
@@ -49,12 +54,27 @@ public class PulseSapper extends PulseBlock {
     }
 
     @Override
+    public void setStats() {
+        super.setStats();
+        stats.add(Stat.range, range);
+    }
+
+    @Override
+    public void drawPlace(int x, int y, int rotation, boolean valid) {
+        Lines.stroke(1f);
+        Draw.color(Pal.placing);
+        Drawf.dashCircle(x * tilesize + offset, y * tilesize + offset, range, chargeColourEnd);
+        Draw.reset();
+    }
+
+    @Override
     public void load() {
         super.load();
         baseRegion = Core.atlas.find(name + "-base");
     }
 
     public class PulseSapperBuild extends PulseBlockBuild implements PulseCanalc {
+
         public float rotation = 90;
         public Vec2 minePos = new Vec2();
         public Pulsec source;
@@ -63,6 +83,11 @@ public class PulseSapper extends PulseBlock {
         public int mode = 0;
 
         public float reload = 0;
+
+        @Override
+        public void drawSelect() {
+            Drawf.dashCircle(x, y, range, chargeColourStart);
+        }
 
         @Override
         public void updateTile() {
@@ -82,7 +107,7 @@ public class PulseSapper extends PulseBlock {
                 switch (mode){
                     case 0: {
                         if(Varsr.world.geodeTiles.size > 0) {
-                            tmppTiles = Varsr.world.geodeTiles.sort(t -> t.dst(this)).copy().filter(t -> t.build instanceof Pulsec && ((Pulsec) t.build).pulseModule().pulse > collectThreshold);
+                            tmppTiles = Varsr.world.geodeTiles.sort(t -> t.dst(this)).copy().filter(t -> t.build instanceof Pulsec && ((Pulsec) t.build).pulseModule().pulse > collectThreshold && t.build.dst(this) <= range);
                             if(tmppTiles.size > 0) source = (Pulsec) tmppTiles.get(0).build;
                         }
                     }

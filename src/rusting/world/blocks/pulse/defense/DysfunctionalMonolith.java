@@ -16,6 +16,7 @@ import mindustry.entities.bullet.BulletType;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import rusting.content.Fxr;
+import rusting.content.ModSounds;
 import rusting.interfaces.PrimitiveControlBlock;
 import rusting.world.blocks.pulse.PulseBlock;
 
@@ -35,7 +36,9 @@ public class DysfunctionalMonolith extends PulseBlock {
     //sound pitch
     public float soundPitchMin = 0.1f, soundPitchMax = 0.3f;
     //shoot sound
-    public Sound shootSound = Sounds.spark;
+    public Sound shootSound = ModSounds.zapHum;
+    //sound volume
+    public float soundVol = 1;
     //effect played when you start shooting
     public Effect shootStartEffect = Fxr.launchCraeWeavers, corsairEffect = Fxr.craeCorsair;
     public TextureRegion hologramRegion;
@@ -206,7 +209,7 @@ public class DysfunctionalMonolith extends PulseBlock {
         }
 
         public void effects(){
-            shootSound.at(x, y, Mathf.random(soundPitchMin, soundPitchMax));
+            shootSound.at(x, y, Mathf.random(soundPitchMin, soundPitchMax), soundVol);
             projectile.shootEffect.at(getPointerPos(), angleTo(getPointerPos()));
         }
 

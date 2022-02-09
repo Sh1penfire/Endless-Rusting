@@ -21,7 +21,8 @@ public class ModSounds {
 
     public static Sound
             harpoonLaunch = new Sound(),
-            whoosh = new Sound()
+            whoosh = new Sound(),
+            zapHum = new Sound()
             ;
 
     public static void load() {
@@ -29,5 +30,6 @@ public class ModSounds {
 
         harpoonLaunch = loadSound("chain-launch");
         whoosh = loadSound("whoosh");
+        zapHum = loadSound("zap-hum");
     }
 }

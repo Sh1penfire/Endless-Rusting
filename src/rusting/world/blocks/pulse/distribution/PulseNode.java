@@ -1,18 +1,22 @@
 package rusting.world.blocks.pulse.distribution;
 
 import arc.Core;
+import arc.func.Boolf;
+import arc.func.Cons;
+import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
-import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
 import arc.struct.Seq;
 import arc.util.*;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.Team;
 import mindustry.gen.Building;
+import mindustry.gen.Groups;
 import mindustry.graphics.*;
 import mindustry.world.Tile;
 import mindustry.world.meta.Stat;
@@ -27,6 +31,8 @@ import static mindustry.Vars.world;
 
 //a block which can connect to other pulse blocks and transmit a pulse
 public class PulseNode extends PulseBlock implements ResearchableBlock {
+    private static PulseNodeBuild lastNode = null;
+
     //Reload of the node till it can transmit a pulse to a nearby block
     public float pulseReloadTime = 60;
     //How many bursts the node sends
@@ -115,6 +121,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
     @Override
     public void load() {
         super.load();
+        super.load();
         closedRegion = Core.atlas.find(name + "-closed", region);
         shineRegion = Core.atlas.find(name + "-shine", Core.atlas.find("clear"));
         topRegion = Core.atlas.find(name + "-top", Core.atlas.find("clear"));
@@ -173,24 +180,12 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
         return ((target instanceof PulseBlockc) && ((PulseBlockc) target).connectableTo()) && !build.connections.contains(target.pos()) && build.connections.size < ((PulseNode) (build.block)).connectionsPotential && ((PulseNode) build.block).laserRange * 8 >= Mathf.dst(build.x, build.y, target.x, target.y);
     }
 
-    protected void getPotentialLinks(PulseNode.PulseNodeBuild build, Team team, Seq<Building> others){
-
-        tempTileEnts.clear();
-
-        Geometry.circle((int)build.x, (int)build.y, (int)(laserRange + 2), (x, y) -> {
-            Building other = world.build(x, y);
-            if(nodeCanConnect(build, other)){
-                tempTileEnts.add(other);
-            }
-        });
-
-        tempTileEnts.sort((a, b) -> {
-            int type = -Boolean.compare(a.block instanceof PulseNode, b.block instanceof PulseNode);
-            if(type != 0) return type;
-            return Float.compare(a.dst2(build), b.dst2(build));
+    public void getPotentialLinks(Tile tile, Team team, Cons<PulseNodeBuild> cons){
+        Boolf<Building> valid = other -> other != null && other.tile() != tile && other instanceof PulseNodeBuild;
+        Groups.build.each(b -> {
+            if(valid.get(b)) cons.get((PulseNodeBuild) b);
         });
     }
-
 
     public class PulseNodeBuild extends PulseBlockBuild{
         public Seq<Integer> connections = new Seq();
@@ -204,7 +199,15 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
         }
 
         @Override
-        public void placed() {
+        public void placed(){
+            if(Vars.net.client()) return;
+
+            getPotentialLinks(tile, team, other -> {
+                if(other.connections.size == 0 && nodeCanConnect(other, this)){
+                    other.configureAny(pos());
+                }
+            });
+
             super.placed();
         }
 
@@ -317,10 +320,36 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
                 //draw with less alpha if node is opening
                 drawLaser((PulseBlockc) other, Tmp.c1.set(laserColor).a(1 - closed * closed));
             });
+
+            Draw.z(Layer.blockOver - 1);
+            if(pulseRegion != Core.atlas.find("error")) {
+
+                Draw.color(chargeColourStart, chargeColourEnd, chargef());
+
+                Draw.alpha(chargef());
+                Draw.rect(pulseRegion, x, y, 270);
+
+                Draw.blend(Blending.additive);
+
+                Draw.alpha(alphaDraw);
+                Draw.rect(shakeRegion, x + xOffset, y + yOffset, (pulseRegion.width + yOffset)/4, (pulseRegion.height + xOffset)/4, 270);
+
+                Draw.alpha(chargef() * visualBlendingAlphaMulti);
+                Draw.rect(pulseRegion, x, y, 270);
+
+                if(Core.settings.getBool("settings.er.pulseglare")){
+                    Draw.alpha(chargef() * chargef() * 0.5f);
+                    Draw.rect(pulseRegion, x, y, pulseRegion.height * 1.5f/4, pulseRegion.width * 1.5f/4, 270);
+                }
+                Draw.blend();
+                Draw.color();
+            }
+
+            Draw.z(Layer.blockOver);
+            Draw.alpha((1 - closed) * 0.15f);
+            Draw.rect(shineRegion, x, y, 0);
             Draw.alpha(closed);
             Draw.rect(topRegion, x, y, 0);
-            Draw.alpha(closed * 0.15f);
-            Draw.rect(shineRegion, x, y, 0);
         }
 
         @Override

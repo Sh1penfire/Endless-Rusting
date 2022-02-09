@@ -186,7 +186,7 @@ public class RustingResearch {
             return reearchSeq.size == 0;
         };
 
-        return Groups.build.find(b -> b.block instanceof ResearchCenter && centercons.get((ResearchCenter) b.block));
+        return Groups.build.find(b -> b.block instanceof ResearchCenter && centercons.get((ResearchCenter) b.block) && b.team == team);
     }
 
     private ResearchCenter asResearchCenter(Object o){

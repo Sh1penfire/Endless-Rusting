@@ -38,6 +38,8 @@ public class PulsePreciseLaserTurret extends PulseBlock {
 
     public float shootDst = 4.5f;
 
+    public float armorPiercingFactor = 0.15f;
+
     public float width = 3, shineBaseWidth = 6, length = 45;
     public float stumpOffset = 8;
     public float laserSpeed = 1.5f;
@@ -120,6 +122,7 @@ public class PulsePreciseLaserTurret extends PulseBlock {
 
         public void updateLaser(){
             Groups.unit.intersect(laserPosition.x, laserPosition.y, 4, 4, u -> {
+                u.health -= damage * armorPiercingFactor * Time.delta;
                 u.damage(damage);
                 u.apply(status, statusDuration);
                 if(Mathf.chance(hitEffectChance)) hitEffect.at(laserPosition.x, laserPosition.y);

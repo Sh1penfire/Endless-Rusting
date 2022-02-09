@@ -1,21 +1,26 @@
 package rusting.world.blocks.pulse.defense;
 
+import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.scene.ui.ButtonGroup;
 import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Table;
 import arc.util.Log;
+import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
+import mindustry.game.Team;
+import mindustry.graphics.Drawf;
 import rusting.content.RustingAchievements;
 import rusting.world.blocks.pulse.PulseBlock;
 
 public class PulseParticleSpawner extends PulseBlock {
 
     public Effect[] effects = {Fx.smoke};
-    public float effectFrequency = 1f, consumeFrequency = 360;
+    public float effectFrequency = 0.65f, consumeFrequency = 360, lightRadius = 0, lightAlpha = 1, warmupRate = 0.05f;
+    public Color lightColor = Color.white;
 
     public PulseParticleSpawner(String name) {
         super(name);
@@ -34,23 +39,30 @@ public class PulseParticleSpawner extends PulseBlock {
 
         int state = 0;
         float particleSpawnInterval = 0, consumeTimer = 0;
+        float warmup = 0;
 
         @Override
         public void update() {
             super.update();
-            if(effects.length > 0 && allConsValid()){
-                particleSpawnInterval += pulseEfficiency() * effectFrequency;
-            }
-            if(particleSpawnInterval >= 1){
-                effects[state].at(x, y);
-                particleSpawnInterval = 0;
-            }
+            if(allConsValid()) {
+                warmup = Mathf.lerpDelta(warmup, 1, warmupRate);
+                if (effects.length > 0) {
+                    particleSpawnInterval += pulseEfficiency() * effectFrequency;
+                }
 
-            if(consumeTimer >= consumeFrequency){
-                consume();
-                customConsume();
-                consumeTimer = 0;
+                if (particleSpawnInterval >= 1) {
+                    effects[state].at(x, y);
+                    particleSpawnInterval = 0;
+                }
+
+                if (consumeTimer >= consumeFrequency) {
+                    consume();
+                    customConsume();
+                    consumeTimer = 0;
+                }
+                consumeTimer++;
             }
+            else warmup = Mathf.clamp(warmup - warmupRate * Time.delta, 0, 1);
         }
 
         @Override
@@ -97,6 +109,12 @@ public class PulseParticleSpawner extends PulseBlock {
             //n mn m nmn mn mn nm nm jm njkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk,
             particleSpawnInterval = r.f();
             consumeTimer = r.f();
+        }
+
+        @Override
+        public void draw() {
+            super.draw();
+            if(lightRadius > 0) Drawf.light(Team.derelict, x, y, lightRadius * warmup, lightColor, lightAlpha * warmup);
         }
     }
 }

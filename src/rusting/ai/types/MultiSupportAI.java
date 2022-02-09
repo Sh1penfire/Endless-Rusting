@@ -3,8 +3,7 @@ package rusting.ai.types;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.struct.Seq;
-import arc.util.Interval;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.ai.types.FlyingAI;
 import mindustry.content.Blocks;
@@ -44,7 +43,6 @@ public class MultiSupportAI extends FlyingAI {
     public float pulseAmount = 0;
     public float pulseGenRange = 0;
     public boolean canGenPulse = false;
-    public boolean initializedCstats = false;
     public Seq<Item> mineItems = Seq.with();
     Item targetItem;
     Tile ore;
@@ -54,20 +52,17 @@ public class MultiSupportAI extends FlyingAI {
     }
 
     @Override
-    public void updateUnit() {
-        super.updateUnit();
-        if(!initializedCstats){
-            initializedCstats = true;
-            if(unit.type instanceof CraeUnitType) {
-                CraeUnitType unitType = (CraeUnitType) unit.type;
-                minRepairRange = unitType.repairRange;
-                pulseAmount = unitType.pulseAmount;
-                pulseGenRange = unitType.pulseGenRange;
-                if(pulseAmount > 0 && pulseGenRange > 0) canGenPulse = true;
-                minRepairRange = Math.min(pulseGenRange, minRepairRange);
-            }
-            mineItems = Varsr.switches.mineItems.get(unit.type);
+    public void unit(Unit unit) {
+        super.unit(unit);
+        if(unit.type instanceof CraeUnitType) {
+            CraeUnitType unitType = (CraeUnitType) unit.type;
+            minRepairRange = unitType.repairRange;
+            pulseAmount = unitType.pulseAmount;
+            pulseGenRange = unitType.pulseGenRange;
+            if(pulseAmount > 0 && pulseGenRange > 0) canGenPulse = true;
+            minRepairRange = Math.min(pulseGenRange, minRepairRange);
         }
+        mineItems = Varsr.switches.mineItems.get(unit.type);
     }
 
     @Override
