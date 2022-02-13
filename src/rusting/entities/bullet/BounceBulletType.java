@@ -28,7 +28,7 @@ public class BounceBulletType extends ConsBulletType {
 
 
     public boolean clearBounce = true;
-    //hwo many ticks inbetween collisions being cleared. Set around 15/20 or lower to make bullet reliable in low fps.
+    //how many ticks inbetween collisions being cleared. Set around 15/20 or lower to make bullet reliable in low fps.
     public int bounceInternal = 15;
 
     public boolean useRange = true;
