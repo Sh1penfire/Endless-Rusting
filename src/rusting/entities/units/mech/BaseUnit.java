@@ -15,27 +15,26 @@ public class BaseUnit extends MechUnit {
     @Override
     public void read(Reads r) {
         super.read(r);
-        read(r, r.i());
+        read(r, r.b());
     }
 
-    public void read(Reads read, int revision){
+    public void read(Reads read, byte revision){
 
     }
 
     @Override
     public void write(Writes w) {
         super.write(w);
-        w.i(revision());
+        w.b(revision());
     }
 
-    public int revision(){
+    public byte revision(){
         return 0;
     }
 
 
     @Override
     public int classId(){
-        return RustingUnits.classID(BaseUnit.class);
+        return RustingUnits.classID(getClass());
     }
-
 }

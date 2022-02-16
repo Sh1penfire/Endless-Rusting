@@ -16,8 +16,8 @@ public class DrawPulseSpinningCrafter extends DrawPulseBlock {
 
         Draw.rect(bottom, build.x, build.y, rotation);
 
-        Draw.alpha(build.chargef());
         Draw.color(((PulseBlock) build.block).chargeColourStart);
+        Draw.alpha(build.chargef());
         Draw.rect(pulse, build.x, build.y, rotation);
         Draw.alpha(1);
         Draw.color();

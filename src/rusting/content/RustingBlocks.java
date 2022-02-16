@@ -7,7 +7,6 @@ import mindustry.ctype.ContentList;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Sounds;
-import mindustry.gen.UnitEntity;
 import mindustry.graphics.CacheLayer;
 import mindustry.graphics.Pal;
 import mindustry.type.*;

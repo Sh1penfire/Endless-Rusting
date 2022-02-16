@@ -3,7 +3,7 @@ package rusting.interfaces;
 import arc.struct.Seq;
 import mindustry.gen.Unit;
 import rusting.entities.units.SpecialWeaponsUnitType;
-import rusting.entities.units.weapons.mounts.UnitMount;
+import rusting.entities.units.weapons.UnitMount;
 
 public interface SpecialWeaponsUnit {
 

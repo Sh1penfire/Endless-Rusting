@@ -1,19 +1,22 @@
-package rusting.entities.units.spider;
+package rusting.entities.units.mech;
 
 import arc.struct.Seq;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.entities.units.WeaponMount;
 import mindustry.gen.Unit;
+import mindustry.type.Weapon;
+import rusting.content.RustingUnits;
 import rusting.entities.units.SpecialWeaponsUnitType;
 import rusting.entities.units.weapons.UnitMount;
 import rusting.interfaces.SpecialWeaponsUnit;
 import rusting.util.TypeIO;
 
-public class SpecialWeaponsSpider extends BaseSpiderEntity implements SpecialWeaponsUnit {
+public class SpecialWeaponsMech extends BaseUnit implements SpecialWeaponsUnit{
 
     @Override
     public String toString() {
-        return "SpecialWeaponsSpider#" + id;
+        return "SpecialWeaponsMech#" + id;
     }
 
     public Seq<UnitMount> sMounts = Seq.with();
@@ -40,6 +43,7 @@ public class SpecialWeaponsSpider extends BaseSpiderEntity implements SpecialWea
         sMounts.each(w -> w.draw());
     }
 
+    @Override
     public UnitMount setupMount(UnitMount mount){
         mount.owner = this;
         sMounts.add(mount);
@@ -62,11 +66,21 @@ public class SpecialWeaponsSpider extends BaseSpiderEntity implements SpecialWea
     }
 
     @Override
+    public boolean hasWeapons() {
+        return super.hasWeapons();
+    }
+
+    @Override
     public void write(Writes w) {
         super.write(w);
         w.i(sMounts.size);
         sMounts.each(mount -> {
             mount.write(w);
         });
+    }
+
+    @Override
+    public int classId() {
+        return RustingUnits.classID(SpecialWeaponsMech.class);
     }
 }

@@ -1,24 +1,19 @@
 package rusting.entities.units.weapons;
 
 import arc.Core;
-import arc.func.Prov;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
-import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Tmp;
 import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
 import rusting.entities.units.SpecialWeaponsUnitType;
-import rusting.entities.units.weapons.mounts.UnitMount;
+import rusting.interfaces.SpecialWeaponsUnit;
 
 import static mindustry.type.UnitType.outlineSpace;
 
 public class MountType {
-
-    //registery for the mount's name
-    public static ObjectMap<String, Prov<UnitMount>> registry = ObjectMap.of();
 
     //all mounts
     public static Seq<MountType> mounts = Seq.with();
@@ -65,8 +60,11 @@ public class MountType {
         mount.type = this;
         mount.x = x;
         mount.y = y;
-        mount.rotationSpeed = rotateSpeed;
         return mount;
+    }
+
+    public void update(SpecialWeaponsUnit unit, UnitMount mount){
+
     }
 
     //override this to draw the weapon

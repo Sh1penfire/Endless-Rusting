@@ -41,19 +41,88 @@ public class Fxr{
             Fill.circle(e.x, e.y, e.fout() * 1.25f);
         }),
 
-        blackened = new Effect(35, 0f, e -> {
+    blackened = new Effect(35, 0f, e -> {
+        color(Color.black, Color.black, e.fin());
+        randLenVectors(e.id, 2, e.finpow() * 3, e.rotation, 360, (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, (float) (e.fout() * 1 + Math.sin(e.fin() * 2 * Math.PI)));
+            Fill.circle(e.x + x, e.y + y, (float) (e.fout() * 1.2 + Math.sin(e.fin() * 2 * Math.PI)));
+        });
+        Draw.reset();
+        color(Color.valueOf("#9c7ae1"), Color.valueOf("#231841"), e.fin());
+        Draw.alpha(0.35F * e.fout());
+        randLenVectors(e.id, 2, e.finpow() * 5, e.rotation, 360, (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, (float) (e.fout() * 1 + Math.sin(e.fin() * 2 * Math.PI)));
+        });
+    }),
+
+    blackenedShotgun = new Effect(45, 0f, e -> {
+        color(Color.black, Color.black, e.fin());
+        randLenVectors(e.id, 12, e.finpow() * 45, e.rotation, 25, (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 1 + Mathf.sin(e.fin() * 6));
+            Fill.circle(e.x + x, e.y + y, e.fout() * 1.2f + Mathf.sin(e.fin() * 6));
+        });
+        Draw.reset();
+
+        e.scaled(25, e2 -> {
+            color(Color.valueOf("#9c7ae1"), Color.valueOf("#231841"), e.fin());
+            Draw.alpha(0.85f * e2.fout());
+            randLenVectors(e.id, 7, e2.finpow() * 55, e.rotation, 35, (x, y) -> {
+                Fill.circle(e.x + x, e.y + y, e2.fout() * 1 + Mathf.sin(e2.fin() * 6));
+            });
+        });
+    }),
+
+    blackenedShotgunCrit = new Effect(55, 0f, e -> {
+        e.scaled(15, c -> {});
+        e.scaled(45, e1 -> {
             color(Color.black, Color.black, e.fin());
-            randLenVectors(e.id, 2, e.finpow() * 3, e.rotation, 360, (x, y) -> {
-                Fill.circle(e.x + x, e.y + y, (float) (e.fout() * 1 + Math.sin(e.fin() * 2 * Math.PI)));
-                Fill.circle(e.x + x, e.y + y, (float) (e.fout() * 1.2 + Math.sin(e.fin() * 2 * Math.PI)));
+            randLenVectors(e.id, 35, e1.finpow() * 156, e.rotation, 35, (x, y) -> {
+                Fill.circle(e.x + x, e.y + y, e.fout() * 1 + Mathf.sin(e1.fin() * 6));
+                Fill.circle(e.x + x, e.y + y, e.fout() * 1.2f + Mathf.sin(e1.fin() * 6));
             });
             Draw.reset();
+        });
+
+        e.scaled(25, e2 -> {
             color(Color.valueOf("#9c7ae1"), Color.valueOf("#231841"), e.fin());
-            Draw.alpha(0.35F * e.fout());
-            randLenVectors(e.id, 2, e.finpow() * 5, e.rotation, 360, (x, y) -> {
-                Fill.circle(e.x + x, e.y + y, (float) (e.fout() * 1 + Math.sin(e.fin() * 2 * Math.PI)));
+            Draw.alpha(0.85f * e2.fout() * e2.fout());
+            randLenVectors(e.id, 14, e2.finpow() * 126, e.rotation, 45, (x, y) -> {
+                Fill.circle(e.x + x, e.y + y, e.fout() * 1 + Mathf.sin(e2.fin() * 6));
             });
-        }),
+        });
+
+        color(Color.valueOf("#9c7ae1"), Color.valueOf("#231841"), e.fin());
+        Draw.alpha(Mathf.clamp(e.fout() * 3, 0, 1));
+        randLenVectors(e.id, 11, e.finpow() * e.finpow() * 156, e.rotation, 55, (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 0.75f + Mathf.sin(e.fin() * 6));
+        });
+        randLenVectors(e.id, 15, e.finpow() * e.finpow() * 126, e.rotation, 45, (x, y) -> {
+            Fill.square(e.x + x, e.y + y, e.fout() * 0.25f + Mathf.sin(e.fin() * 6));
+        });
+    }),
+
+    voidExplosion = new Effect(65, e -> {
+        Draw.color(Color.black, Color.black, e.fout());
+        Lines.stroke(e.fout() * 6);
+        float alpha = 1 - Mathf.sin(e.fout() * Mathf.PI + Mathf.PI/3);
+        Draw.alpha(alpha);
+        Lines.stroke(e.fout() * 2 + Mathf.sin(e.fin() * 4 * Mathf.PI));
+        float scaling = -Mathf.sin(e.fout() * e.fout() * Mathf.PI + Mathf.PI/3);
+        float radius = e.rotation;
+        Color fromColor = Color.valueOf("#9c7ae1"), toColor = Color.valueOf("#231841");
+        fromColor.a = alpha;
+        toColor.a = alpha;
+        Fill.light(e.x, e.y, 15, scaling * radius, fromColor, toColor);
+        Lines.circle(e.x, e.y, scaling * radius);
+        Angles.randLenVectors(e.id, (int) (radius * 0.35f) , -scaling *  radius, e.rotation, 360, (x, y) -> {
+            Draw.color(Color.valueOf("#9c7ae1"), Color.valueOf("#231841"), Math.abs(x/30) * Math.abs(y/30) * e.fout());
+            Fill.circle(e.x + x, e.y + y, e.fout() * 1.2f + Mathf.sin(e.fin() * 4 * Mathf.PI));
+        });
+        Angles.randLenVectors(e.id, (int) (radius * 0.25f) , -scaling * radius, e.rotation, 360, (x, y) -> {
+            Draw.color(Color.valueOf("#9c7ae1"), Color.valueOf("#231841"), Math.abs(x/30) * Math.abs(y/30) * e.fout());
+            Fill.square(e.x + x, e.y + y, e.fout() * 2 + Mathf.sin(e.fin() * 4 * Mathf.PI));
+        });
+    }),
 
         salty = new Effect(35f, e -> {
             color(Color.white, Palr.dustriken, e.fin());

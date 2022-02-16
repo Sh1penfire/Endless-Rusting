@@ -10,8 +10,7 @@ import arc.math.geom.Vec2;
 import arc.struct.ObjectIntMap;
 import arc.struct.ObjectMap.Entry;
 import arc.struct.Seq;
-import arc.util.Time;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.ai.types.*;
 import mindustry.content.*;
 import mindustry.core.Version;
@@ -33,10 +32,10 @@ import rusting.entities.bullet.*;
 import rusting.entities.units.*;
 import rusting.entities.units.flying.*;
 import rusting.entities.units.mech.BaseUnit;
+import rusting.entities.units.mech.SpecialWeaponsMech;
 import rusting.entities.units.spider.BaseSpiderEntity;
 import rusting.entities.units.spider.SpecialWeaponsSpider;
 import rusting.entities.units.weapons.*;
-import rusting.entities.units.weapons.mounts.*;
 import rusting.interfaces.Targeting;
 
 import static arc.graphics.g2d.Draw.color;
@@ -53,7 +52,8 @@ public class RustingUnits implements ContentList{
             prov(BaseUnit.class, BaseUnit::new),
             prov(BaseSpiderEntity.class, BaseSpiderEntity::new),
             prov(SpecialWeaponsSpider.class, SpecialWeaponsSpider::new),
-            prov(SpecialWeaponsFlying.class, SpecialWeaponsFlying::new)
+            prov(SpecialWeaponsFlying.class, SpecialWeaponsFlying::new),
+            prov(SpecialWeaponsMech.class, SpecialWeaponsMech::new)
     };
 
     private static ObjectIntMap<Class<? extends Entityc>> idMap = new ObjectIntMap<>();
@@ -77,12 +77,13 @@ public class RustingUnits implements ContentList{
 
     private static void setupID(){
         int start = 33;
-        int[] free = new int[types.length - 1];
+        int[] free = new int[types.length];
         for (int i = start, j = 0; i < EntityMapping.idMap.length; i++) {
             if(EntityMapping.idMap[i] == null) free[j++] = i;
             if(j > free.length - 1) break;
         }
 
+        Log.info("setting up map");
         for (int i = 0; i < free.length; i++) {
             idMap.put(types[i].key, free[i]);
             EntityMapping.idMap[free[i]] = types[i].value;
@@ -115,7 +116,7 @@ public class RustingUnits implements ContentList{
         //something
         SYSTEM_DELETED_UNIT,
         //player's unit
-        player;
+        glimpse, hastius, unwavering, sunspot;
 
     @Override
     public void load() {
@@ -128,25 +129,44 @@ public class RustingUnits implements ContentList{
 
          */
 
-        MountType.registry.put(
-                "default",
-                UnitMount::new
-        );
+        unwavering = new SpecialWeaponsUnitType("unwavering"){{
+            speed = 1.3f;
+            armor = 12;
+            health = 640;
 
-        MountType.registry.put(
-                "shoot",
-                ShootUnitMount::new
-        );
+            constructor = SpecialWeaponsMech::new;
 
-        MountType.registry.put(
-                "bullet",
-                BulletUnitMount::new
-        );
+            specialMounts.addAll(
+                    new ShotgunMountType("unwavering-shotgun") {{
+                        bulletType = RustingBullets.darkPellet;
+                        critBullet = RustingBullets.darkPelletCrit;
+                        critShootEffect = Fxr.blackenedShotgunCrit;
+                        critLifetimeMulti = 5;
+                        rotateSpeed = 15;
+                        shellReloadTime = 35;
+                        reloadTime = 12;
+                        shots = 12;
+                        velocityRand = 0.9f;
+                        inaccuracy = 25;
+                        shake = 2;
+                        critShakeMulti = 3;
+                    }}
+            );
 
-        MountType.registry.put(
-                "pointlaser",
-                PointLaserUnitMount::new
-        );
+            weapons.add(
+                new Weapon("clear"){{
+                    reload = 45;
+                    shots = 0;
+                    bullet = new ConsBulletType(6, 14, "clear"){{
+                        range = RustingBullets.darkPellet.range() * 2;
+                        shootEffect = Fx.none;
+                        smokeEffect = Fx.none;
+                        shootSound = Sounds.none;
+                        useRange = true;
+                    }};
+                }}
+            );
+        }};
 
         duono = new CraeUnitType("duono"){{
 
@@ -303,7 +323,7 @@ public class RustingUnits implements ContentList{
             );
             specialMounts.add(
                     new PointLaserMountType("austute-laser"){{
-                        reload = 75;
+                        reloadTime = 75;
                         rotateSpeed = 0;
                     }}
             );
@@ -992,6 +1012,7 @@ public class RustingUnits implements ContentList{
             legTrns = 0.6f;
             legMoveSpace = 3.25f;
             hovering = true;
+            drawCell = false;
 
             rotateSpeed = 4.95f;
             lightRadius = hitSize * 4.5f;
@@ -1011,6 +1032,7 @@ public class RustingUnits implements ContentList{
             specialMounts.addAll(
                 new BulletMountType(modname + "-diaphysis-harpoon-launcher"){{
                 bulletType = RustingBullets.stingrayShard;
+                rotateSpeed = 0;
                 y = -5;
                 x = 0;
             }});

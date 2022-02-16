@@ -111,7 +111,6 @@ public class PulseBlock extends Block implements ResearchableBlock {
     }
 
     public void setPulseStats(){
-        Log.info("hi!, my name is " + localizedName());
         pStats.pulseStorage.setValue(pulseStorage);
         pStats.resistance.setValue(resistance);
         pStats.powerLoss.setValue(powerLoss * 60);

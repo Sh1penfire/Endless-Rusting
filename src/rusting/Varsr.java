@@ -6,13 +6,15 @@ import arc.assets.Loadable;
 import arc.math.Mathf;
 import arc.struct.Queue;
 import arc.struct.Seq;
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.core.GameState;
+import mindustry.core.Version;
 import mindustry.game.EventType;
 import mindustry.game.EventType.Trigger;
 import mindustry.gen.Building;
+import mindustry.net.Net;
+import mindustry.net.Packet;
 import mindustry.type.ItemStack;
 import mindustry.world.Tile;
 import mindustry.world.meta.BuildVisibility;
@@ -24,6 +26,7 @@ import rusting.core.holder.ItemScoreHolder;
 import rusting.ctype.UnlockableAchievement;
 import rusting.entities.abilities.SpeedupAbility;
 import rusting.game.*;
+import rusting.net.ControlPacket;
 import rusting.ui.RustingUI;
 import rusting.util.MusicControl;
 import rusting.world.Worldr;
@@ -31,6 +34,9 @@ import rusting.world.blocks.defense.turret.BerthaTurret;
 import rusting.world.blocks.pulse.distribution.PulseCanal.PulseCanalBuild;
 import rusting.world.format.holder.FormatHolder;
 import rusting.world.research.RustingResearch;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 //having everything not branch off my main class was done due to ***AR O N FICX THE FUCKN M O D NAM E***
 public class Varsr implements Loadable {
@@ -183,6 +189,19 @@ public class Varsr implements Loadable {
     public static void end(){
         research.saveGameResearch();
         //sectors.writeNodes();
+    }
+    
+    public static void registerPackets(){
+        if(Version.isAtLeast("135")){
+            Class<?> classDef = Net.class;
+            try {
+                Method registerMethod = classDef.getMethod("registerPacket", Packet.class);
+                registerMethod.invoke(ControlPacket.class);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     public static void flare(){

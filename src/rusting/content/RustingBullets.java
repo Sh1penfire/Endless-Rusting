@@ -81,6 +81,8 @@ public class RustingBullets implements ContentList{
         saltyBolt,
         //instant bouncing bullets
         horizonInstalt, nummingInstalt, timelessInstalt, gunnersInstalt,
+        //linecast bullet clearers
+        darkPellet, darkPelletCrit,
         //laser bullets
         celsiusLance, kelvinLance,
         //bullet spawning bullets
@@ -319,6 +321,65 @@ public class RustingBullets implements ContentList{
             bounciness = 1.35f;
             bounceCap = 5;
         }};
+
+        darkPellet = new PelletBulletType(5, 25, "shell"){{
+            lifetime = 45;
+            width = 6;
+            height = 6;
+            drag = 0.05f;
+            bulletDamage = 15;
+            frontColor = Palr.voidBullet;
+            backColor = Palr.voidBulletBack;
+            lightRadius = 0;
+            hitEffect = Fxr.blackened;
+            shootEffect = Fxr.blackenedShotgun;
+            despawnEffect = Fx.plasticburn;
+            shrinkY = 0.2f;
+            pierce = true;
+            pierceCap = 2;
+            bulletPierceCap = 5;
+        }};
+
+        darkPelletCrit = new PelletBulletType(5, 25, "shell"){{
+            consHit = b -> {
+                Fxr.voidExplosion.at(b.x, b.y, splashDamageRadius);
+            };
+            lifetime = 45;
+            width = 6;
+            height = 6;
+            hitSize = 6;
+            drag = 0.05f;
+            splashDamage = 15;
+            splashDamageRadius = 45;
+            fragBullet = darkShard;
+            fragBullets = 3;
+            bulletDamage = 35;
+            shieldRadius = 10;
+            shieldSides = 6;
+            frontColor = Palr.voidBullet;
+            backColor = Palr.voidBulletBack;
+            shieldFront = new Color(Palr.voidLightBullet).a(1);
+            shieldBack = new Color(Palr.voidLightBulletBack).a(0.65f);
+            lightRadius = 0;
+            hitEffect = Fxr.blackened;
+            shootEffect = Fxr.blackenedShotgun;
+            despawnEffect = Fx.plasticburn;
+            shrinkY = 0.2f;
+            drawShield = true;
+            damageFalloff = false;
+            bulletPierceCap = 5;
+        }};
+
+        UnitTypes.alpha.weapons.each(w -> {
+            w.shootSound = Sounds.bang;
+            w.shake = 3;
+            w.reload = 45;
+            w.shots = 12;
+            w.velocityRnd = 0.8f;
+            w.shotDelay = 0.5f;
+            w.inaccuracy = 25;
+            w.bullet = darkPellet;
+        });
 
         fossilShard = new BounceBulletType(4, 9, "bullet"){{
             width = 7;
