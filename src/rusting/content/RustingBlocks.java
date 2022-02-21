@@ -1090,7 +1090,8 @@ public class RustingBlocks implements ContentList{
             requirements(Category.effect, BuildVisibility.editorOnly, with(Items.copper, 1000, Items.lead, 800));
             alwaysUnlocked = false;
 
-            unitType = RustingUnits.duoly;
+            unitType = RustingUnits.glimpse;
+            solid = false;
             health = 2100;
             itemCapacity = 6500;
             size = 3;

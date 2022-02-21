@@ -50,7 +50,7 @@ public class RustingBullets implements ContentList{
 
     public static Cons<Bullet>
         homing, noStopHoming,
-            velbasedHoming, velbasedHomingTrue, velbasedHomingDespawn,
+            velbasedHoming, velbasedHomingNoLife, velbasedHomingTrue, velbasedHomingDespawn,
             velbasedHomingFlame, homingFlame,
             homingOwner, homingBuildingsAroundOwner;
 
@@ -157,6 +157,28 @@ public class RustingBullets implements ContentList{
             if(bullet.dst(Tmp.v3.x, Tmp.v3.y) >= ((Ranged) bullet.owner).range() + trueBulletSpeed + 3) bullet.time += bullet.lifetime/100 * Time.delta;
 
             //essentualy goes to owner aim pos, without stopping homing
+        };
+
+        velbasedHomingNoLife = bullet -> {
+
+            if(!(bullet.owner instanceof Ranged) || bullet.time < bullet.type.homingDelay) return;
+
+            trueBulletSpeed = bullet.type.speed;
+            Tmp.v1.set(bullet.x, bullet.y);
+            //handle modded cases of bullet owners first
+            if(bullet.owner instanceof Targeting){
+                Tmp.v1.set(((Targeting) bullet.owner).targetPos());
+            }
+            else if(bullet.owner instanceof TurretBuild) {
+                Tmp.v1.set(((TurretBuild) bullet.owner).targetPos.x, ((TurretBuild) bullet.owner).targetPos.y);
+            }
+            else if (bullet.owner instanceof Unitc){
+                Tmp.v1.set(((Unitc) bullet.owner).aimX(), ((Unitc) bullet.owner).aimY());
+            }
+            Tmp.v3.set(((Posc) bullet.owner()).x(), ((Posc) bullet.owner()).y());
+            Tmp.v1.sub(Tmp.v3).clamp(0, ((Ranged) bullet.owner).range()).add(Tmp.v3);
+            bullet.vel.add(Tmp.v2.trns(bullet.angleTo(Tmp.v1), bullet.type.homingPower * Time.delta)).clamp(0, trueBulletSpeed);
+            //essentualy goes to owner aim pos, without stopping homing and reducing lifetime
         };
 
         velbasedHomingTrue = bullet -> {
@@ -340,37 +362,42 @@ public class RustingBullets implements ContentList{
             bulletPierceCap = 5;
         }};
 
-        darkPelletCrit = new PelletBulletType(5, 25, "shell"){{
+        darkPelletCrit = new LandmineBulletType(5, 15, "shell"){{
             consHit = b -> {
                 Fxr.voidExplosion.at(b.x, b.y, splashDamageRadius);
             };
-            lifetime = 45;
+            lifetime = 275;
             width = 6;
             height = 6;
             hitSize = 6;
             drag = 0.05f;
             splashDamage = 15;
-            splashDamageRadius = 45;
+            splashDamageRadius = 22;
             fragBullet = darkShard;
             fragBullets = 3;
-            bulletDamage = 35;
-            shieldRadius = 10;
+            shieldRadius = 5;
+            indicatorRadius = 10;
+            armingRange = splashDamageRadius;
+            armingMulti = 0.8f;
+
             shieldSides = 6;
             frontColor = Palr.voidBullet;
             backColor = Palr.voidBulletBack;
+
             shieldFront = new Color(Palr.voidLightBullet).a(1);
             shieldBack = new Color(Palr.voidLightBulletBack).a(0.65f);
+            colorStart = Palr.voidBullet;
+            colorEnd = Palr.voidBulletBack;
+
             lightRadius = 0;
             hitEffect = Fxr.blackened;
             shootEffect = Fxr.blackenedShotgun;
             despawnEffect = Fx.plasticburn;
             shrinkY = 0.2f;
-            drawShield = true;
-            damageFalloff = false;
-            bulletPierceCap = 5;
         }};
 
         UnitTypes.alpha.weapons.each(w -> {
+            w.bullet = darkPelletCrit;
             w.shootSound = Sounds.bang;
             w.shake = 3;
             w.reload = 45;
@@ -378,9 +405,7 @@ public class RustingBullets implements ContentList{
             w.velocityRnd = 0.8f;
             w.shotDelay = 0.5f;
             w.inaccuracy = 25;
-            w.bullet = darkPellet;
         });
-
         fossilShard = new BounceBulletType(4, 9, "bullet"){{
             width = 7;
             height = 8;
@@ -1051,7 +1076,7 @@ public class RustingBullets implements ContentList{
             trailWidth = 4;
             weaveMag = 2;
             weaveScale = 5;
-            homingPower = 0.145f;
+            homingPower = 0.125f;
             homingRange = 0;
             homingDelay = 65;
             knockback = 0.45f;

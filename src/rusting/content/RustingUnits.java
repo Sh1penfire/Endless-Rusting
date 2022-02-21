@@ -104,7 +104,7 @@ public class RustingUnits implements ContentList{
         observantly, kindling, sharpen,
         //Forgotten unit family
         marrow, metaphys, ribigen, spinascene, trumpedoot,
-        diaphysis,
+        diaphysis, epiphysis,
         //Pulse ground tree
         fahrenheit, celsius, kelvin,
         //walls
@@ -129,6 +129,55 @@ public class RustingUnits implements ContentList{
 
          */
 
+        glimpse = new BaseUnitType("glimpse"){{
+            defaultController = GroundAI::new;
+
+            accel = 0.18f;
+            drag = 0.15f;
+            speed = 0.85f;
+            armor = 7;
+            health = 450;
+            mineSpeed = 2.25f;
+            buildSpeed = 1.25f;
+
+            itemCapacity = 55;
+            range = 98;
+
+            weapons.addAll(
+                new Weapon("glimpse-sidearm"){{
+                    bullet = new ConsBulletType(4.2f, 35, "missile"){{
+                        consUpdate = RustingBullets.velbasedHomingNoLife;
+                        useRange = true;
+                        useTrueSpeed = true;
+                        trueSpeed = 1.5f;
+                        range = 128;
+                        width = 8;
+                        height = 10;
+                        lifetime = 450;
+                        homingPower = 0.15f;
+                        homingRange = 0;
+                        homingDelay = 35;
+                        splashDamage = 15;
+                        splashDamageRadius = 45;
+                        hitEffect = Fx.explosion;
+                        despawnEffect = Fx.smokeCloud;
+                        trailEffect = Fx.smoke;
+                        trailChance = 0.15f;
+                        hitSound = Sounds.explosion;
+                    }};
+                    shootSound = Sounds.missile;
+                    shots = 1;
+                    range = 65;
+                    reload = 35;
+                    inaccuracy = 5f;
+                    mirror = true;
+                    alternate = true;
+                }}
+            );
+
+            constructor = BaseUnit::new;
+        }};
+
         unwavering = new SpecialWeaponsUnitType("unwavering"){{
             speed = 1.3f;
             armor = 12;
@@ -142,6 +191,7 @@ public class RustingUnits implements ContentList{
                         critBullet = RustingBullets.darkPelletCrit;
                         critShootEffect = Fxr.blackenedShotgunCrit;
                         critLifetimeMulti = 5;
+                        critShots = 15;
                         rotateSpeed = 15;
                         shellReloadTime = 35;
                         reloadTime = 12;
@@ -1066,6 +1116,61 @@ public class RustingUnits implements ContentList{
                     soundPitchMax = 0.5f;
                     soundPitchMin = 0.35f;
                     shootCone = 360;
+                }}
+            );
+        }};
+
+        epiphysis = new SpecialWeaponsUnitType("epiphysis"){{
+            constructor = SpecialWeaponsMech::new;
+            specialMounts.add(
+                new BulletMountType(modname + "epiphysis-launcher"){{
+                    x = 0;
+                    y = 0;
+                    restitution = 0.005f;
+                    rotateSpeed = 0;
+                    shootY = 8.5f;
+
+                    shootSound = Sounds.missile;
+                    shots = 1;
+                    range = 65;
+                    reloadTime = 35;
+                    inaccuracy = 5f;
+
+                    bulletType = new ConsBulletType(4.2f, 35, "missile"){{
+                        consUpdate = RustingBullets.velbasedHomingNoLife;
+                        useRange = true;
+                        useTrueSpeed = true;
+                        trueSpeed = 1.5f;
+                        range = 128;
+                        width = 8;
+                        height = 10;
+                        lifetime = 450;
+                        homingPower = 0.15f;
+                        homingRange = 0;
+                        homingDelay = 35;
+                        splashDamage = 15;
+                        splashDamageRadius = 45;
+                        hitEffect = Fx.explosion;
+                        despawnEffect = Fx.smokeCloud;
+                        trailEffect = Fx.smoke;
+                        trailChance = 0.15f;
+                        hitSound = Sounds.explosion;
+                    }};
+
+                    parts.add(
+                        new MountPart(modname + "-epiphysis-launcher-rail"){{
+                            x = 0;
+                            y = 0;
+                            recoil = 1;
+                            layerOffset = -2;
+                        }},
+                        new MountPart(modname + "-epiphysis-launcher-casing"){{
+                            x = 0;
+                            y = 0;
+                            recoil = 2;
+                            layerOffset = -2;
+                        }}
+                    );
                 }}
             );
         }};

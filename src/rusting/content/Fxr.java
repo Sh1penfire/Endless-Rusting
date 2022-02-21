@@ -188,6 +188,17 @@ public class Fxr{
             });
         }),
 
+        magmaVentWater = new Effect(323f, 80f, e -> {
+            color(Liquids.water.color, Color.lightGray, e.finpow());
+            Draw.alpha(e.finpow() * 0.75f + 0.25f);
+
+            Draw.z(Mathf.lerp(Layer.groundUnit + 1, Layer.flyingUnit + 4, Math.min(e.fin() * 2, 1)));
+
+            randLenVectors(e.id, 2, e.finpow() * 12, e.rotation, 360, (x, y) -> {
+                Fill.circle(e.x + x, e.y + y + Math.max(e.finpow() - 0.3f, 0)/7 * 10 * 9 * Tmp.v1.set(x, y).len()/10f * 9, e.fout() * 1.6f);
+            });
+        }),
+
         singingFlame = new Effect(18, e ->{
             color(Pal.lightPyraFlame, Pal.darkPyraFlame, e.fin() * e.fin());
             float vx = e.x, vy = e.y;

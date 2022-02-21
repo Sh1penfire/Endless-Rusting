@@ -188,4 +188,20 @@ public class Drawr {
     public static boolean validateRegion(PixmapRegion weapon){
         return weapon != Core.atlas.getPixmap("none");
     }
+
+    public static void polyLight(float x, float y, float[] vertices, Color center, Color edge){
+        float centerf = center.toFloatBits(), edgef = edge.toFloatBits();
+        int size = vertices.length;
+
+        for (int i = 0; i < vertices.length; i += 2) {
+            float x1 = vertices[i % size],
+                    y1 = vertices[(i % size) + 1],
+                    x2 = vertices[(i + 2) % size],
+                    y2 = vertices[((i + 2) % size) + 1],
+                    x3 = vertices[(i + 4) % size],
+                    y3 = vertices[((i + 4) % size) + 1];
+
+            Fill.quad(x, y, centerf, x + x1, y + y1, edgef, x + x2, y + y2, edgef, x + x3, y + y3, edgef);
+        }
+    }
 }

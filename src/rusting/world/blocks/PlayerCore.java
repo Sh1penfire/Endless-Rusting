@@ -3,14 +3,17 @@ package rusting.world.blocks;
 import arc.Core;
 import arc.graphics.g2d.*;
 import arc.math.geom.Vec2;
+import arc.scene.ui.layout.Scl;
 import arc.struct.Seq;
 import arc.util.Time;
+import mindustry.Vars;
 import mindustry.gen.*;
 import mindustry.world.blocks.storage.CoreBlock;
 import rusting.net.Call;
 
 public class PlayerCore extends CoreBlock {
     public float constructTime = 150;
+    public float targetScale = Scl.scl(1), moveSpeed = 0.006f;
     public TextureRegion unitRegion;
 
     public PlayerCore(String name) {
@@ -41,10 +44,14 @@ public class PlayerCore extends CoreBlock {
             if(que.size > 0) {
                 progress += Time.delta;
                 constructPos.set(x, y);
+                Player p = que.get(0);
+                if(p == Vars.player){
+                    Vars.renderer.setScale(targetScale);
+                    Core.camera.position.set(x, y);
+                }
                 if(progress >= constructTime) {
                     progress = 0;
                     Unit coreUnit = unitType.spawn(team, constructPos.x, constructPos.y);
-                    Player p = que.get(0);
                     que.remove(0);
                     Call.playerControl(p, coreUnit);
                 }

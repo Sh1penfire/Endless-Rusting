@@ -21,6 +21,7 @@ public class UnitMount {
     public MountType type = null;
     public float reload = 0;
     public float rotation = 0;
+    public float recoil = 0;
 
     //a percentage, do with it what you want
     public float durability = 1;
@@ -34,7 +35,7 @@ public class UnitMount {
     }
 
     public Vec2 getPos(){
-        return new Vec2(x, y).rotate(owner.self().rotation - 90).add(owner.self().x, owner.self().y);
+        return new Vec2(x, y).rotate(getRotation()).add(owner.self().x, owner.self().y);
     }
 
     public float getRotation(){

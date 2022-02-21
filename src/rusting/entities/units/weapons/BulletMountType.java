@@ -2,6 +2,7 @@ package rusting.entities.units.weapons;
 
 import arc.audio.Sound;
 import arc.math.geom.Vec2;
+import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Bullet;
@@ -29,9 +30,15 @@ public class BulletMountType extends ShootMountType {
         }
 
         @Override
+        public void update() {
+            super.update();
+            recoil = Math.max(recoil - type.restitution * Time.delta, 0);
+        }
+
+        @Override
         public void shoot() {
             reload = 0;
-            bullet(getRotation());
+            bullet(getRotation() - 90);
             effects(bulletType);
         }
 
@@ -39,7 +46,7 @@ public class BulletMountType extends ShootMountType {
             return bulletType.create(
                     owner.self(),
                     owner.self().team,
-                    Tmp.v1.set(getShootPos()).x, Tmp.v1.y, angle);
+                    Tmp.v1.set(getShootPos()).x, getShootPos().y, angle);
         }
 
         public void effects(BulletType type){
@@ -47,6 +54,7 @@ public class BulletMountType extends ShootMountType {
             shootPos.add(Tmp.v1.set(shootX, shootY).rotate(getRotation()));
             shootSound.at(getPos().x, getPos().y, 1, 1);
             type.shootEffect.at(shootPos.x, shootPos.y, getRotation());
+            recoil = 1;
         }
 
         @Override

@@ -19,6 +19,7 @@ public class ShotgunMountType extends BulletMountType{
     public Effect critShootEffect = Fx.explosion;
     public float critSpeedMulti = 1.35f;
     public float shellReloadTime = 60;
+    public int critShots = 3;
     public float shellSpace = 3;
     public float critDamageMulti = 2.25f, critLifetimeMulti = 1.35f;
     public float critShakeMulti = 3;
@@ -65,7 +66,7 @@ public class ShotgunMountType extends BulletMountType{
             if(consecutive >= shellSpace) crit = true;
             Tmp.v1.set(getPos().add(Tmp.v2.set(shootX, shootY).rotate(getRotation() - 90)));
             BulletType shot = crit && critBullet != null ? critBullet : bulletType;
-            Angles.shotgun(shots, spacing, getRotation(), f -> {
+            Angles.shotgun(crit ? critShots : shots, spacing, getRotation(), f -> {
                 Bullet b = shot.create(
                         owner.self(),
                         owner.self().team,
@@ -90,8 +91,8 @@ public class ShotgunMountType extends BulletMountType{
             Vec2 shootPos = new Vec2(getPos());
             shootPos.add(Tmp.v1.set(shootX, shootY).rotate(getRotation()));
             shootSound.at(getPos().x, getPos().y, 1, 1);
-            if(crit) critShootEffect.at(shootPos.x, shootPos.y, getRotation());
-            else type.shootEffect.at(shootPos.x, shootPos.y, getRotation());
+            if(crit) critShootEffect.at(shootPos.x, shootPos.y, getRotation() - 90);
+            else type.shootEffect.at(shootPos.x, shootPos.y, getRotation() - 90);
             Effect.shake((crit ? shake * critShakeMulti : shake), shakeDuration, shootPos.x, shootPos.y);
         }
 

@@ -1,22 +1,19 @@
 package rusting.entities.units.weapons;
 
 import arc.Core;
-import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
-import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.Tmp;
-import mindustry.graphics.Layer;
-import mindustry.type.UnitType;
 import rusting.entities.units.SpecialWeaponsUnitType;
 import rusting.interfaces.SpecialWeaponsUnit;
-
-import static mindustry.type.UnitType.outlineSpace;
 
 public class MountType {
 
     //all mounts
     public static Seq<MountType> mounts = Seq.with();
+
+    //mount parts
+    public Seq<MountPart> parts = Seq.with();
+    public boolean useParts = true;
 
     public MountType(String name){
         this.name = name;
@@ -37,6 +34,12 @@ public class MountType {
     //the default speed at which the mount rotates at
     public float rotateSpeed = 10;
 
+    //recoil
+    public float recoil = 0;
+
+    //recoil lost per tick
+    public float restitution = 0.12f;
+
     public TextureRegion region, outlineRegion, fullRegion;
 
     public MountProvider<UnitMount> mountType = UnitMount::new;
@@ -49,6 +52,13 @@ public class MountType {
         region = Core.atlas.find(name);
         outlineRegion = Core.atlas.find(name + "-outline", Core.atlas.find("clear"));
         fullRegion = Core.atlas.find(name + "-full", region);
+        if(parts.size == 0 || !useParts) {
+            parts.add(new MountPart(name) {{
+
+            }});
+            parts.get(0).init(this);
+        }
+        parts.each(p -> p.load());
     }
 
     public UnitMount createMount(){
@@ -69,12 +79,7 @@ public class MountType {
 
     //override this to draw the weapon
     public void draw(UnitMount mount){
-        UnitType type = mount.owner.self().type;
-        float z = mount.owner.self().elevation > 0.5f ? (type.lowAltitude ? Layer.flyingUnitLow : Layer.flyingUnit) : type.groundLayer + Mathf.clamp(mount.owner.self().hitSize / 4000f, 0, 0.01f);
-        Draw.z(z);
-        Draw.rect(region, Tmp.v1.set(mount.getPos()).x, Tmp.v1.y, mount.getRotation() - 90);
-        if(!top) Draw.z(z - outlineSpace);
-        Draw.rect(outlineRegion, Tmp.v1.set(mount.getPos()).x, Tmp.v1.y, mount.getRotation() - 90);
+        parts.each(m -> m.draw(mount));
     }
 
     public interface MountProvider<T>{
