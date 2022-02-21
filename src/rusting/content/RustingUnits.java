@@ -1121,6 +1121,23 @@ public class RustingUnits implements ContentList{
         }};
 
         epiphysis = new SpecialWeaponsUnitType("epiphysis"){{
+            speed = 0.75f;
+            range = 170;
+
+            weapons.add(
+                new Weapon("clear"){{
+                    reload = 45;
+                    shots = 0;
+                    bullet = new ConsBulletType(6, 14, "clear"){{
+                        range = 170;
+                        shootEffect = Fx.none;
+                        smokeEffect = Fx.none;
+                        shootSound = Sounds.none;
+                        useRange = true;
+                    }};
+                }}
+            );
+
             constructor = SpecialWeaponsMech::new;
             specialMounts.add(
                 new BulletMountType(modname + "epiphysis-launcher"){{
@@ -1133,42 +1150,47 @@ public class RustingUnits implements ContentList{
                     shootSound = Sounds.missile;
                     shots = 1;
                     range = 65;
-                    reloadTime = 35;
+                    reloadTime = 150;
                     inaccuracy = 5f;
 
-                    bulletType = new ConsBulletType(4.2f, 35, "missile"){{
+
+                    bulletType = new ConsBulletType(3.5f, 250, "missile"){{
                         consUpdate = RustingBullets.velbasedHomingNoLife;
                         useRange = true;
                         useTrueSpeed = true;
-                        trueSpeed = 1.5f;
+                        collidesTiles = false;
+                        trueSpeed = 0.1f;
+                        drag = -0.015f;
                         range = 128;
                         width = 8;
                         height = 10;
-                        lifetime = 450;
-                        homingPower = 0.15f;
+                        lifetime = 250;
+                        homingPower = 0.11f;
                         homingRange = 0;
                         homingDelay = 35;
-                        splashDamage = 15;
+                        splashDamage = 85;
                         splashDamageRadius = 45;
-                        hitEffect = Fx.explosion;
-                        despawnEffect = Fx.smokeCloud;
-                        trailEffect = Fx.smoke;
-                        trailChance = 0.15f;
-                        hitSound = Sounds.explosion;
+                        hitEffect = Fxr.instaltSummonerExplosionLarge;
+                        despawnEffect = Fxr.instaltSummonerExplosionLarge;
+                        trailEffect = Fx.redgeneratespark;
+                        trailChance = 0.35f;
+                        hitSound = Sounds.explosionbig;
                     }};
 
                     parts.add(
                         new MountPart(modname + "-epiphysis-launcher-rail"){{
                             x = 0;
                             y = 0;
-                            recoil = 1;
+                            recoil = 3;
                             layerOffset = -2;
+                            top = false;
                         }},
                         new MountPart(modname + "-epiphysis-launcher-casing"){{
                             x = 0;
                             y = 0;
-                            recoil = 2;
+                            recoil = 6;
                             layerOffset = -2;
+                            top = false;
                         }}
                     );
                 }}

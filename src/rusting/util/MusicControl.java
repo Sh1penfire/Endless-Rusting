@@ -5,7 +5,6 @@ import arc.Events;
 import arc.assets.AssetDescriptor;
 import arc.assets.loaders.MusicLoader.MusicParameter;
 import arc.audio.Music;
-import arc.files.Fi;
 import arc.func.Boolf;
 import arc.func.Boolp;
 import arc.math.Mathf;
@@ -13,15 +12,12 @@ import arc.struct.*;
 import arc.util.Log;
 import arc.util.Nullable;
 import mindustry.core.GameState;
+import mindustry.core.GameState.State;
 import mindustry.game.EventType;
+import mindustry.game.EventType.StateChangeEvent;
 import mindustry.type.SectorPreset;
 import rusting.game.ERSectorPreset;
 import rusting.util.MusicControl.MusicSecController.MusicSecSegment;
-
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Objects;
 
 import static mindustry.Vars.*;
 import static rusting.Varsr.music;
@@ -165,6 +161,7 @@ public class MusicControl {
     public Seq<ERSectorPreset> musicSectors = Seq.with();
 
     public void init(){
+        ObjectMap
         musics = new Music[musicFiles.length];
         Events.on(EventType.FileTreeInitEvent.class, e -> {
             //load music here
@@ -174,17 +171,12 @@ public class MusicControl {
 
         });
 
-
-        /*
-
         Events.on(StateChangeEvent.class, e -> {
             if(e.to == State.playing && e.from == State.menu){
                 setupSector();
             }
             else if(e.to == State.menu) currentMusicSector = null;
         });
-
-         */
     }
 
     public void setupSector(){
@@ -247,56 +239,8 @@ public class MusicControl {
         }
     }
 
-    //hipity hpity-
-    public double calculateDuration(final File oggFile) throws IOException {
-        int rate = -1;
-        int length = -1;
-
-        int size = (int) oggFile.length();
-        byte[] t = new byte[size];
-
-        FileInputStream stream = new FileInputStream(oggFile);
-        stream.read(t);
-
-        for (int i = size-1-8-2-4; i>=0 && length<0; i--) { //4 bytes for "OggS", 2 unused bytes, 8 bytes for length
-            // Looking for length (value after last "OggS")
-            if (
-                    t[i]==(byte)'O'
-                            && t[i+1]==(byte)'g'
-                            && t[i+2]==(byte)'g'
-                            && t[i+3]==(byte)'S'
-            ) {
-                byte[] byteArray = new byte[]{t[i+6],t[i+7],t[i+8],t[i+9],t[i+10],t[i+11],t[i+12],t[i+13]};
-                ByteBuffer bb = ByteBuffer.wrap(byteArray);
-                bb.order(ByteOrder.LITTLE_ENDIAN);
-                length = bb.getInt(0);
-            }
-        }
-        for (int i = 0; i<size-8-2-4 && rate<0; i++) {
-            // Looking for rate (first value after "vorbis")
-            if (
-                    t[i]==(byte)'v'
-                            && t[i+1]==(byte)'o'
-                            && t[i+2]==(byte)'r'
-                            && t[i+3]==(byte)'b'
-                            && t[i+4]==(byte)'i'
-                            && t[i+5]==(byte)'s'
-            ) {
-                byte[] byteArray = new byte[]{t[i+11],t[i+12],t[i+13],t[i+14]};
-                ByteBuffer bb = ByteBuffer.wrap(byteArray);
-                bb.order(ByteOrder.LITTLE_ENDIAN);
-                rate = bb.getInt(0);
-            }
-
-        }
-        stream.close();
-
-        double duration = (double) (length*1000) / (double) rate;
-        return duration;
-    }
-
     public void reset(){
-        if(current != null){
+        if(current != null && current.music != null){
             current.music.setLooping(false);
             if(current.music.isPlaying()) current.music.stop();
         }
@@ -325,33 +269,5 @@ public class MusicControl {
         desc.errored = Throwable::printStackTrace;
 
         return music;
-    }
-
-    //I literaly have no idea what this code does
-    public void rrrrr() throws IOException {
-        Fi fil = tree.get("music/march.ogg");
-        File file = fil.file();
-        String path = file.getAbsolutePath();
-
-        Log.info(fil.exists());
-        Log.info(fil);
-        Log.info(file);
-        Log.info(path);
-        FileInputStream fileInputStream = null;
-        long duration = 0;
-
-        try {
-            fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            Log.err(e);
-        }
-
-        try {
-            duration = Objects.requireNonNull(fileInputStream).getChannel().size() / 128;
-        } catch (IOException e) {
-            Log.err(e);
-        }
-
-        Log.info(duration);
     }
 }

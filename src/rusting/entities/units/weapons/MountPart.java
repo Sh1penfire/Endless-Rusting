@@ -13,6 +13,8 @@ import static mindustry.type.UnitType.outlineSpace;
 
 public class MountPart {
 
+    public float groundLayer = Layer.groundUnit;
+    public boolean top = false;
     //offset from the normal drawing layer of the mount
     public float layerOffset = 0;
     //x and y positions of the part
@@ -41,8 +43,9 @@ public class MountPart {
 
     public void draw(UnitMount mount){
         UnitType type = mount.owner.self().type;
-        float z = (mount.owner.self().elevation > 0.5f ? (type.lowAltitude ? Layer.flyingUnitLow : Layer.flyingUnit) : type.groundLayer + Mathf.clamp(mount.owner.self().hitSize / 4000f, 0, 0.01f)) - layerOffset;
-        if(!mount.type.top) Draw.z(z - outlineSpace);
+        float z = (mount.owner.self().elevation > 0.5f ? (type.lowAltitude ? Layer.flyingUnitLow : Layer.flyingUnit) : groundLayer + Mathf.clamp(mount.owner.self().hitSize / 4000f, 0, 0.01f)) + layerOffset;
+        if(!top) Draw.z(z - outlineSpace);
+        else Draw.z(z);
         Draw.rect(outlineRegion, Tmp.v1.set(getPos(mount)).x, Tmp.v1.y, mount.getRotation() - 90);
         Draw.z(z);
         Draw.rect(region, Tmp.v1.set(getPos(mount)).x, Tmp.v1.y, mount.getRotation() - 90);

@@ -38,7 +38,7 @@ public class BulletMountType extends ShootMountType {
         @Override
         public void shoot() {
             reload = 0;
-            bullet(getRotation() - 90);
+            bullet(getRotation());
             effects(bulletType);
         }
 
@@ -51,7 +51,7 @@ public class BulletMountType extends ShootMountType {
 
         public void effects(BulletType type){
             Vec2 shootPos = new Vec2(getPos());
-            shootPos.add(Tmp.v1.set(shootX, shootY).rotate(getRotation()));
+            shootPos.add(Tmp.v1.set(shootX, shootY).rotate(getRotation() - 90));
             shootSound.at(getPos().x, getPos().y, 1, 1);
             type.shootEffect.at(shootPos.x, shootPos.y, getRotation());
             recoil = 1;

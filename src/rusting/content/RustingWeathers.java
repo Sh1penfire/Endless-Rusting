@@ -9,12 +9,13 @@ import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.type.Weather;
 import mindustry.world.meta.Attribute;
+import rusting.graphics.RustedShaders;
 import rusting.type.weather.*;
 
 public class RustingWeathers implements ContentList{
     public static Weather
             //destructive
-            fossilStorm, corrosiveDeluge, pulesweptGround, chemNullificationStorm, hailsiteSpray;
+            fossilStorm, corrosiveDeluge, pulsesweptGround, chemNullificationStorm, hailsiteSpray;
 
     @Override
     public void load(){
@@ -61,7 +62,7 @@ public class RustingWeathers implements ContentList{
             attrs.set(Attribute.water, 0.35f);
         }};
 
-        pulesweptGround = new PowerDisablingParticleWeather("pulseswept-ground"){{
+        pulsesweptGround = new PowerDisablingParticleWeather("pulseswept-ground"){{
             color = Palr.pulseBullet;
             blindingColor = Palr.darkerPulseChargeStart;
             drawNoise = true;
@@ -73,6 +74,7 @@ public class RustingWeathers implements ContentList{
             baseSpeed = 1.25f;
             opacityMultiplier = 0.375f;
             drawLayer = Layer.groundUnit + 0.5f;
+            shader = RustedShaders.staticShader;
             status = RustingStatusEffects.balancedPulsation;
             statusAir = false;
             useWindVector = true;

@@ -2,6 +2,7 @@ package rusting.graphics;
 
 import arc.Core;
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
 import arc.util.Log;
@@ -15,6 +16,7 @@ public class RustedShaders {
 
     public static @Nullable
     PulseShader pulseGradiant;
+    public static @Nullable NamedShader staticShader;
     protected static boolean loaded;
 
     public static void load(){
@@ -23,6 +25,7 @@ public class RustedShaders {
 
         try {
             pulseGradiant = new PulseShader("pulseGradiant");
+            staticShader = new NamedShader("static");
         }
         catch (IllegalArgumentException error){
             loaded = false;
@@ -51,6 +54,11 @@ public class RustedShaders {
                     Core.camera.position.x,
                     Core.camera.position.y
             );
+            setUniformf("u_resolution",
+                    Core.graphics.getWidth(),
+                    Core.graphics.getHeight()
+            );
+            setUniformf("u_drawCol", Draw.getColor().r,  Draw.getColor().g,  Draw.getColor().b,  Draw.getColor().a);
         }
     }
 

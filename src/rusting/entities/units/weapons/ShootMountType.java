@@ -64,7 +64,7 @@ public class ShootMountType extends MountType {
         }
 
         public Vec2 getShootPos(){
-            return new Vec2(x, y).rotate(owner.self().rotation - 90).add(owner.self().x, owner.self().y).add(new Vec2(shootX, shootY).rotate(getRotation()));
+            return new Vec2(x, y).rotate(owner.self().rotation - 90).add(owner.self().x, owner.self().y).add(new Vec2(shootX, shootY).rotate(getRotation() - 90));
         }
 
         @Override

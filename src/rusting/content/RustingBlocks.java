@@ -13,7 +13,6 @@ import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.*;
-import mindustry.world.blocks.distribution.Conveyor;
 import mindustry.world.blocks.environment.*;
 import mindustry.world.blocks.power.LightBlock;
 import mindustry.world.blocks.production.GenericCrafter;
@@ -33,6 +32,7 @@ import rusting.world.blocks.defense.turret.*;
 import rusting.world.blocks.defense.turret.healer.*;
 import rusting.world.blocks.defense.turret.power.LightningTurret;
 import rusting.world.blocks.defense.turret.power.PanelTurret;
+import rusting.world.blocks.distribution.FrictionConveyor;
 import rusting.world.blocks.environment.*;
 import rusting.world.blocks.logic.UnbreakableMessageBlock;
 import rusting.world.blocks.power.AttributeBurnerGenerator;
@@ -758,8 +758,8 @@ public class RustingBlocks implements ContentList{
 
         //region distribution
 
-        terraConveyor = new Conveyor("terra-conveyor"){{
-            requirements(Category.distribution, with(Items.copper, 2, Items.coal, 1, RustingItems.bulastelt, 2));
+        terraConveyor = new FrictionConveyor("terra-conveyor"){{
+            requirements(Category.distribution, with(Items.copper, 2, RustingItems.taconite, 1));
             health = 95;
             speed = 0.04f;
             displayedSpeed = 5.5f;
