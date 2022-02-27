@@ -45,13 +45,14 @@ public class PlayerCore extends CoreBlock {
                 progress += Time.delta;
                 constructPos.set(x, y);
                 Player p = que.get(0);
-                if(p == Vars.player){
+                if(false && p == Vars.player){
                     Vars.renderer.setScale(targetScale);
                     Core.camera.position.set(x, y);
                 }
                 if(progress >= constructTime) {
                     progress = 0;
                     Unit coreUnit = unitType.spawn(team, constructPos.x, constructPos.y);
+                    coreUnit.spawnedByCore = true;
                     que.remove(0);
                     Call.playerControl(p, coreUnit);
                 }

@@ -23,7 +23,7 @@ public class BoomerangBulletType extends BounceBulletType {
     public float rotateMag = 1f, rotScaling = 1, rotScaleMin = 0.1f, rotScaleMax = 1, rotateVisualMag = 1;
     public boolean reverseBoomerangRotScale = false, stayInRange = false;
 
-    public BoomerangBulletType(float speed, int damage, String sprite) {
+    public BoomerangBulletType(float speed, float damage, String sprite) {
         super(speed, damage, sprite);
         this.trailLength = 10;
         this.trailWidth = width/3;

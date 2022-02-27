@@ -34,8 +34,9 @@ public class ShootMountType extends MountType {
         ShootUnitMount shoot = (ShootUnitMount) mount;
         shoot.rotation = Angles.moveToward(shoot.rotation, shoot.getPos().angleTo(unit.self().aimX, unit.self().aimY), rotateSpeed * Time.delta);
 
-        if(shoot.isShooting() && shoot.shouldReload()) {
-            shoot.reload += Time.delta * unit.self().reloadMultiplier();
+        if(shoot.shouldReload()) shoot.reload += Time.delta * unit.self().reloadMultiplier();
+
+        if(shoot.isShooting()) {
             if (shoot.canShoot()) shoot.shoot();
         }
     }

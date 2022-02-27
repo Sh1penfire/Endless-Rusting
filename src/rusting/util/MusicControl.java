@@ -161,7 +161,6 @@ public class MusicControl {
     public Seq<ERSectorPreset> musicSectors = Seq.with();
 
     public void init(){
-        ObjectMap
         musics = new Music[musicFiles.length];
         Events.on(EventType.FileTreeInitEvent.class, e -> {
             //load music here

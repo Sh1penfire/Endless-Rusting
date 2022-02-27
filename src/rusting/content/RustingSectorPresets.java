@@ -8,11 +8,9 @@ import mindustry.content.StatusEffects;
 import mindustry.core.GameState;
 import mindustry.ctype.ContentList;
 import mindustry.gen.Groups;
-import rusting.Varsr;
-import rusting.game.ERSectorPreset;
-import rusting.game.ScriptedSectorHandler.EventNodeSupplier;
-import rusting.game.nodes.action.EffectEventNode;
-import rusting.game.nodes.conditional.TimedEventNode;
+import rusting.game.*;
+import rusting.game.controller.CrystallineCragsController;
+import rusting.game.controller.ScrapyardController;
 import rusting.util.MusicControl.MusicSecController.MusicSecSegment;
 
 public class RustingSectorPresets implements ContentList {
@@ -68,10 +66,12 @@ public class RustingSectorPresets implements ContentList {
             difficulty = 4;
         }};
 
-        crystallineCrags = new ERSectorPreset("crystalline-crags", RustingPlanets.err, 268){{
+        crystallineCrags = new ScriptedSector("crystalline-crags", RustingPlanets.err, 268){{
             captureWave = 40;
             difficulty = 4;
             musicChance = 1;
+
+            defaultController = new CrystallineCragsController();
 
             musicSecController.musicMap.addAll(
                     ObjectMap.of(
@@ -114,12 +114,6 @@ public class RustingSectorPresets implements ContentList {
             captureWave = 0;
         }};
 
-        Varsr.sectors.nodeRegistery.putAll(ObjectMap.of(
-                "positionaleffect",
-                new EventNodeSupplier(EffectEventNode.class),
-                "timed",
-                new EventNodeSupplier(TimedEventNode.class)
-            )
-        );
+        SectorController.mapSector(new ScrapyardController(), 1);
     }
 }

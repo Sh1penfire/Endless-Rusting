@@ -1,143 +1,79 @@
 package rusting.game;
 
-import arc.Core;
+import arc.Events;
 import arc.assets.Loadable;
-import arc.struct.ObjectMap;
+import arc.func.Boolf;
 import arc.struct.Seq;
-import arc.util.Log;
-import mindustry.Vars;
-import mindustry.io.JsonIO;
-import rusting.Varsr;
-import rusting.game.nodes.EventNode;
+import arc.util.Nullable;
+import mindustry.game.EventType;
+import mindustry.type.SectorPreset;
+import rusting.game.controller.DefaultController;
 
-//Thanks Glen, going to be fun playing around with this :D
+import static mindustry.Vars.mapExtension;
+import static mindustry.Vars.state;
+
+/**
+ * A class which handles scripted sector controllers, see {@link SectorController}
+ */
 public class ScriptedSectorHandler implements Loadable {
 
-    //if the handler is active or not
-    public boolean active = false;
+    //Used in the case that no valid controller is found. Unmapped.
+    public static SectorController defaultController = new DefaultController();
 
-    //used  as a temporarily variable in writing the nodes to the editor's tags
-    public static String completeEntry;
+    //A list of all scripted sectors
+    public static Seq<ScriptedSector> scriptedSectors = Seq.with();
+
+    //Current controller
+    public SectorController controller = defaultController;
+
+    //Current sector preset. Can be null.
+    public @Nullable ScriptedSector preset;
 
 
-    //nodes currently in the sector
-    public Seq<EventNode> nodes = Seq.with();
-    //nodes which are active in the sector
-    public Seq<EventNode> activeNodes = Seq.with();
-
-    //used for itterating over everything without fucking activeNodes over
-    private Seq<EventNode> activeNodesClone;
-
-    //register custom nodes to strings, why am I making this it's not like some mod is going to use ER as a dependanc-
-    public ObjectMap<String, NodeSupplier> nodeRegistery = ObjectMap.of();
-
-    //placeholder variable for if it should save
-    private boolean save = false;
+    private ScriptedSector sector;
 
     public ScriptedSectorHandler(){
-        
+        SectorController.mapSector(defaultController, 0);
     }
 
-    public NodeSupplier getNode(String key){
-        return nodeRegistery.get(key);
-    }
-
-    public void readNodes() {
-        String json = Vars.state.rules.tags.get("er.sectorevents", "");
-        if (json == "") {
-            active = false;
-            return;
-        };
-        try {
-            Log.info(json);
-            String[] types = json.split("\\|");
-            for (int i = 1; i < types.length; i++) {
-                //split string into the name of the node, and it's sotred json
-                String[] args = types[i].split("!");
-
-                //get the node based on the stored name before the !, then suply the NodeSupplier with the json
-                EventNode node = getNode(args[0]).get(args[1]);
-                nodes.add(node);
-                if (node.active) activeNodes.add(node);
-            }
-            active = true;
-        } catch (Error e) {
-            Log.err(e);
-            Vars.state.rules.tags.put("er.sectorevents", "");
-            active = false;
-        }
-    }
-
-    public String writeNodes(){
-        try{
-            completeEntry = "";
-            nodes.each(n -> {
-                completeEntry = n.write(completeEntry);
-            });
-            Vars.state.rules.tags.put("er.sectorevents", completeEntry);
-            nodes.clear();
-            activeNodes.clear();
-            Log.info(completeEntry);
-            return completeEntry;
-        }
-        catch (Error e){
-            Log.err(Varsr.username + ", you got an error: \n"+  Core.bundle.get("er.failsave"), e);
-        }
-        return "";
-    }
-
-    public void update(){
-        if(!active) return;
-
-        save = false;
-        activeNodesClone = activeNodes.copy();
-        activeNodesClone.each(n -> {
-            n.update();
-
-            //it's already saved, don't save nodes again
-            if(!save && n.shouldSave()) {
-                save = true;
-            }
-            if(!n.alwaysActive && n.finished()){
-                for(int i = 0; i < n.activates.size; i++){
-                    try {
-                        EventNode act = nodes.get(n.activates.get(i));
-                        activeNodes.add(act);
-                        act.active = true;
-                    }
-                    catch (Error e){
-                        n.activates.removeIndex(i);
-                        Log.err("A Node was found trying to activate a node out of bounds.\nNode's position: + " + activeNodesClone.indexOf(n) + "\nError is below\n" + e);
-                    }
-                }
-
-                n.active = false;
-                activeNodes.remove(n);
-            }
+    public void init(){
+        Events.run(EventType.WaveEvent.class, () -> {
+            if(controller != null) controller.wave();
         });
-        if(save) writeNodes();
     }
 
-    public void draw(){
-
-    }
-
-    public interface NodeSupplier {
-        EventNode get(String json);
-    }
-
-    //use if there's no extra nuance to reading and writing the node
-    public static class EventNodeSupplier implements NodeSupplier {
-        public Class nodeClass;
-
-        public EventNodeSupplier(Class inputClass){
-            nodeClass = inputClass;
+    public Boolf<SectorPreset> isScripted = (sectorPreset -> {
+        if (sectorPreset instanceof ScriptedSector) {
+            sector = (ScriptedSector) sectorPreset;
+            return true;
         }
+        return false;
+    });
 
-        @Override
-        public EventNode get(String json) {
-            return (EventNode) JsonIO.json.fromJson(nodeClass, json);
+    //Setup the controller for the current sector.
+    public void setup() {
+        if (state.isCampaign() && isScripted.get(state.getSector().preset) && scriptedSectors.contains(sector) && sector.musicChance != 0 && scriptedSectors.size > 0) {
+            loadSector(sector);
+            return;
         }
+        if (isScripted.get(scriptedSectors.find(this::isValidSector))) {
+            loadSector(sector);
+            return;
+        }
+        //ersc stands for Endless Rusting Sector Controller
+        controller = SectorController.idMap.get(state.rules.tags.getInt("ersc", 0), defaultController);
+        controller.load();
     }
 
+    public boolean isValidSector(ScriptedSector erSectorPreset) {
+        sector = erSectorPreset;
+        return state.map.file.name().equals(sector.name.substring(sector.minfo.mod.name.length() + 1) + "." + mapExtension);
+    }
+
+    //Sets the preset to the current sector and loads the controller
+    public void loadSector(ScriptedSector sector){
+        controller = sector.defaultController;
+        preset = sector;
+        controller.load();
+    }
 }

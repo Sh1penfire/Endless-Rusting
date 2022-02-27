@@ -396,16 +396,6 @@ public class RustingBullets implements ContentList{
             shrinkY = 0.2f;
         }};
 
-        UnitTypes.alpha.weapons.each(w -> {
-            w.bullet = darkPelletCrit;
-            w.shootSound = Sounds.bang;
-            w.shake = 3;
-            w.reload = 45;
-            w.shots = 12;
-            w.velocityRnd = 0.8f;
-            w.shotDelay = 0.5f;
-            w.inaccuracy = 25;
-        });
         fossilShard = new BounceBulletType(4, 9, "bullet"){{
             width = 7;
             height = 8;
@@ -532,7 +522,8 @@ public class RustingBullets implements ContentList{
             homingDelay = 35;
             hitEffect = Fx.hitFuse;
             trailLength = 0;
-            bounciness = 0.85f;
+            bounciness = 1.85f;
+            pierceCap = 4;
             bounceCap = 0;
             weaveScale = 4;
             weaveMag = 3;
@@ -569,8 +560,10 @@ public class RustingBullets implements ContentList{
             consUpdate = new Cons<Bullet>() {
                 @Override
                 public void get(Bullet bullet) {
-                    darkShard.create(bullet.owner, bullet.team, bullet.x, bullet.y, bullet.rotation() - 90, Mathr.helix(7, 1, bullet.fin()));
-                    darkShard.create(bullet.owner, bullet.team, bullet.x, bullet.y, bullet.rotation() + 90, Mathr.helix(7, 1, bullet.fin()));
+                    if(bullet.timer(3, 2)){
+                        darkShard.create(bullet.owner, bullet.team, bullet.x, bullet.y, bullet.rotation() - 90, Mathr.helix(7, 1, bullet.fin()));
+                        darkShard.create(bullet.owner, bullet.team, bullet.x, bullet.y, bullet.rotation() + 90, Mathr.helix(7, 1, bullet.fin()));
+                    }
                 }
             };
             despawnEffect = Fx.plasticburn;

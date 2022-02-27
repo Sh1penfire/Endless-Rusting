@@ -7,8 +7,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.util.*;
-import mindustry.content.Items;
-import mindustry.content.Liquids;
+import mindustry.content.*;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.Team;
@@ -823,6 +822,23 @@ public class Fxr{
 
         randLenVectors(e.id + 1, 12, 1f + 43f * e.finpow(), (x, y) -> {
             lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 5f);
+        });
+    }),
+
+    powderyExplosion = new Effect(65, e -> {
+        e.scaled(25, e2 -> {
+            stroke(3f * e2.fout());
+            Lines.circle(e.x, e.y, 5f + e2.fin() * 75f);
+
+            color(Pal.stoneGray);
+            randLenVectors(e.id, 12, 3f + e2.finpow() * 45f, (x, y) -> {
+                Fill.square(e.x + x, e.y + y, e2.fout() * 1.25f + 0.5f, 45);
+            });
+        });
+
+        randLenVectors(e.id, 7, 3f + e.fin() * 13f, (x, y) -> {
+            color(Pal.stoneGray);
+            Fill.square(e.x + x, e.y + y, e.fout() * 3f + 0.5f, 45);
         });
     }),
 

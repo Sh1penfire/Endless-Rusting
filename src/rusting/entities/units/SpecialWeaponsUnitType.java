@@ -23,13 +23,12 @@ public class SpecialWeaponsUnitType extends BaseUnitType {
     @Override
     public void init() {
         super.init();
-        int index = 0;
         MountType w;
         //setup unit and position
         for (int i = 0; i < specialMounts.size; i++) {
             w = specialMounts.get(i);
             w.unit = this;
-            w.position = index;
+            w.position = i;
         }
     }
 

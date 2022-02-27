@@ -41,6 +41,7 @@ import rusting.interfaces.Targeting;
 import static arc.graphics.g2d.Draw.color;
 import static rusting.EndlessRusting.modname;
 import static rusting.content.RustingAISwitches.*;
+import static rusting.content.RustingBullets.velbasedHomingNoLife;
 
 public class RustingUnits implements ContentList{
 
@@ -145,7 +146,7 @@ public class RustingUnits implements ContentList{
 
             weapons.addAll(
                 new Weapon("glimpse-sidearm"){{
-                    bullet = new ConsBulletType(4.2f, 35, "missile"){{
+                    bullet = new ConsBulletType(5.2f, 45, "missile"){{
                         consUpdate = RustingBullets.velbasedHomingNoLife;
                         useRange = true;
                         useTrueSpeed = true;
@@ -153,8 +154,8 @@ public class RustingUnits implements ContentList{
                         range = 128;
                         width = 8;
                         height = 10;
-                        lifetime = 450;
-                        homingPower = 0.15f;
+                        lifetime = 140;
+                        homingPower = 0.25f;
                         homingRange = 0;
                         homingDelay = 35;
                         splashDamage = 15;
@@ -164,11 +165,12 @@ public class RustingUnits implements ContentList{
                         trailEffect = Fx.smoke;
                         trailChance = 0.15f;
                         hitSound = Sounds.explosion;
+                        buildingDamageMultiplier = 0.15f;
                     }};
                     shootSound = Sounds.missile;
                     shots = 1;
                     range = 65;
-                    reload = 35;
+                    reload = 65;
                     inaccuracy = 5f;
                     mirror = true;
                     alternate = true;
@@ -779,9 +781,12 @@ public class RustingUnits implements ContentList{
             immunities.addAll(
                 StatusEffects.wet,
                 StatusEffects.burning,
+                StatusEffects.corroded,
                 StatusEffects.sporeSlowed,
                 StatusEffects.sapped,
-                RustingStatusEffects.shieldShatter
+                RustingStatusEffects.shieldShatter,
+                RustingStatusEffects.amberstriken,
+                RustingStatusEffects.umbrafliction
             );
 
             weapons.add(
@@ -821,9 +826,12 @@ public class RustingUnits implements ContentList{
             immunities.addAll(
                 StatusEffects.wet,
                 StatusEffects.burning,
+                    StatusEffects.corroded,
                 StatusEffects.sporeSlowed,
                 StatusEffects.sapped,
-                RustingStatusEffects.shieldShatter
+                RustingStatusEffects.shieldShatter,
+                RustingStatusEffects.amberstriken,
+                RustingStatusEffects.umbrafliction
             );
 
             weapons.addAll(
@@ -866,6 +874,7 @@ public class RustingUnits implements ContentList{
             immunities.addAll(
                     StatusEffects.wet,
                     StatusEffects.burning,
+                    StatusEffects.corroded,
                     StatusEffects.sporeSlowed,
                     StatusEffects.sapped,
                     RustingStatusEffects.shieldShatter,
@@ -1044,6 +1053,7 @@ public class RustingUnits implements ContentList{
                 StatusEffects.burning,
                 StatusEffects.sporeSlowed,
                 StatusEffects.sapped,
+                RustingStatusEffects.shieldShatter,
                 RustingStatusEffects.amberstriken,
                 RustingStatusEffects.umbrafliction
             );
@@ -1121,13 +1131,21 @@ public class RustingUnits implements ContentList{
         }};
 
         epiphysis = new SpecialWeaponsUnitType("epiphysis"){{
-            speed = 0.75f;
+            hitSize = 13;
+            health = 850;
+            armor = 6;
+            speed = 0.45f;
+            accel = 0.45f;
+            drag = 0.115f;
+
             range = 170;
 
             weapons.add(
                 new Weapon("clear"){{
-                    reload = 45;
+                    reload = 175;
                     shots = 0;
+                    shootStatus = StatusEffects.unmoving;
+                    shootStatusDuration = 25;
                     bullet = new ConsBulletType(6, 14, "clear"){{
                         range = 170;
                         shootEffect = Fx.none;
@@ -1150,15 +1168,15 @@ public class RustingUnits implements ContentList{
                     shootSound = Sounds.missile;
                     shots = 1;
                     range = 65;
-                    reloadTime = 150;
+                    reloadTime = 175;
                     inaccuracy = 5f;
 
 
-                    bulletType = new ConsBulletType(3.5f, 250, "missile"){{
+                    bulletType = new ConsBulletType(3.5f, 75, "missile"){{
                         consUpdate = RustingBullets.velbasedHomingNoLife;
                         useRange = true;
                         useTrueSpeed = true;
-                        collidesTiles = false;
+                        keepVelocity = false;
                         trueSpeed = 0.1f;
                         drag = -0.015f;
                         range = 128;
@@ -1168,13 +1186,15 @@ public class RustingUnits implements ContentList{
                         homingPower = 0.11f;
                         homingRange = 0;
                         homingDelay = 35;
-                        splashDamage = 85;
-                        splashDamageRadius = 45;
-                        hitEffect = Fxr.instaltSummonerExplosionLarge;
-                        despawnEffect = Fxr.instaltSummonerExplosionLarge;
+                        splashDamage = 35;
+                        splashDamageRadius = 15;
+                        buildingDamageMultiplier = 6f;
+                        hitEffect = Fxr.instaltSummonerExplosion;
+                        despawnEffect = Fxr.instaltSummonerExplosion;
                         trailEffect = Fx.redgeneratespark;
                         trailChance = 0.35f;
                         hitSound = Sounds.explosionbig;
+                        recoil = 8;
                     }};
 
                     parts.add(
@@ -1193,7 +1213,83 @@ public class RustingUnits implements ContentList{
                             top = false;
                         }}
                     );
+                }},
+
+                new BulletMountType(modname + "epiphysis"){{
+                    useParts = false;
+                    shootY = -7.5f;
+                    shots = 3;
+                    inaccuracy = 12;
+                    velocityRand = 2;
+                    reloadTime = 350;
+                    bulletType = new LandmineBulletType(0.45f, 50, "shell"){{
+                        drawDefault = true;
+                        colorStart = Palr.lightstriken;
+                        colorEnd = Palr.darkerPulseChargeStart;
+                        width = 8;
+                        height = 8;
+
+                        armingMulti = 1.15f;
+
+                        trailEffect = Fx.smeltsmoke;
+                        trailChance = 0.35f;
+                        indicatorRadius = 16;
+
+                        lifetime = 300;
+                        keepVelocity = false;
+                        fragBullets = 3;
+                        rotationOffset = 180;
+                        fragCone = 15;
+                        fragAngle = 180;
+
+                        hitEffect = Fxr.powderyExplosion;
+                        hitSound = Sounds.release;
+
+                        fragBullet = new BoomerangBulletType(2.5f, 5.5f, modname + "-glave-large"){{
+                            homingPower = 0.345f;
+                            homingRange = 8;
+                            homingDelay = 80;
+                            trueSpeed = 0.05f;
+                            keepVelocity = false;
+                            buildingDamageMultiplier = 4.5f;
+
+                            consUpdate = velbasedHomingNoLife;
+                            consDespawned = consHit;
+
+                            bounceInternal = 5;
+                            bounciness = 1;
+
+                            width = 8;
+                            height = 8;
+                            lifetime = 240;
+                            pierceCap = 3;
+                            rotateMag = 5;
+                            bounceUnits = false;
+                            bounceBuildings = false;
+                            rotScaleMin = 0f;
+                            rotScaleMax = 0f;
+                            spin = -10;
+                            trailEffect = Fx.smeltsmoke;
+                            trailChance = 0.25f;
+                            hitEffect = Fx.hitFuse;
+                            despawnEffect = Fx.plasticburn;
+                            bounceEffect = Fx.none;
+                            frontColor = Palr.pulseChargeStart;
+                            backColor = Palr.pulseChargeEnd;
+                            drag = -0.05f;
+                        }};
+                    }};
                 }}
+            );
+            immunities.addAll(
+                    StatusEffects.wet,
+                    StatusEffects.burning,
+                    StatusEffects.corroded,
+                    StatusEffects.sporeSlowed,
+                    StatusEffects.sapped,
+                    RustingStatusEffects.shieldShatter,
+                    RustingStatusEffects.amberstriken,
+                    RustingStatusEffects.umbrafliction
             );
         }};
 

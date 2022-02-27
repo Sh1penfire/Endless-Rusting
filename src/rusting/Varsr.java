@@ -79,7 +79,6 @@ public class Varsr implements Loadable {
         Events.on(EventType.UnlockEvent.class, e -> {
             if(e.content instanceof ERSectorPreset) ((ERSectorPreset) e.content).loadBundles();
         });
-
     }
 
     public static void init(){
@@ -162,10 +161,10 @@ public class Varsr implements Loadable {
                 }
         );
 
+        sectors.init();
+
         Events.on(Trigger.update.getClass(), e -> {
-            music.update();
-            if(Vars.state.isPaused()) return;
-            sectors.update();
+            if(Vars.state.isPaused() && !Vars.state.isPlaying()) return;
 
             //lerp player elevation for visual effects
             if(Vars.player.unit() != null) lerpedPlayerElevation = Mathf.lerp(lerpedPlayerElevation, Vars.player.unit().elevation, 0.1f);
@@ -176,6 +175,12 @@ public class Varsr implements Loadable {
                 if(Mathf.chance(0.15f * Time.delta)) Fxr.blackened.at(b.x, b.y);
                 b.time += Time.delta;
             });
+
+            if(sectors.controller != null) sectors.controller.update();
+        });
+
+        Events.on(Trigger.draw.getClass(), e -> {
+            if(sectors.controller != null) sectors.controller.draw();
         });
 
         Log.info("Loaded Varsr");
@@ -183,12 +188,12 @@ public class Varsr implements Loadable {
 
     public static void begin(){
         research.setupGameResearch();
-        //sectors.readNodes();
+        sectors.setup();
     }
 
     public static void end(){
         research.saveGameResearch();
-        //sectors.writeNodes();
+        sectors.controller = null;
     }
     
     public static void registerPackets(){
@@ -200,7 +205,6 @@ public class Varsr implements Loadable {
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
-
         }
     }
 

@@ -1,16 +1,17 @@
 package rusting.game;
 
-import arc.struct.Seq;
+import arc.util.Nullable;
 import mindustry.type.Planet;
-import rusting.game.nodes.EventNode;
 
-@Deprecated
+import static rusting.game.ScriptedSectorHandler.scriptedSectors;
+
 public class ScriptedSector extends ERSectorPreset {
 
-    //set after playing map, readMount only when necessary
-    public final Seq<EventNode> nodes = new Seq();
+    //default controller of the scripted sector
+    public @Nullable SectorController defaultController;
 
     public ScriptedSector(String name, Planet planet, int sector) {
         super(name, planet, sector);
+        scriptedSectors.add(this);
     }
 }

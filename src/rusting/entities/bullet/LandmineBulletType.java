@@ -13,6 +13,7 @@ import rusting.graphics.Drawr;
 
 public class LandmineBulletType extends ConsBulletType {
 
+    public boolean drawDefault = false;
     public float armingMulti = 2;
     public float armingRange = 85;
     static Vec2 tmp = new Vec2();
@@ -49,22 +50,26 @@ public class LandmineBulletType extends ConsBulletType {
 
     @Override
     public void draw(Bullet b) {
-        super.draw(b);
         float rotation = Mathf.randomSeed(b.id) * 360 + b.time * spin;
 
-        for (int i = 0; i < shieldSides * 2; i += 2) {
-            tmp.trns(i * 360/shieldSides + rotation, shieldRadius);
-            verts[i] = tmp.x;
-            verts[i + 1] = tmp.y;
+        if(drawDefault) {
+            super.draw(b);
         }
-        Drawr.polyLight(b.x, b.y, verts, shieldFront, shieldBack);
+        else {
+            for (int i = 0; i < shieldSides * 2; i += 2) {
+                tmp.trns(i * 360 / shieldSides + rotation, shieldRadius);
+                verts[i] = tmp.x;
+                verts[i + 1] = tmp.y;
+            }
+            Drawr.polyLight(b.x, b.y, verts, shieldFront, shieldBack);
+        }
 
-        if(b.fin() < indicatorPercent) return;
-
-        float scaling = (b.fin() - indicatorPercent) * indicatorFadein;
-        float indScaling = b.fout()/indicatorPercent;
-        Draw.color(colorStart, colorEnd, scaling);
-        Draw.alpha(scaling);
-        Lines.swirl(b.x, b.y, indicatorRadius, indScaling, b.fout() * 360 + rotation);
+        if(b.fin() >= indicatorPercent){
+            float scaling = (b.fin() - indicatorPercent) * indicatorFadein;
+            float indScaling = b.fout() / indicatorPercent;
+            Draw.color(colorStart, colorEnd, scaling);
+            Draw.alpha(scaling);
+            Lines.swirl(b.x, b.y, indicatorRadius, indScaling, b.fout() * 360 + rotation);
+        }
     }
 }

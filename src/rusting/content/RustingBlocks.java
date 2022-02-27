@@ -35,6 +35,7 @@ import rusting.world.blocks.defense.turret.power.PanelTurret;
 import rusting.world.blocks.distribution.FrictionConveyor;
 import rusting.world.blocks.environment.*;
 import rusting.world.blocks.logic.UnbreakableMessageBlock;
+import rusting.world.blocks.logic.WaveAlarm;
 import rusting.world.blocks.power.AttributeBurnerGenerator;
 import rusting.world.blocks.production.ConditionalDrill;
 import rusting.world.blocks.pulse.PulseBlock;
@@ -155,7 +156,7 @@ public class RustingBlocks implements ContentList{
         //region unit
         hotSpringSprayer, coldSpringSprayer, fraeFactory, antiquaeGuardianBuilder, absentReconstructor, dwindlingReconstructor,
         //logic
-        halsinteLamp, gelBasin, mhemLog, raehLog, fraeLog;
+        waveAlarm, halsinteLamp, gelBasin, mhemLog, raehLog, fraeLog;
 
     public static void addLiquidAmmo(Block turret, Liquid liquid, BulletType bullet){
         ((LiquidTurret) turret).ammoTypes.put(liquid, bullet);
@@ -296,11 +297,11 @@ public class RustingBlocks implements ContentList{
             attributes.set(Attribute.heat, 0.35f);
         }};
 
-        fraePlating = new Floor("frae-aged-plating-horizontalin"){{
+        fraePlating = new Floor("frae-aged-plating"){{
             variants = 0;
         }};
 
-        damagedFraePlating = new Floor("frae-damaged-aged-plating-horizontal"){{
+        damagedFraePlating = new Floor("frae-damaged-aged-plating"){{
             variants = 2;
         }};
 
@@ -1361,7 +1362,7 @@ public class RustingBlocks implements ContentList{
             cooldown = 0.11f;
             size = 2;
             health = 350;
-            reloadTime = 120;
+            reloadTime = 330;
             shots = 5;
             burstSpacing = 5;
             inaccuracy = 5;
@@ -1946,6 +1947,10 @@ public class RustingBlocks implements ContentList{
 
         fraeLog = new UnbreakableMessageBlock("frae-log"){{
             buildVisibility = BuildVisibility.sandboxOnly;
+        }};
+
+        waveAlarm = new WaveAlarm("wave-alarm"){{
+
         }};
 
         halsinteLamp = new LightBlock("halsinte-lamp"){{

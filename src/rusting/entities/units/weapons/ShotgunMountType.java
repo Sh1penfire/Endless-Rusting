@@ -91,8 +91,8 @@ public class ShotgunMountType extends BulletMountType{
             Vec2 shootPos = new Vec2(getPos());
             shootPos.add(Tmp.v1.set(shootX, shootY).rotate(getRotation()));
             shootSound.at(getPos().x, getPos().y, 1, 1);
-            if(crit) critShootEffect.at(shootPos.x, shootPos.y, getRotation() - 90);
-            else type.shootEffect.at(shootPos.x, shootPos.y, getRotation() - 90);
+            if(crit) critShootEffect.at(shootPos.x, shootPos.y, getRotation());
+            else type.shootEffect.at(shootPos.x, shootPos.y, getRotation());
             Effect.shake((crit ? shake * critShakeMulti : shake), shakeDuration, shootPos.x, shootPos.y);
         }
 

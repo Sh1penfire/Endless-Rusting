@@ -39,6 +39,7 @@ public class BulletMountType extends ShootMountType {
         public void shoot() {
             reload = 0;
             bullet(getRotation());
+            owner.self().vel.add(Tmp.v1.trns(getRotation() + 180.0F, bulletType.recoil));
             effects(bulletType);
         }
 
