@@ -164,7 +164,6 @@ public class EndlessRusting extends Mod{
     }
 
     public void registerKeybinds(){
-        Axis repsawn = Core.keybinds.get(Binding.respawn);
         Events.on(Trigger.update.getClass(), e -> {
             if(!scene.hasField() && !scene.hasDialog()){
                 if(Core.input.keyTap(KeyCode.f2)) Varsr.ui.achievements.show();
