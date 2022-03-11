@@ -62,11 +62,9 @@ public class RustingBlocks implements ContentList{
         sunkenMetalFloor, sunkenMetalFloor2, sunkenMetalFloor3, sunkenBasalt, sunkenHotrock, sunkenMagmarock,
         //floor
         //frae plating
-        fraePlating, fraePlating2, fraePlating3, fraePlating4, fraePlating5, fraeAgedMetal, fraePulseCapedWall,
+        fraePlating, fraePlatingHorizontal, fraePlatingVertical, fraePlating2, fraePlating3, fraePlating4, fraePlating5, fraePlating6, fraePlating7, fraePlating8, fraeAgedMetal, fraePulseCapedWall,
         //mhem plating
         mhemPlating, mhemPlating3, mhemPlating4, mhemPlating5, mhemAgedFraeBlock, mhemAgedMetal,
-        //damaged frae plating
-        damagedFraePlating, damagedFraePlating2,
         //pailean
         paileanStolnen, paileanSanden, paileanPathen, paileanWallen, paileanBarreren,
         //ebrin, drier pailean blocks
@@ -301,18 +299,19 @@ public class RustingBlocks implements ContentList{
             variants = 0;
         }};
 
-        damagedFraePlating = new Floor("frae-damaged-aged-plating"){{
-            variants = 2;
-        }};
-
-        fraePlating2 = new Floor("frae-aged-plating-verticalin"){{
+	fraePlatingHorizontal = new Floor("frae-aged-plating-horizontalin"){{
             variants = 0;
             blendGroup = fraePlating;
         }};
 
-        damagedFraePlating2 = new Floor("frae-damaged-aged-plating-verticinaeium") {{
+	fraePlatingVertical  = new Floor("frae-aged-plating-verticalin"){{
             variants = 0;
-            blendGroup = damagedFraePlating;
+            blendGroup = fraePlating;
+        }};
+
+        fraePlating2 = new Floor("frae-aged-plating2"){{
+            variants = 0;
+            blendGroup = fraePlating;
         }};
 
         fraePlating3 = new Floor("frae-aged-plating3"){{
@@ -326,6 +325,21 @@ public class RustingBlocks implements ContentList{
         }};
 
         fraePlating5 = new Floor("frae-aged-plating5"){{
+            variants = 0;
+            blendGroup = fraePlating;
+        }};
+
+        fraePlating6 = new Floor("frae-aged-plating6"){{
+            variants = 0;
+            blendGroup = fraePlating;
+        }};
+
+        fraePlating7 = new Floor("frae-aged-plating7"){{
+            variants = 0;
+            blendGroup = fraePlating;
+        }};
+
+        fraePlating8 = new Floor("frae-aged-plating8"){{
             variants = 0;
             blendGroup = fraePlating;
         }};
@@ -777,7 +791,7 @@ public class RustingBlocks implements ContentList{
             buildVisibility = BuildVisibility.sandboxOnly;
 
             health = 250;
-            pulseStorage = 650;
+            pulseCapacity = 650;
             selfDamage = 0.25f;
             pulseProduction = 0.075f;
 
@@ -794,7 +808,7 @@ public class RustingBlocks implements ContentList{
 
             health = 250;
             collectSpeed = 0.1f;
-            pulseStorage = 15;
+            pulseCapacity = 15;
             pulsePressure = 10;
         }};
 
@@ -809,7 +823,7 @@ public class RustingBlocks implements ContentList{
             pulseAmount = 7.5f;
             connectionsPotential = 0;
             connectable = false;
-            pulseStorage = 55;
+            pulseCapacity = 55;
             resistance = 0.75f;
             laserOffset = 4;
         }};
@@ -827,7 +841,7 @@ public class RustingBlocks implements ContentList{
             pulseReloadTime = 15;
             energyTransmission = 8.5f;
             connectionsPotential = 3;
-            pulseStorage = 275;
+            pulseCapacity = 275;
             resistance = 0.25f;
             laserOffset = 10;
             laserRange = 7;
@@ -846,7 +860,7 @@ public class RustingBlocks implements ContentList{
             pulseReloadTime = 5;
             energyTransmission = 45.5f;
             connectionsPotential = 7;
-            pulseStorage = 2350;
+            pulseCapacity = 2350;
             resistance = 0.25f;
             laserOffset = 10;
             laserRange = 55;
@@ -860,13 +874,13 @@ public class RustingBlocks implements ContentList{
         pulseCanal = new PulseCanal("pulse-canal"){{
             requirements(Category.power, with(Items.lead, 2, Items.titanium, 1));
             centerResearchRequirements(false, with());
-            pulseStorage = 25;
+            pulseCapacity = 25;
         }};
 
         pulseFlowSplitter = new PulseFlowSplitter("pulse-flow-splitter"){{
             requirements(Category.power, with(Items.lead, 4, Items.titanium, 3));
             centerResearchRequirements(false, with());
-            pulseStorage = 65;
+            pulseCapacity = 65;
         }};
 
         pulseCanalTunnel = new PulseCanalTunnel("pulse-tunnel-dock"){{
@@ -877,10 +891,10 @@ public class RustingBlocks implements ContentList{
             requirements(Category.power, with(Items.copper, 5, Items.lead, 4, Items.titanium, 3));
             centerResearchRequirements(true, with(Items.copper, 120, Items.lead, 95, Items.titanium, 65));
             size = 1;
-            powerLoss = 0.0025f;
+            drain = 0.0025f;
             pulseReloadTime = 15;
             energyTransmission = 25f;
-            pulseStorage = 65;
+            pulseCapacity = 65;
             resistance = 0.075f;
             laserRange = 13;
             canOverload = false;
@@ -893,12 +907,12 @@ public class RustingBlocks implements ContentList{
             size = 2;
             projectile = RustingBullets.craeBolt;
             projectileChanceModifier = 0.15f;
-            powerLoss = 0.00835f;
+            drain = 0.00835f;
             pulseReloadTime = 35;
             minRequiredPulsePercent = 0.15f;
             connectionsPotential = 2;
             energyTransmission = 35f;
-            pulseStorage = 95;
+            pulseCapacity = 95;
             overloadCapacity = 15;
             resistance = 0.075f;
             laserOffset = 3;
@@ -912,9 +926,9 @@ public class RustingBlocks implements ContentList{
             centerResearchRequirements(false, with());
             health = 350;
             size = 1;
-            powerLoss = 0.00425f;
+            drain = 0.00425f;
             resistance = 0;
-            pulseStorage = 350;
+            pulseCapacity = 350;
             energyTransmission = 2.5f;
             canOverload = false;
         }};
@@ -923,11 +937,11 @@ public class RustingBlocks implements ContentList{
             requirements(Category.power, with(Items.copper, 10, Items.graphite, 20, Items.titanium, 15));
             centerResearchRequirements(false, with());
             size = 1;
-            powerLoss = 0.000035f;
+            drain = 0.000035f;
             siphonAmount = 5;
             energyTransmission = 11f;
             pulseReloadTime = 55;
-            pulseStorage = 35;
+            pulseCapacity = 35;
             laserRange = 6;
             canOverload = false;
         }};
@@ -938,8 +952,8 @@ public class RustingBlocks implements ContentList{
             drawer = new DrawPulseSpinningCrafter();
             size = 2;
             itemCapacity = 30;
-            powerLoss = 0.05f;
-            pulseStorage = 240;
+            drain = 0.05f;
+            pulseCapacity = 240;
             canOverload = false;
             minRequiredPulsePercent = 0.45f;
             customConsumes.pulse = 14;
@@ -954,8 +968,8 @@ public class RustingBlocks implements ContentList{
             requirements(Category.crafting, with(Items.copper, 345, Items.coal, 235, Items.silicon, 200, Items.titanium, 185, Items.metaglass, 130));
             centerResearchRequirements(true, with(Items.coal, 65, Items.silicon, 45, Items.pyratite, 25, Items.metaglass, 85));
             size = 2;
-            powerLoss = 0.35f;
-            pulseStorage = 1750;
+            drain = 0.35f;
+            pulseCapacity = 1750;
             canOverload = false;
             minRequiredPulsePercent = 0.65f;
             customConsumes.pulse = 350;
@@ -974,8 +988,8 @@ public class RustingBlocks implements ContentList{
             drawer = new DrawPulseLiquidMixer();
             hasLiquids = true;
             size = 2;
-            powerLoss = 0.05f;
-            pulseStorage = 150;
+            drain = 0.05f;
+            pulseCapacity = 150;
             canOverload = false;
             minRequiredPulsePercent = 0.45f;
             customConsumes.pulse = 6.5f;
@@ -993,8 +1007,8 @@ public class RustingBlocks implements ContentList{
             drawer = new DrawPulseLiquidCrafter();
             hasLiquids = true;
             size = 3;
-            powerLoss = 0.05f;
-            pulseStorage = 350;
+            drain = 0.05f;
+            pulseCapacity = 350;
             canOverload = false;
             minRequiredPulsePercent = 0.45f;
             customConsumes.pulse = 45;
@@ -1011,8 +1025,8 @@ public class RustingBlocks implements ContentList{
             centerResearchRequirements(true, with(Items.copper, 115, Items.coal, 65, Items.titanium, 30));
             size = 1;
             health = 410 * size * size;
-            powerLoss = 0.000035f;
-            pulseStorage = 55;
+            drain = 0.000035f;
+            pulseCapacity = 55;
             canOverload = false;
         }};
 
@@ -1021,8 +1035,8 @@ public class RustingBlocks implements ContentList{
             centerResearchRequirements(true, with(Items.copper, 450, Items.graphite, 75, Items.titanium, 120));
             size = 2;
             health = 410 * size * size;
-            powerLoss = 0.000035f;
-            pulseStorage = 135;
+            drain = 0.000035f;
+            pulseCapacity = 135;
             laserOffset = 5.5f;
             canOverload = false;
         }};
@@ -1031,7 +1045,7 @@ public class RustingBlocks implements ContentList{
             requirements(Category.effect, with(Items.copper, 65, Items.lead, 50, Items.coal, 25));
             centerResearchRequirements(false, with(Items.copper, 40,  Items.coal, 15));
             size = 2;
-            fieldNames.add("pulseStorage");
+            fieldNames.add("pulseCapacity");
             fieldNames.add("canOverload");
         }};
 
@@ -1039,12 +1053,12 @@ public class RustingBlocks implements ContentList{
             requirements(Category.effect, with(Items.copper, 95, Items.lead, 75, Items.silicon, 45, Items.titanium, 25));
             centerResearchRequirements(true, with(Items.copper, 550,  Items.coal, 355, Items.metaglass, 100, Items.graphite, 125, Items.titanium, 175, RustingItems.melonaleum, 75));
             size = 2;
-            powerLoss = 0.0000155f;
+            drain = 0.0000155f;
             minRequiredPulsePercent = 0.5f;
             pulseReloadTime = 165;
             connectionsPotential = 4;
             energyTransmission = 0.5f;
-            pulseStorage = 70;
+            pulseCapacity = 70;
             overloadCapacity = 30;
             laserRange = 10;
             laserOffset = 9;
@@ -1063,9 +1077,9 @@ public class RustingBlocks implements ContentList{
             health = 35 * size * size;
             projectileChanceModifier = 0;
             customConsumes.pulse = 0.25f;
-            pulseStorage = 70;
+            pulseCapacity = 70;
             overloadCapacity = 30;
-            powerLoss = 0;
+            drain = 0;
             minRequiredPulsePercent = 0;
             canOverload = true;
             effectFrequency = 0.45f;
@@ -1092,6 +1106,7 @@ public class RustingBlocks implements ContentList{
             alwaysUnlocked = false;
 
             unitType = RustingUnits.glimpse;
+            unitTypes = Seq.with(RustingUnits.glimpse, RustingUnits.unwavering);
             solid = false;
             health = 2100;
             itemCapacity = 6500;
@@ -1115,9 +1130,9 @@ public class RustingBlocks implements ContentList{
             inaccuracy = 5;
             customConsumes.pulse = 65;
             cruxInfiniteConsume = false;
-            pulseStorage = 140;
+            pulseCapacity = 140;
             overloadCapacity = 30;
-            powerLoss = 0;
+            drain = 0;
             minRequiredPulsePercent = 0;
             canOverload = true;
         }};
@@ -1139,9 +1154,9 @@ public class RustingBlocks implements ContentList{
             reloadTime = 85;
             customConsumes.pulse = 25;
             cruxInfiniteConsume = true;
-            pulseStorage = 70;
+            pulseCapacity = 70;
             overloadCapacity = 30;
-            powerLoss = 0;
+            drain = 0;
             minRequiredPulsePercent = 0;
             canOverload = true;
         }};
@@ -1158,10 +1173,10 @@ public class RustingBlocks implements ContentList{
             reloadTime = 85;
             shots = 3;
             customConsumes.pulse = 10;
-            pulseStorage = 75;
+            pulseCapacity = 75;
             cruxInfiniteConsume = true;
             canOverload = false;
-            powerLoss = 0;
+            drain = 0;
         }};
 
 
@@ -1177,10 +1192,10 @@ public class RustingBlocks implements ContentList{
             requirements(Category.units, with(Items.copper, 75, Items.lead, 60, Items.coal, 35, Items.titanium, 25));
             centerResearchRequirements(with(Items.copper, 145,  Items.lead, 145, Items.graphite, 55, Items.titanium, 85, Items.pyratite, 35));
             customConsumes.pulse = 10f;
-            powerLoss = 0.00155f;
+            drain = 0.00155f;
             minRequiredPulsePercent = 0.35f;
             laserOffset = 8f;
-            pulseStorage = 55;
+            pulseCapacity = 55;
             overloadCapacity = 25;
             size = 3;
             plans.addAll(
@@ -1198,10 +1213,10 @@ public class RustingBlocks implements ContentList{
             buildVisibility = BuildVisibility.hidden;
             liquidCapacity = 85;
             customConsumes.pulse = 65f;
-            powerLoss = 0.0f;
+            drain = 0.0f;
             minRequiredPulsePercent = 0.65f;
             laserOffset = 8f;
-            pulseStorage = 1365;
+            pulseCapacity = 1365;
             canOverload = false;
             size = 7;
             cruxInfiniteConsume = true;
@@ -1215,10 +1230,10 @@ public class RustingBlocks implements ContentList{
             centerResearchRequirements(with(Items.copper, 450,  Items.lead, 375, Items.silicon, 145, Items.titanium, 135, Items.pyratite, 75, RustingItems.melonaleum, 45));
             consumes.items(ItemStack.with(Items.silicon, 35, Items.titanium, 25, RustingItems.melonaleum, 25));
             customConsumes.pulse = 25f;
-            powerLoss = 0.00155f;
+            drain = 0.00155f;
             minRequiredPulsePercent = 0.65f;
             laserOffset = 8f;
-            pulseStorage = 85;
+            pulseCapacity = 85;
             canOverload = false;
             size = 3;
             upgrades.add(
@@ -1233,10 +1248,10 @@ public class RustingBlocks implements ContentList{
             centerResearchRequirements(with(Items.lead, 1255, Items.silicon, 455, Items.titanium, 235, Items.pyratite, 145, RustingItems.melonaleum, 125));
             consumes.items(ItemStack.with(Items.silicon, 145, Items.titanium, 55, RustingItems.melonaleum, 55, RustingItems.bulastelt, 85));
             customConsumes.pulse = 65f;
-            powerLoss = 0.00155f;
+            drain = 0.00155f;
             minRequiredPulsePercent = 0.55f;
             laserOffset = 8f;
-            pulseStorage = 145;
+            pulseCapacity = 145;
             canOverload = false;
             size = 5;
             upgrades.add(
@@ -1684,7 +1699,7 @@ public class RustingBlocks implements ContentList{
 
 
             canOverload = false;
-            pulseStorage = 125;
+            pulseCapacity = 125;
 
             customConsumes.pulse = 10.875f;
 

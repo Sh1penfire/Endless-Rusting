@@ -44,6 +44,16 @@ public class PulseChainNode extends PulseNode {
             healFract(healPercent/600);
         }
 
+        @Override
+        public boolean pConsValid() {
+            return false;
+        }
+
+        @Override
+        public boolean allConsValid() {
+            return cons.valid() && pConsValid();
+        }
+
         public void affectChained(){
             affectChained(connections, healPercent * pulseEfficiency(), overdrivePercent * pulseEfficiency());
             clearMendedSeq();

@@ -55,11 +55,11 @@ public class PulseHarpoonTurret extends HarpoonTurret {
         }
 
         public void customConsume(){
-            pulseModule.pulse -= customConsumes.pulse;
+            pstorage.pulse -= customConsumes.pulse;
         }
 
         public boolean customConsumeValid(){
-            return (pulseModule.pulse >= customConsumes.pulse) || (!state.rules.pvp && (team == Team.derelict || team == state.rules.waveTeam && cruxInfiniteConsume));
+            return (pstorage.pulse >= customConsumes.pulse) || (!state.rules.pvp && (team == Team.derelict || team == state.rules.waveTeam && cruxInfiniteConsume));
         }
 
         public boolean allConsValid(){
@@ -71,7 +71,7 @@ public class PulseHarpoonTurret extends HarpoonTurret {
         }
 
         public boolean canRecievePulse(float pulse, Building build){
-            return pulse + pulseModule.pulse < pulseStorage + (canOverload ? overloadCapacity : 0);
+            return pulse + pstorage.pulse < pulseCapacity + (canOverload ? overloadCapacity : 0);
         }
 
         public boolean connectableTo(){
@@ -89,9 +89,9 @@ public class PulseHarpoonTurret extends HarpoonTurret {
         }
 
         public void addPulse(float pulse, @Nullable Building building){
-            float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
+            float storage = pulseCapacity + (canOverload ? overloadCapacity : 0);
             float resistAmount = (building != this ? falloff : 0);
-            pulseModule.pulse += Math.max(pulse - resistAmount, 0);
+            pstorage.pulse += Math.max(pulse - resistAmount, 0);
             normalizePulse();
         }
 
@@ -100,14 +100,14 @@ public class PulseHarpoonTurret extends HarpoonTurret {
         }
 
         public void removePulse(float pulse, @Nullable Building building){
-            float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
-            pulseModule.pulse -= pulse;
+            float storage = pulseCapacity + (canOverload ? overloadCapacity : 0);
+            pstorage.pulse -= pulse;
             normalizePulse();
         }
 
         public void normalizePulse(){
-            float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
-            pulseModule.pulse = Math.max(Math.min(pulseModule.pulse, storage), 0);
+            float storage = pulseCapacity + (canOverload ? overloadCapacity : 0);
+            pstorage.pulse = Math.max(Math.min(pstorage.pulse, storage), 0);
         }
 
         public void overloadEffect(){
@@ -116,15 +116,15 @@ public class PulseHarpoonTurret extends HarpoonTurret {
         }
 
         public boolean overloaded(){
-            return pulseModule.pulse > pulseStorage && canOverload;
+            return pstorage.pulse > pulseCapacity && canOverload;
         }
 
         public float overloadChargef(){
-            return (pulseModule.pulse - pulseStorage)/overloadCapacity;
+            return (pstorage.pulse - pulseCapacity)/overloadCapacity;
         }
 
         public float chargef(boolean overloadaccount){
-            return pulseModule.pulse/(pulseStorage + (canOverload && overloadaccount ? overloadCapacity : 0));
+            return pstorage.pulse/(pulseCapacity + (canOverload && overloadaccount ? overloadCapacity : 0));
         }
 
         public float chargef(){

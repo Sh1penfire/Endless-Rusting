@@ -38,6 +38,7 @@ import rusting.entities.units.spider.SpecialWeaponsSpider;
 import rusting.entities.units.weapons.*;
 import rusting.interfaces.Targeting;
 
+
 import static arc.graphics.g2d.Draw.color;
 import static rusting.EndlessRusting.modname;
 import static rusting.content.RustingAISwitches.*;
@@ -115,27 +116,19 @@ public class RustingUnits implements ContentList{
         //crux units
         fusee,
         //something
-        SYSTEM_DELETED_UNIT,
+        SYSTEM_DELETED_UNIT;
         //player's unit
-        glimpse, hastius, unwavering, sunspot;
+        public static PlayerUnitType glimpse, hastius, unwavering, sunspot;
 
     @Override
     public void load() {
         setupID();
-
-        /*
-        player = new UnitType("player"){{
-            //Placeholder unit type
-        }};
-
-         */
-
-        glimpse = new BaseUnitType("glimpse"){{
+        glimpse = new PlayerUnitType("glimpse"){{
             defaultController = GroundAI::new;
 
-            accel = 0.18f;
-            drag = 0.15f;
-            speed = 0.85f;
+            accel = 0.68f;
+            drag = 0.35f;
+            speed = 0.78f;
             armor = 7;
             health = 450;
             mineSpeed = 2.25f;
@@ -180,7 +173,7 @@ public class RustingUnits implements ContentList{
             constructor = BaseUnit::new;
         }};
 
-        unwavering = new SpecialWeaponsUnitType("unwavering"){{
+        unwavering = new PlayerUnitType("unwavering"){{
             speed = 1.3f;
             armor = 12;
             health = 640;

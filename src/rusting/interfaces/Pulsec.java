@@ -2,60 +2,35 @@ package rusting.interfaces;
 
 import arc.math.geom.Position;
 import arc.util.Nullable;
-import mindustry.gen.Building;
 import rusting.world.modules.PulseModule;
 
 public interface Pulsec extends Position {
 
-    default boolean canReceivePulse(float pulse, Pulsec source){
-        return false;
-    }
+    boolean canReceivePulse(float pulse, Pulsec source);
 
-    default boolean connectableTo(){
-        return false;
-    }
+    boolean connectableTo();
 
-    default boolean receivePulse(float pulse, Pulsec source){;
-        pulseModule().pulse += pulse;
-        return true;
-    }
+    void addPulse();
 
-    default void addPulse(){
-        return;
-    }
+    float addPulse(float pulse);
 
-    default void addPulse(float pulse){
-        addPulse(pulse, null);
-    }
+    float addPulse(float pulse, @Nullable Pulsec source);
 
-    default void addPulse(float pulse, @Nullable Pulsec building){
-        pulseModule().pulse += pulse;
-    }
+    float removePulse(float pulse);
 
-    //returns how much pulse was removed
-    default float removePulse(float pulse){
-        return removePulse(pulse, null);
-    }
+    float removePulse(float pulse, @Nullable Pulsec source);
 
-    default float removePulse(float pulse, @Nullable Building building){
-        float before = pulseModule().pulse;
-        pulseModule().pulse -= pulse;
-        normalizePulse();
-        return before - pulseModule().pulse;
-    }
+    void normalizePulse();
 
-    default void normalizePulse(){}
+    void normalizeOverload();
 
+    float chargef();
 
-    default float chargef(boolean overloadaccount){
-        return 0;
-    }
+    float chargef(boolean overloadaccount);
 
-    default float chargef(){
-        return chargef(true);
-    }
+    float overloadf();
 
-    default PulseModule pulseModule(){
-        return null;
-    }
+    PulseModule pulseModule();
+
+    PulseModule overloadModule();
 }

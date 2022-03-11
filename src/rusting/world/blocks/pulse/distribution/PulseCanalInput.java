@@ -85,7 +85,7 @@ public class PulseCanalInput extends PulseCanal {
 
         @Override
         public boolean canReceivePulse(float pulse, Pulsec build){
-            return pulse + pulseModule.pulse < pulseStorage + (canOverload ? overloadCapacity : 0);
+            return pulse + storage.pulse < pulseCapacity + (canOverload ? overloadCapacity : 0);
         }
 
         @Override

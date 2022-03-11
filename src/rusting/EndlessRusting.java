@@ -2,7 +2,6 @@ package rusting;
 
 import arc.Core;
 import arc.Events;
-import arc.KeyBinds.Axis;
 import arc.graphics.Color;
 import arc.input.KeyCode;
 import arc.math.Mathf;
@@ -15,7 +14,6 @@ import mindustry.game.EventType.FileTreeInitEvent;
 import mindustry.game.EventType.Trigger;
 import mindustry.game.Team;
 import mindustry.gen.Call;
-import mindustry.input.Binding;
 import mindustry.mod.Mod;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
@@ -88,7 +86,7 @@ public class EndlessRusting extends Mod{
         );
     }
 
-    private void callNukestorm(int groups, int missiles, boolean useSpawnerPos, float rotation, float x, float y, float anglefromSky){
+    public static void callNukestorm(int groups, int missiles, boolean useSpawnerPos, float rotation, float x, float y, float anglefromSky){
         for (int j = 0; j < groups; j++) {
             for (int i = 0; i < missiles; i++) {
                 Time.run(i * 65 + Mathf.random(85), () -> {

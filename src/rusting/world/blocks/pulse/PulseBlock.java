@@ -4,7 +4,6 @@ import arc.Core;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
-import arc.math.Angles;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.*;
@@ -48,11 +47,11 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
     public CustomStatHolder pStats = new CustomStatHolder();
 
-    public float pulseStorage = 10;
+    public float pulseCapacity = 10;
     //decreases pulse energy received
     public float resistance = 0.1f;
     //decreases power over time
-    public float powerLoss = 0;
+    public float drain = 0;
     //minimum power required to work
     public float minRequiredPulsePercent = 0;
     //base efficiency
@@ -69,7 +68,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
     public float overloadCapacity = 3;
     //Whether the building can be connected to by PulseNodes with power lasers
     public boolean connectable = true;
-    //what the block can shoot when overloaded
+    //What the block can shoot when overloaded. Optional
     public BulletType projectile = RustingBullets.craeShard;
     //chance modifier for projectile spawning
     public float projectileChanceModifier = 1;
@@ -86,6 +85,8 @@ public class PulseBlock extends Block implements ResearchableBlock {
     //colours for charge
     public Color chargeColourStart, chargeColourEnd;
 
+    public boolean hideTest = false;
+
     public PulseBlock(String name){
         super(name);
         update = true;
@@ -101,7 +102,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
     @Override
     public void setStats(){
         super.setStats();
-        this.stats.add(Stat.powerCapacity, pulseStorage);
+        this.stats.add(Stat.powerCapacity, pulseCapacity);
     }
 
     @Override
@@ -111,9 +112,9 @@ public class PulseBlock extends Block implements ResearchableBlock {
     }
 
     public void setPulseStats(){
-        pStats.pulseStorage.setValue(pulseStorage);
+        pStats.pulseStorage.setValue(pulseCapacity);
         pStats.resistance.setValue(resistance);
-        pStats.powerLoss.setValue(powerLoss * 60);
+        pStats.powerLoss.setValue(drain * 60);
         pStats.connectable.setValue(connectable);
         pStats.canOverload.setValue(canOverload);
         pStats.requiresOverload.setValue(requiresOverload);
@@ -137,11 +138,17 @@ public class PulseBlock extends Block implements ResearchableBlock {
     @Override
     public void setBars(){
         super.setBars();
-        bars.add("power", entity -> new Bar(() ->
-            Core.bundle.get("bar.pulsebalance"),
-            () -> Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd,
-                     ((PulseBlockBuild) entity).chargef()),
-            () -> Mathf.clamp(((PulseBlockBuild) entity).chargef())
+        bars.add("pulse", entity -> new Bar(() ->
+                Core.bundle.get("bar.pulsebalance"),
+                () -> Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd,
+                        ((PulseBlockBuild) entity).chargef(false)),
+                () -> Mathf.clamp(((PulseBlockBuild) entity).chargef(false))
+        ));
+        bars.add("pulse", entity -> new Bar(() ->
+                Core.bundle.get("bar.overloadbalance"),
+                () -> Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd,
+                        ((PulseBlockBuild) entity).overloadf()),
+                () -> Mathf.clamp(((PulseBlockBuild) entity).overloadf())
         ));
     }
 
@@ -179,7 +186,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
     @Override
     public boolean isHidden(){
-        return !Varsr.research.researched(player.team(), this, researchTypes) || super.isHidden();
+        return !Varsr.research.researched(player.team(), this, researchTypes) || hideTest || super.isHidden();
     }
 
     @Override
@@ -233,30 +240,22 @@ public class PulseBlock extends Block implements ResearchableBlock {
         return returnBuilding[0];
     }
 
-    public void drawLaser(float x, float y, float targetX, float targetY, float laserOffset, float targetLaserOffset, float lerpPercent, Color laserCol1, Color laserCol2){
-        Draw.z(Layer.power);
-        float angle = Mathf.angle(targetX - x, targetY - y) - 90;
-        float sourcx = x + Angles.trnsx(angle, 0, laserOffset), sourcy = y + Angles.trnsy(angle, 0, laserOffset);
-        float edgex = targetX + Angles.trnsx(angle + 180, 0, targetLaserOffset), edgey = targetY + Angles.trnsy(angle + 180, 0, targetLaserOffset);
-        Draw.color(laserCol1, laserCol2, lerpPercent);
-        Lines.stroke(1.35f);
-        Lines.line(sourcx, sourcy, edgex, edgey);
-        Fill.circle(edgex, edgey, 0.85f);
-        Fill.circle(sourcx, sourcy, 1.35f);
-        Draw.reset();
-    }
 
-    public class PulseBlockBuild extends Building implements PulseBlockc, Ranged {
+    public class PulseBlockBuild extends Building implements PulseBlockc, Ranged{
+        public PulseModule storage = new PulseModule();
+        public PulseModule overload = new PulseModule();
 
-        public float falloff = resistance;
         public float xOffset = 0, yOffset = 0, alphaDraw = 0;
         public float shake = 0;
 
-        public PulseModule pulseModule = new PulseModule();
+        @Override
+        public boolean pConsValid() {
+            return storage.pulse >= customConsumes.pulse;
+        }
 
         @Override
-        public PulseModule pulseModule() {
-            return pulseModule;
+        public boolean allConsValid() {
+            return cons.valid() && pConsValid();
         }
 
         @Override
@@ -265,127 +264,96 @@ public class PulseBlock extends Block implements ResearchableBlock {
         }
 
         @Override
-        public float pulseEfficiency(){
-            return Math.max(baseEfficiency, chargef(false) * timeScale());
-        }
-
-        public void customConsume(){
-            pulseModule.pulse -= customConsumes.pulse;
-        }
-
-        public boolean customConsumeValid(){
-            return (pulseModule.pulse >= customConsumes.pulse) || (!state.rules.pvp && (team == Team.derelict || team == state.rules.waveTeam && cruxInfiniteConsume));
-        }
-
-        public boolean allConsValid(){
-            return customConsumeValid() && ((team == Team.derelict || (team == state.rules.waveTeam && cruxInfiniteConsume)) && !state.rules.pvp || consValid());
+        public boolean overloaded() {
+            return overloadf() >= 0.2f;
         }
 
         @Override
-        public boolean canReceivePulse(float pulse, Pulsec build){
-            return pulse + pulseModule.pulse < pulseStorage + (canOverload ? overloadCapacity : 0);
+        public void update() {
+            super.update();
+            overload.pulse -= drain * overloadf() * overloadf();
+            normalizePulse();
         }
 
-        public boolean connectableTo(){
+        @Override
+        public boolean canReceivePulse(float pulse, Pulsec source) {
+            return true;
+        }
+
+        @Override
+        public boolean connectableTo() {
             return connectable;
         }
 
         @Override
-        public boolean receivePulse(float pulse, Pulsec source){
-            tmpBool = canReceivePulse(pulse, source);
-            if(tmpBool) addPulse(pulse, source);
-            return tmpBool;
-        }
-
-        @Override
         public void addPulse() {
-            pulseModule.pulse = pulseStorage + overloadCapacity;
+            storage.pulse = pulseCapacity;
         }
 
         @Override
-        public void addPulse(float pulse){
-            addPulse(pulse, null);
+        public float addPulse(float pulse) {
+            return addPulse(pulse, this);
         }
 
-        public void addPulse(float pulse, @Nullable Pulsec building){
-            float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
-            float resistAmount = (building != this ? falloff : 0);
-            pulseModule.pulse += Math.max(pulse - resistAmount, 0);
+        @Override
+        public float addPulse(float pulse, Pulsec source) {
+            float before = totalPulse();
+            overload.pulse += (storage.pulse += pulse) % pulseCapacity;
             normalizePulse();
+            return totalPulse() - before;
         }
 
-        public void normalizePulse(){
-            float storage = pulseStorage + (canOverload ? overloadCapacity : 0);
-            pulseModule.pulse = Mathf.clamp(pulseModule.pulse, 0, storage);
-            SpriteBatch s = null;
-        }
-
-        public void overloadEffect(){
-            //for now, sprays projectiles around itself, and damages itself.
-            Tmp.v1.trns(Mathf.random(360), projectileOffset);
-            if(!Vars.headless && Mathf.chance(overloadChargef() * projectileChanceModifier)) Call.createBullet(projectile, team, x + Tmp.v1.x, y + Tmp.v1.y, Tmp.v1.angle(), projectile.damage, Mathf.random(0.5f) + 0.3f * size, 1);
-        }
-
-        public boolean overloaded(){
-            return pulseModule.pulse > pulseStorage && canOverload;
-        }
-
-        public float overloadChargef(){
-            return (pulseModule.pulse - pulseStorage)/overloadCapacity;
-        }
-
-        public float chargef(boolean overloadaccount){
-            return pulseModule.pulse/(pulseStorage + (canOverload && overloadaccount ? overloadCapacity : 0));
-        }
-
-        public float chargef(){
-            return chargef(true);
+        public float totalPulse(){
+            return storage.pulse + overload.pulse;
         }
 
         @Override
-        public float laserOffset() {
-            return laserOffset;
+        public float removePulse(float pulse) {
+            return removePulse(pulse, this);
         }
 
         @Override
-        public Tile tile() {
-            return tile;
+        public float removePulse(float pulse, Pulsec source) {
+            float before = totalPulse();
+            overload.pulse += (storage.pulse += pulse) % pulseCapacity;
+            normalizePulse();
+            return totalPulse() - before;
         }
 
         @Override
-        public void updateTile() {
-            super.updateTile();
-            if(shake >= timeOffset){
-                xOffset = block.size * 0.3f * Mathf.range(2);
-                yOffset = block.size * 0.3f * Mathf.range(2);
-                alphaDraw = Mathf.absin(Time.time/100, chargef());
-            }
-            else shake++;
-            pulseModule.pulse = Math.max(pulseModule.pulse - powerLoss, 0);
-            if(overloaded()) overloadEffect();
+        public void normalizePulse() {
+            storage.pulse = Mathf.clamp(storage.pulse, 0, pulseCapacity);
+            overload.pulse = Mathf.clamp(overload.pulse, 0, pulseCapacity);
         }
 
         @Override
-        public void drawSelect(){
-            if(canShoot()){
-                Drawf.dashCircle(x, y, projectileRange(), chargeColourStart.lerp(chargeColourEnd, chargef()));
-            }
-            Draw.reset();
+        public void normalizeOverload() {
+            overload.pulse = Mathf.clamp(overload.pulse, 0, pulseCapacity);
         }
 
-        public void drawLaser(PulseBlockc building, Color laserCol) {
-            Draw.z(Layer.power);
-            if(!(building instanceof Building)) return;
-            Building build = (Building) building;
-            float angle = angleTo(build.x, build.y) - 90;
-            float sourcx = x + Angles.trnsx(angle, 0, laserOffset), sourcy = y + Angles.trnsy(angle, 0, laserOffset);
-            float edgex = build.x + Angles.trnsx(angle + 180, 0, building.laserOffset()), edgey = build.y + Angles.trnsy(angle + 180, 0, building.laserOffset());
-            Draw.color(laserCol);
-            Lines.stroke(1.35f);
-            Lines.line(sourcx, sourcy, edgex, edgey);
-            Fill.circle(edgex, edgey, 0.85f);
-            Fill.circle(sourcx, sourcy, 1.35f);
-            Draw.reset();
+        @Override
+        public float chargef() {
+            return chargef(false);
+        }
+
+        @Override
+        public float chargef(boolean overloadaccount) {
+            return overloadaccount ? storage.pulse/pulseCapacity : (storage.pulse + overload.pulse)/(pulseCapacity + overloadCapacity);
+        }
+
+        @Override
+        public float overloadf(){
+            return overload.pulse/ overloadCapacity;
+        }
+
+        @Override
+        public PulseModule pulseModule() {
+            return storage;
+        }
+
+        @Override
+        public PulseModule overloadModule() {
+            return overload;
         }
 
         public void draw(){
@@ -417,13 +385,13 @@ public class PulseBlock extends Block implements ResearchableBlock {
         @Override
         public void write(Writes w){
             super.write(w);
-            w.f(pulseModule.pulse);
+            w.f(storage.pulse);
         }
 
         @Override
         public void read(Reads read, byte revision){
             super.read(read, revision);
-            pulseModule.pulse = read.f();
+            storage.pulse = read.f();
         }
     }
 }

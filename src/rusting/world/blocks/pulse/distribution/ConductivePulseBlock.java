@@ -4,6 +4,7 @@ import arc.Core;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.util.Time;
+import mindustry.Vars;
 import mindustry.graphics.Layer;
 import mindustry.world.meta.Stat;
 import rusting.interfaces.Pulsec;
@@ -59,8 +60,8 @@ public class ConductivePulseBlock extends PulseBlock {
 
         public void addPulseAdjacent(){
             proximity().each(l -> {
-                if (pulseModule.pulse > 0 && l instanceof PulseBlockBuild) {
-                    float energyTransmitted = Math.min(pulseModule.pulse, energyTransmission);
+                if (storage.pulse > 0 && l instanceof PulseBlockBuild) {
+                    float energyTransmitted = Math.min(storage.pulse, energyTransmission);
                     if (((PulseBlockBuild) l).canReceivePulse(energyTransmitted, this) && ((PulseBlockBuild) l).chargef() < chargef()) {
                         ((Pulsec) l).receivePulse(energyTransmitted, this);
                         removePulse(energyTransmitted);
@@ -75,7 +76,7 @@ public class ConductivePulseBlock extends PulseBlock {
             Draw.z(Layer.blockOver + 0.1f);
             Draw.rect(rotatorRegion, x, y, visualRotation);
             Draw.rect(topRegion, x, y, 0);
-            Draw.alpha(0.15f);
+            Draw.alpha(0.25f * Vars.state.rules.ambientLight.a);
             Draw.rect(shineRegion, x, y, 0);
         }
     }

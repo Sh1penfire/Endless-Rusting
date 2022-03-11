@@ -3,6 +3,7 @@ package rusting.game.modules.waves;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Log;
+import mindustry.Vars;
 import mindustry.gen.Unit;
 import rusting.game.BaseSpawnGroup;
 import rusting.game.modules.WaveModule;

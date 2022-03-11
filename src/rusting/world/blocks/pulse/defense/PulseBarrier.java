@@ -13,6 +13,7 @@ import mindustry.content.Liquids;
 import mindustry.gen.Bullet;
 import mindustry.graphics.Layer;
 import rusting.content.Palr;
+import rusting.graphics.Drawr;
 import rusting.world.blocks.pulse.PulseBlock;
 
 public class PulseBarrier extends PulseBlock {
@@ -49,7 +50,7 @@ public class PulseBarrier extends PulseBlock {
 
         @Override
         public boolean collision(Bullet other) {
-            if(other.type.pierceBuilding && pulseModule.pulse >= other.type.damage/pulseAbsorbMulti){
+            if(other.type.pierceBuilding && storage.pulse >= other.type.damage/pulseAbsorbMulti){
                 removePulse(other.type.damage/pulseAbsorbMulti);
                 other.remove();
                 shieldAlpha++;
@@ -84,8 +85,7 @@ public class PulseBarrier extends PulseBlock {
             }
 
             Draw.z(Layer.blockOver);
-            Draw.alpha((1 - closed) * 0.15f);
-            Draw.rect(shineRegion, x, y, 0);
+            Drawr.drawShine(shineRegion, x, y, 0, 0.25f);
             Draw.alpha(closed);
             Draw.rect(topRegion, x, y, 0);
         }

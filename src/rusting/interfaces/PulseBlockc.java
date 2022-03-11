@@ -5,40 +5,22 @@ import mindustry.world.Tile;
 
 public interface PulseBlockc extends Pulsec{
 
-    default float pulseEfficiency(){
-        return 1;
-    }
+    float pEfficiency();
 
-    default void customConsume(){}
+    default void pConsume(){};
 
-    default boolean customConsumeValid(){
-        return false;
-    }
+    boolean pConsValid();
 
-    default boolean allConsValid(){
-        return false;
-    }
+    boolean allConsValid();
 
-    default void overloadEffect(){}
+    default void overloadEffect(){};
 
-    default boolean overloaded(){
-        return false;
-    }
+    boolean overloaded();
 
-    default float overloadChargef(){
-        return 0;
-    }
+    void drawLaser(PulseBlockc building, Color laserCol);
 
-    default void drawLaser(PulseBlockc building, Color laserCol) {
+    float laserOffset();
 
-    }
-
-    default float laserOffset(){
-        return 8;
-    }
-
-    default Tile tile(){
-        return null;
-    }
+    Tile tile();
 
 }

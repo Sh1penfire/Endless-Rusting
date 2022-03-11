@@ -22,6 +22,7 @@ import mindustry.world.Tile;
 import mindustry.world.meta.Stat;
 import rusting.Varsr;
 import rusting.content.Palr;
+import rusting.graphics.Drawr;
 import rusting.interfaces.PulseBlockc;
 import rusting.interfaces.ResearchableBlock;
 import rusting.world.blocks.pulse.PulseBlock;
@@ -231,7 +232,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
 
         @Override
         public void updateTile() {
-            pulseModule.pulse = Math.max(pulseModule.pulse - powerLoss * (1 - closed), 0);
+            storage.pulse = Math.max(storage.pulse - drain * (1 - closed), 0);
             if(overloaded()) overloadEffect();
             //if theres more than one connection, lerp to one. Otherwise, lerp to 0. All this extra stuf is nescecary because no devide by 0
             //*sigh* I tried to use bitwise opperators for this but my brain died halfway through
@@ -281,7 +282,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
                 }
                 if(chargef() <= 0 || j == null) return;
                 if(index[0] > connectionsPotential) connections.remove(l);
-                float energyTransmitted = Math.min(pulseModule.pulse, energyTransmission);
+                float energyTransmitted = Math.min(storage.pulse, energyTransmission);
                 if(((PulseBlockc)j).receivePulse(energyTransmitted, this)) removePulse(energyTransmitted);
                 index[0]++;
             });
@@ -346,8 +347,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             }
 
             Draw.z(Layer.blockOver);
-            Draw.alpha((1 - closed) * 0.15f);
-            Draw.rect(shineRegion, x, y, 0);
+            Drawr.drawShine(shineRegion, x, y, 0, 0.25f);
             Draw.alpha(closed);
             Draw.rect(topRegion, x, y, 0);
         }

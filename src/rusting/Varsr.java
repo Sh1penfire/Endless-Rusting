@@ -13,6 +13,7 @@ import mindustry.core.Version;
 import mindustry.game.EventType;
 import mindustry.game.EventType.Trigger;
 import mindustry.gen.Building;
+import mindustry.gen.Groups;
 import mindustry.net.Net;
 import mindustry.net.Packet;
 import mindustry.type.ItemStack;
@@ -30,6 +31,7 @@ import rusting.net.ControlPacket;
 import rusting.ui.RustingUI;
 import rusting.util.MusicControl;
 import rusting.world.Worldr;
+import rusting.world.blocks.PlayerCore;
 import rusting.world.blocks.defense.turret.BerthaTurret;
 import rusting.world.blocks.pulse.distribution.PulseCanal.PulseCanalBuild;
 import rusting.world.format.holder.FormatHolder;
@@ -64,6 +66,7 @@ public class Varsr implements Loadable {
     public static boolean debug = false;
     public static float lerpedPlayerElevation = 0;
     public static boolean showAllSectors = false;
+    public static boolean customCoreUsed = false;
 
     public static void setup(){
 
@@ -156,7 +159,10 @@ public class Varsr implements Loadable {
         });
 
         Events.on(EventType.WorldLoadEvent.class, e -> {
-                    if(Vars.state.isMenu() == false) research.setupGameResearch();
+                    if(Vars.state.isMenu() == false) {
+                        research.setupGameResearch();
+                        checkCore();
+                    }
                     else if(Varsr.debug) RustingAchievements.GTFO.unlock();
                 }
         );
@@ -189,11 +195,21 @@ public class Varsr implements Loadable {
     public static void begin(){
         research.setupGameResearch();
         sectors.setup();
+        checkCore();
     }
 
     public static void end(){
         research.saveGameResearch();
         sectors.controller = null;
+    }
+
+    public static void checkCore(){
+        Time.run(1, () -> {
+            customCoreUsed = false;
+            Groups.build.each(b -> {
+                if(b.block instanceof PlayerCore) customCoreUsed = true;
+            });
+        });
     }
     
     public static void registerPackets(){

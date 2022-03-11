@@ -7,6 +7,7 @@ import arc.graphics.g2d.*;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.util.*;
+import mindustry.Vars;
 import mindustry.core.Version;
 import mindustry.type.Weapon;
 import rusting.math.Mathr;
@@ -132,6 +133,11 @@ public class Drawr {
         };
         Draw.rect(region, x, y, rotation);
         Draw.shader();
+    }
+
+    public static void drawShine(TextureRegion region, float x, float y, float rotation, float alpha){
+        Draw.alpha((1 - Vars.state.rules.ambientLight.a) * alpha);
+        Draw.rect(region, x, y, rotation);
     }
 
     public static void drawPixmapWeapons(Pixmap stencil, Weapon w, boolean top, boolean pastMainRegion){

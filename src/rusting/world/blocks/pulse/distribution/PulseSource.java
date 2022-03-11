@@ -40,7 +40,7 @@ public class PulseSource extends PulseNode{
                     }
                     if(chargef() <= 0 || j == null) return;
                     if(index[0] > connectionsPotential) connections.remove(l);
-                    float energyTransmitted = Math.min(pulseModule.pulse, energyTransmission);
+                    float energyTransmitted = Math.min(storage.pulse, energyTransmission);
                     ((PulseBlockc)j).addPulse();
                     index[0]++;
                 });

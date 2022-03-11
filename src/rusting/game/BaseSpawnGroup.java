@@ -58,7 +58,7 @@ public class BaseSpawnGroup extends SpawnGroup {
     }
 
     public int untilSpawn(int wave){
-        return (wave > end || wave < begin - spacing) ? -1 : wave % spacing;
+        return (wave > end || wave < begin) ? -1 : spacing - (wave - begin) % spacing;
     }
 
     protected void spawnEffect(Unit unit){

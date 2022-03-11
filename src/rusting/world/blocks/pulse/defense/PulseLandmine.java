@@ -55,7 +55,7 @@ public class PulseLandmine extends PulseBlock {
         public float drawAlpha = 0;
 
         //max amount of pulse landmine can store before reaching amx amount of bursts
-        protected float maxPulseRequired = pulseStorage - pulseStorage % customConsumes.pulse;
+        protected float maxPulseRequired = pulseCapacity - pulseCapacity % customConsumes.pulse;
         //sates:
         /*
         0: Default state before being set
@@ -69,7 +69,7 @@ public class PulseLandmine extends PulseBlock {
         @Override
         public void placed() {
             super.placed();
-            addPulse(pulseStorage);
+            addPulse();
         }
 
         @Override
@@ -77,7 +77,7 @@ public class PulseLandmine extends PulseBlock {
             super.update();
             if(allConsValid()){
                 //Most likely never going to be 1, so get max amount of charges that it can store
-                if(pulseModule.pulse >= maxPulseRequired){
+                if(storage.pulse >= maxPulseRequired){
                     state = 3;
                 }
                 else state = 2;

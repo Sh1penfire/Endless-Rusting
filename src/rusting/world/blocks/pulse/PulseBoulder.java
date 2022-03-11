@@ -66,8 +66,8 @@ public class PulseBoulder extends PulseBlock{
         public void update() {
             super.update();
             if(Mathf.chance(effectChance * Time.delta)) passiveEffect.at(x + Mathf.range(size * 8), y + Mathf.random(size * 8));
-            if(pulseModule.pulse <= destroyAmount) damage(selfDamage * (1 - chargef()) * damageRampup * Time.delta);
-            pulseModule.pulse += pulseProduction * Time.delta;
+            if(storage.pulse <= destroyAmount) damage(selfDamage * (1 - chargef()) * damageRampup * Time.delta);
+            storage.pulse += pulseProduction * Time.delta;
         }
 
         @Override

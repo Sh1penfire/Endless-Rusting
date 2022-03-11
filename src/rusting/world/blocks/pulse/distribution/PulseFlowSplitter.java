@@ -9,6 +9,7 @@ import mindustry.gen.Building;
 import mindustry.gen.Entityc;
 import mindustry.graphics.Layer;
 import mindustry.world.Tile;
+import rusting.graphics.Drawr;
 import rusting.interfaces.Pulsec;
 import rusting.interfaces.block.PulseCanalc;
 
@@ -21,7 +22,7 @@ public class PulseFlowSplitter extends PulseCanal {
         super(name);
         rotate = false;
         schematicPriority = 10;
-        pulseStorage = 45;
+        pulseCapacity = 45;
         pulsePressure = 25;
     }
 
@@ -29,8 +30,7 @@ public class PulseFlowSplitter extends PulseCanal {
     public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list){
         Draw.rect(baseRegion[0], req.drawx(), req.drawy(), 0);
 
-        Draw.alpha(0.15f);
-        Draw.rect(shineRegion[0], req.drawx(), req.drawy(), 0);
+        Drawr.drawShine(shineRegion[0], req.drawx(), req.drawy(),0, 0.25f);
         Draw.alpha(1);
         Draw.z(Layer.blockOver + 0.1f);
 
@@ -53,8 +53,7 @@ public class PulseFlowSplitter extends PulseCanal {
             Draw.alpha(chargef());
             Draw.rect(pulseRegion, x, y, 0);
             Draw.color();
-            Draw.alpha(0.15f);
-            Draw.rect(shineRegion[0], x, y, 0);
+            Drawr.drawShine(shineRegion[0], x, y, 0, 0.25f);
             Draw.alpha(1);
             Draw.z(Layer.blockOver + 0.1f);
 
@@ -75,7 +74,7 @@ public class PulseFlowSplitter extends PulseCanal {
 
         @Override
         public void updateTile(){
-            if(pulseModule.pulse >= moveAmount() && reload >= reloadTime){
+            if(storage.pulse >= moveAmount() && reload >= reloadTime){
                 movePulse();
                 reload %= reloadTime;
             }else{
@@ -110,7 +109,7 @@ public class PulseFlowSplitter extends PulseCanal {
 
         @Override
         public boolean canReceivePulse(float pulse, Pulsec build){
-            return build instanceof PulseCanalc && pulse + pulseModule.pulse < pulseStorage + (canOverload ? overloadCapacity : 0);
+            return build instanceof PulseCanalc && pulse + storage.pulse < pulseCapacity + (canOverload ? overloadCapacity : 0);
         }
     }
 }

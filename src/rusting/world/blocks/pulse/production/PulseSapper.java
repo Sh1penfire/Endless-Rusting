@@ -91,7 +91,7 @@ public class PulseSapper extends PulseBlock {
 
         @Override
         public void updateTile() {
-            boolean canCollect = pulseModule.pulse + collectSpeed * Time.delta < (pulseStorage);
+            boolean canCollect = storage.pulse + collectSpeed * Time.delta < (pulseCapacity);
 
             if(!canCollect) {
                 rotation = (rotation + rotationSpeed) % 360;
@@ -120,7 +120,7 @@ public class PulseSapper extends PulseBlock {
             }
 
             //as it goes, ctrl c ctrl v
-            if(pulseModule.pulse >= pulsePressure && reload >= reloadTime){
+            if(storage.pulse >= pulsePressure && reload >= reloadTime){
                 movePulse();
                 reload = 0;
             }else{

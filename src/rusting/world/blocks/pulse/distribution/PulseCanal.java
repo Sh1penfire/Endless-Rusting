@@ -10,7 +10,9 @@ import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
 import mindustry.graphics.Layer;
 import mindustry.world.Tile;
-import rusting.interfaces.*;
+import rusting.graphics.Drawr;
+import rusting.interfaces.PulseCornerpiece;
+import rusting.interfaces.Pulsec;
 import rusting.interfaces.block.PulseCanalc;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.utility.PulseTeleporterController.PulseTeleporterControllerBuild;
@@ -31,7 +33,7 @@ public class PulseCanal extends PulseBlock {
         connectable = false;
         liquidPressure = 1.025f;
         pulsePressure = 10f;
-        pulseStorage = 15;
+        pulseCapacity = 15;
     }
 
     @Override
@@ -60,8 +62,7 @@ public class PulseCanal extends PulseBlock {
     public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list){
         Draw.rect(baseRegion[0], req.drawx(), req.drawy(), req.rotation * 90);
 
-        Draw.alpha(0.15f);
-        Draw.rect(shineRegion[0], req.drawx(), req.drawy(), 270);
+        Drawr.drawShine(shineRegion[0], req.drawx(), req.drawy(),0, 0.25f);
         Draw.alpha(1);
         Draw.z(Layer.blockOver + 0.1f);
 
@@ -101,7 +102,7 @@ public class PulseCanal extends PulseBlock {
         @Override
         public void updateTile(){
             if(canalEnding != null){
-                if(pulseModule.pulse >= moveAmount()){
+                if(storage.pulse >= moveAmount()){
                     movePulse();
                 }
             }
@@ -109,7 +110,7 @@ public class PulseCanal extends PulseBlock {
         }
 
         public float moveAmount(){
-            return (pulseStorage + (canOverload ? overloadCapacity : 0)) * pulsePressure/60 * Time.delta * chargef();
+            return (pulseCapacity + (canOverload ? overloadCapacity : 0)) * pulsePressure/60 * Time.delta * chargef();
         }
 
         public void movePulse() {
@@ -171,8 +172,7 @@ public class PulseCanal extends PulseBlock {
             Draw.alpha(smoothPulse);
             Draw.rect(pulseRegion, x, y, rotation * 90);
             Draw.color();
-            Draw.alpha(0.15f);
-            Draw.rect(shineRegion[input], x, y, 270);
+            Drawr.drawShine(shineRegion[input], x, y, 0, 0.25f);
             Draw.alpha(1);
             Draw.z(Layer.blockOver + 0.1f);
 

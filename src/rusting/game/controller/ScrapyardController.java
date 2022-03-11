@@ -13,11 +13,12 @@ import static mindustry.Vars.tilesize;
 
 public class ScrapyardController extends SectorController {
 
+    public float spawnParticleMulti = 3.15f;
     public DefaultWaveModule waves = new DefaultWaveModule();
 
     public ScrapyardController(){
         waves.groups.addAll(
-            new EnvironmentSpawnGroup(RustingUnits.marrow){{
+            new EnvironmentSpawnGroup(RustingUnits.epiphysis){{
                 spacing = 3;
                 end = 8;
                 effect = RustingStatusEffects.potassiumDeficiency;
@@ -37,9 +38,10 @@ public class ScrapyardController extends SectorController {
     public void update() {
         waves.groups.each(s -> {
             if(s.untilSpawn(Vars.state.wave) != -1){
-                float chance = s.effectChance * (1 - s.untilSpawn(Vars.state.wave)/s.spacing);
+                float untilWaves = s.untilSpawn(Vars.state.wave);
+                float chance = s.effectChance * ((s.spacing - untilWaves)/s.spacing) * s.type.hitSize;
                 for (int i = 0; i < chance; i++) {
-                    if(chance > 1 || Mathf.chance(s.type.hitSize * (chance - i))) Fx.ripple.at(s.x * tilesize + Mathf.range(s.type.hitSize), s.y * tilesize + Mathf.range(s.type.hitSize), s.type.hitSize/8, s.effectData);
+                    if(chance > 1 || Mathf.chance(untilWaves == s.spacing ? spawnParticleMulti * (chance - i) : chance - i)) Fx.ripple.at(s.x * tilesize + Mathf.range(s.type.hitSize), s.y * tilesize + Mathf.range(s.type.hitSize), s.type.hitSize/8, Vars.world.floor(s.x, s.y).mapColor, null);
                 }
             }
         });
