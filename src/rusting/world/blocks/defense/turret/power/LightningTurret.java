@@ -128,7 +128,7 @@ public class LightningTurret extends PulseBlock {
             updateTargeting();
 
             rotation = Angles.moveToward(rotation, angleTo(aimPos.x, aimPos.y), delta() * rotationSpeed);
-            if(isShooting() && customConsumeValid()) {
+            if(isShooting() && pConsValid()) {
                 if(isControlled()) aimPos.set(unit().aimX, unit().aimY);
                 else if(target != null) aimPos.set(target.getX(), target.getY());
                 updateShooting();
@@ -147,7 +147,7 @@ public class LightningTurret extends PulseBlock {
 
                 reload = 0f;
             }else{
-                reload += delta();
+                reload += delta() * pEfficiency();
             }
         }
 
@@ -240,7 +240,7 @@ public class LightningTurret extends PulseBlock {
             if(anyNearby) {
                 shootSound.at(this);
                 recoil = 1;
-                customConsume();
+                pConsume();
             }
         }
 

@@ -56,6 +56,8 @@ public class PulseBlock extends Block implements ResearchableBlock {
     public float minRequiredPulsePercent = 0;
     //base efficiency
     public float baseEfficiency = 0.5f;
+    //Max overload efficiency. This is additive!
+    public float overloadEfficiency = 1;
     //how long before the charged region draw x and y changes
     public int timeOffset = 1;
     //the multiplier for the blended region's alpha
@@ -139,13 +141,13 @@ public class PulseBlock extends Block implements ResearchableBlock {
     public void setBars(){
         super.setBars();
         bars.add("pulse", entity -> new Bar(() ->
-                Core.bundle.get("bar.pulsebalance"),
+                Core.bundle.get("bar.pulse"),
                 () -> Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd,
                         ((PulseBlockBuild) entity).chargef(false)),
                 () -> Mathf.clamp(((PulseBlockBuild) entity).chargef(false))
         ));
-        bars.add("pulse", entity -> new Bar(() ->
-                Core.bundle.get("bar.overloadbalance"),
+        if(canOverload) bars.add("overload", entity -> new Bar(
+                () -> Core.bundle.get("bar.pulseoverload") + ": " + Mathf.floor(((PulseBlockBuild) entity).overloadf() * 10000)/100 + "%",
                 () -> Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd,
                         ((PulseBlockBuild) entity).overloadf()),
                 () -> Mathf.clamp(((PulseBlockBuild) entity).overloadf())
@@ -248,6 +250,13 @@ public class PulseBlock extends Block implements ResearchableBlock {
         public float xOffset = 0, yOffset = 0, alphaDraw = 0;
         public float shake = 0;
 
+        public float pEfficiency(){
+            return baseEfficiency + (1 - baseEfficiency) * chargef() + overloadEfficiency * overloadf();
+        }
+        public float pDelta(){
+            return pEfficiency() * edelta();
+        }
+
         @Override
         public boolean pConsValid() {
             return storage.pulse >= customConsumes.pulse;
@@ -277,7 +286,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
         @Override
         public boolean canReceivePulse(float pulse, Pulsec source) {
-            return true;
+            return chargef(true) < 1;
         }
 
         @Override
@@ -298,7 +307,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
         @Override
         public float addPulse(float pulse, Pulsec source) {
             float before = totalPulse();
-            overload.pulse += (storage.pulse += pulse) % pulseCapacity;
+            overload.pulse += Mathf.clamp((storage.pulse += pulse) - pulseCapacity, 0, overloadCapacity);
             normalizePulse();
             return totalPulse() - before;
         }
@@ -315,7 +324,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
         @Override
         public float removePulse(float pulse, Pulsec source) {
             float before = totalPulse();
-            overload.pulse += (storage.pulse += pulse) % pulseCapacity;
+            storage.pulse -= pulse;
             normalizePulse();
             return totalPulse() - before;
         }
@@ -323,7 +332,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
         @Override
         public void normalizePulse() {
             storage.pulse = Mathf.clamp(storage.pulse, 0, pulseCapacity);
-            overload.pulse = Mathf.clamp(overload.pulse, 0, pulseCapacity);
+            overload.pulse = Mathf.clamp(overload.pulse, 0, overloadCapacity);
         }
 
         @Override
@@ -338,12 +347,12 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
         @Override
         public float chargef(boolean overloadaccount) {
-            return overloadaccount ? storage.pulse/pulseCapacity : (storage.pulse + overload.pulse)/(pulseCapacity + overloadCapacity);
+            return overloadaccount ? (storage.pulse + overload.pulse)/(pulseCapacity + overloadCapacity) : storage.pulse/pulseCapacity;
         }
 
         @Override
         public float overloadf(){
-            return overload.pulse/ overloadCapacity;
+            return overload.pulse/overloadCapacity;
         }
 
         @Override
@@ -354,6 +363,11 @@ public class PulseBlock extends Block implements ResearchableBlock {
         @Override
         public PulseModule overloadModule() {
             return overload;
+        }
+
+        @Override
+        public float laserOffset() {
+            return laserOffset;
         }
 
         public void draw(){

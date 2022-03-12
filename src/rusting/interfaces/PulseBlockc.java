@@ -17,8 +17,6 @@ public interface PulseBlockc extends Pulsec{
 
     boolean overloaded();
 
-    void drawLaser(PulseBlockc building, Color laserCol);
-
     float laserOffset();
 
     Tile tile();

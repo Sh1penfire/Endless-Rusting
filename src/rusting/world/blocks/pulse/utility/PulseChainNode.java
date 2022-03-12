@@ -55,7 +55,7 @@ public class PulseChainNode extends PulseNode {
         }
 
         public void affectChained(){
-            affectChained(connections, healPercent * pulseEfficiency(), overdrivePercent * pulseEfficiency());
+            affectChained(connections, healPercent * pEfficiency(), overdrivePercent * pEfficiency());
             clearMendedSeq();
         }
 

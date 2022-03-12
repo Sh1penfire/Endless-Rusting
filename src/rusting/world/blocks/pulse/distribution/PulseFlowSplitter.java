@@ -91,7 +91,7 @@ public class PulseFlowSplitter extends PulseCanal {
                     distribute.add(b);
                     return;
                 }
-                if(b.receivePulse(moveAmount()/distributeTo.size, this)) removePulse(moveAmount()/distributeTo.size);
+                if(b.canReceivePulse(moveAmount()/distributeTo.size, this)) removePulse(b.addPulse(moveAmount()/distributeTo.size));
             });
 
             distribute.each(b -> distributeTo.remove(b));

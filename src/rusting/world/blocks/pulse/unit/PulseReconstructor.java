@@ -191,7 +191,7 @@ public class PulseReconstructor extends PulseUnitBlock{
                             Effect.shake(2f, 3f, this);
                             Fx.producesmoke.at(this);
                             consume();
-                            customConsume();
+                            pConsume();
                             Events.fire(new UnitCreateEvent(payload.unit, this));
                         }
                     }
@@ -199,7 +199,7 @@ public class PulseReconstructor extends PulseUnitBlock{
             }
 
             speedScl = Mathf.lerpDelta(speedScl, Mathf.num(valid), 0.05f);
-            time += edelta() * speedScl * state.rules.unitBuildSpeedMultiplier * pulseEfficiency();
+            time += edelta() * speedScl * state.rules.unitBuildSpeedMultiplier * pEfficiency();
         }
 
         @Override

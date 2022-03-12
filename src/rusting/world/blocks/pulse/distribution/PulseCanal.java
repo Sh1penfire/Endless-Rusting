@@ -85,6 +85,8 @@ public class PulseCanal extends PulseBlock {
         public Tile canalInput = tile;
         public Tile canalEnding = tile;
 
+        private PulseCanalc distributeTo = null;
+
         public int input = 1;
 
         @Override
@@ -101,7 +103,8 @@ public class PulseCanal extends PulseBlock {
 
         @Override
         public void updateTile(){
-            if(canalEnding != null){
+            if(canalEnding != null && canalEnding.build instanceof PulseCanalc && ((PulseCanalc) canalEnding.build).canReceive(this)){
+                distributeTo = (PulseCanalc) canalEnding.build;
                 if(storage.pulse >= moveAmount()){
                     movePulse();
                 }
@@ -114,9 +117,8 @@ public class PulseCanal extends PulseBlock {
         }
 
         public void movePulse() {
-            Building next = canalEnding.build;
-            if(next != null && ((PulseCanalc) next).receivePulse(moveAmount(), this)) {
-                removePulse(moveAmount());
+            if(distributeTo != null && distributeTo.canReceivePulse(moveAmount(), this)) {
+                distributeTo.addPulse(removePulse(moveAmount()));
             }
         }
 

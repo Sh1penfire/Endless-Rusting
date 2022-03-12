@@ -17,7 +17,6 @@ import mindustry.world.Tile;
 import rusting.Varsr;
 import rusting.content.*;
 import rusting.interfaces.PulseBlockc;
-import rusting.interfaces.Pulsec;
 
 import static mindustry.Vars.*;
 
@@ -81,8 +80,8 @@ public class PulseCondensary extends PulseGenericCrafter{
                 }
                 else {
                     PulseBlockc building = (PulseBlockc) build;
-                    if (receivePulse(gatherAmount, (Pulsec) building)) {
-                        building.removePulse(gatherAmount);
+                    if (canReceivePulse(gatherAmount, building)) {
+                        addPulse(building.removePulse(gatherAmount));
                     }
                     gatheredTiles.add(build);
                     siphonTime -= reload;
@@ -92,7 +91,7 @@ public class PulseCondensary extends PulseGenericCrafter{
                     }
                 }
             }
-            else siphonTime += efficiency() * Time.delta * 1 * pulseEfficiency();
+            else siphonTime += efficiency() * Time.delta * 1 * pEfficiency();
         }
 
         @Override

@@ -6,6 +6,7 @@ import arc.func.Cons;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
+import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
 import arc.struct.Seq;
@@ -188,6 +189,19 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
         });
     }
 
+    public void drawLaser(float x, float y, float targetX, float targetY, float laserOffset, float targetLaserOffset, float lerpPercent, Color laserCol1, Color laserCol2){
+        Draw.z(Layer.power);
+        float angle = Mathf.angle(targetX - x, targetY - y) - 90;
+        float sourcx = x + Angles.trnsx(angle, 0, laserOffset), sourcy = y + Angles.trnsy(angle, 0, laserOffset);
+        float edgex = targetX + Angles.trnsx(angle + 180, 0, targetLaserOffset), edgey = targetY + Angles.trnsy(angle + 180, 0, targetLaserOffset);
+        Draw.color(laserCol1, laserCol2, lerpPercent);
+        Lines.stroke(1.35f);
+        Lines.line(sourcx, sourcy, edgex, edgey);
+        Fill.circle(edgex, edgey, 0.85f);
+        Fill.circle(sourcx, sourcy, 1.35f);
+        Draw.reset();
+    }
+
     public class PulseNodeBuild extends PulseBlockBuild{
         public Seq<Integer> connections = new Seq();
         public Seq<Integer> previousConnections = new Seq();
@@ -264,7 +278,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
                 interactConnected();
                 reload = 0;
             }
-            else reload += pulseEfficiency() * Time.delta;
+            else reload += pEfficiency() * Time.delta;
         }
 
         public void interactConnected(){
@@ -283,7 +297,8 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
                 if(chargef() <= 0 || j == null) return;
                 if(index[0] > connectionsPotential) connections.remove(l);
                 float energyTransmitted = Math.min(storage.pulse, energyTransmission);
-                if(((PulseBlockc)j).receivePulse(energyTransmitted, this)) removePulse(energyTransmitted);
+                PulseBlockc pBlock = (PulseBlockc) j;
+                if(pBlock.canReceivePulse(energyTransmitted, this)) removePulse(pBlock.addPulse(energyTransmitted));
                 index[0]++;
             });
         }
@@ -311,6 +326,21 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             Draw.reset();
         }
 
+
+        public void drawLaser(PulseBlockc building, Color laserCol) {
+            Draw.z(Layer.power);
+            if(!(building instanceof Building)) return;
+            Building build = (Building) building;
+            float angle = angleTo(build.x, build.y) - 90;
+            float sourcx = x + Angles.trnsx(angle, 0, laserOffset), sourcy = y + Angles.trnsy(angle, 0, laserOffset);
+            float edgex = build.x + Angles.trnsx(angle + 180, 0, building.laserOffset()), edgey = build.y + Angles.trnsy(angle + 180, 0, building.laserOffset());
+            Draw.color(laserCol);
+            Lines.stroke(1.35f);
+            Lines.line(sourcx, sourcy, edgex, edgey);
+            Fill.circle(edgex, edgey, 0.85f);
+            Fill.circle(sourcx, sourcy, 1.35f);
+            Draw.reset();
+        }
         @Override
         public void draw() {
             Draw.rect(region, x, y, 0);

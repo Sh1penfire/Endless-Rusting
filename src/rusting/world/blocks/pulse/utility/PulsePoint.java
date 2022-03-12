@@ -8,7 +8,7 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.entities.Units;
 import mindustry.graphics.Layer;
-import rusting.entities.units.flying.CraeUnitEntity;
+import rusting.interfaces.Pulsec;
 import rusting.world.blocks.pulse.PulseBlock;
 
 //Finds units which can be charged with Pulse, or Buildings which are lacking pulse. Fires a continuous stream of Pulse.
@@ -38,7 +38,7 @@ public class PulsePoint extends PulseBlock {
     }
 
     public class PulsePointBuild extends PulseBlockBuild{
-        public CraeUnitEntity target;
+        public Pulsec target;
         public float targetRot = 0;
         public float rotation = 270;
 
@@ -54,11 +54,11 @@ public class PulsePoint extends PulseBlock {
         }
 
         public void turnToTarget(){
-            rotation = Angles.moveToward(rotation, targetRot, rotateSpeed * pulseEfficiency());
+            rotation = Angles.moveToward(rotation, targetRot, rotateSpeed * pEfficiency());
         }
 
         public void findTarget(){
-            target = (CraeUnitEntity) Units.closest(team, x, y, range, u -> u instanceof CraeUnitEntity && ((CraeUnitEntity) u).chargef() < 1);
+            target = (Pulsec) Units.closest(team, x, y, range, u -> u instanceof Pulsec && ((Pulsec) u).chargef() < 1);
         }
 
         @Override

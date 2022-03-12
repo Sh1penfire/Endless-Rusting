@@ -1,19 +1,19 @@
 package rusting.world.blocks.pulse.utility;
 
 import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.*;
+import arc.math.Angles;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.gen.Building;
-import mindustry.graphics.Drawf;
-import mindustry.graphics.Pal;
+import mindustry.graphics.*;
 import mindustry.world.Tile;
 import rusting.Varsr;
 import rusting.interfaces.PrimitiveControlBlock;
+import rusting.interfaces.PulseBlockc;
 import rusting.world.blocks.pulse.distribution.PulseNode;
 
 import static mindustry.Vars.tilesize;
@@ -123,8 +123,24 @@ public class PulseContactSender extends PulseControlModule{
             connections.each(l -> {
                 Building other = world.build(l);
                 if(other == null || other.isNull() || !other.isAdded()) return;
-                drawLaser((PulseBlockBuild) other, laserColor);
+                drawLaser((PulseBlockc) other, laserColor);
             });
+        }
+
+
+        public void drawLaser(PulseBlockc building, Color laserCol) {
+            Draw.z(Layer.power);
+            if(!(building instanceof Building)) return;
+            Building build = (Building) building;
+            float angle = angleTo(build.x, build.y) - 90;
+            float sourcx = x + Angles.trnsx(angle, 0, laserOffset), sourcy = y + Angles.trnsy(angle, 0, laserOffset);
+            float edgex = build.x + Angles.trnsx(angle + 180, 0, building.laserOffset()), edgey = build.y + Angles.trnsy(angle + 180, 0, building.laserOffset());
+            Draw.color(laserCol);
+            Lines.stroke(1.35f);
+            Lines.line(sourcx, sourcy, edgex, edgey);
+            Fill.circle(edgex, edgey, 0.85f);
+            Fill.circle(sourcx, sourcy, 1.35f);
+            Draw.reset();
         }
 
         @Override

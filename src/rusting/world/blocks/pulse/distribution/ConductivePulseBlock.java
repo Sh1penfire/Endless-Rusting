@@ -54,7 +54,7 @@ public class ConductivePulseBlock extends PulseBlock {
                 reload = 0;
                 addPulseAdjacent();
             }
-            else reload += pulseEfficiency() * Time.delta;
+            else reload += pEfficiency() * Time.delta;
             visualRotation = (visualRotation + Time.delta * rotationSpeed * chargef()) % 360;
         }
 
@@ -63,8 +63,7 @@ public class ConductivePulseBlock extends PulseBlock {
                 if (storage.pulse > 0 && l instanceof PulseBlockBuild) {
                     float energyTransmitted = Math.min(storage.pulse, energyTransmission);
                     if (((PulseBlockBuild) l).canReceivePulse(energyTransmitted, this) && ((PulseBlockBuild) l).chargef() < chargef()) {
-                        ((Pulsec) l).receivePulse(energyTransmitted, this);
-                        removePulse(energyTransmitted);
+                        removePulse(((Pulsec) l).addPulse(energyTransmitted, this));
                     }
                 }
             });

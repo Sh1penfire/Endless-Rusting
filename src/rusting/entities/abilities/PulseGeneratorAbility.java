@@ -8,7 +8,6 @@ import mindustry.Vars;
 import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
 import rusting.content.Palr;
-import rusting.entities.units.flying.CraeUnitEntity;
 import rusting.interfaces.Pulsec;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.PulseBlock.PulseBlockBuild;
@@ -51,7 +50,7 @@ public class PulseGeneratorAbility extends MountAbility {
                 building.addPulse(pulse);
                 timeSincePulse = 0;
             }
-            else if(unit instanceof CraeUnitEntity) ((CraeUnitEntity) unit).addPulse(pulse);
+            else if(unit instanceof Pulsec) ((Pulsec) unit).addPulse(pulse);
             timer = 0;
         }
     }

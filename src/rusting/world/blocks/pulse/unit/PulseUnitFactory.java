@@ -225,8 +225,8 @@ public class PulseUnitFactory extends PulseUnitBlock{
             }
 
             if(allConsValid() && currentPlan != -1){
-                time += edelta() * speedScl * Vars.state.rules.unitBuildSpeedMultiplier * pulseEfficiency();
-                progress += edelta() * Vars.state.rules.unitBuildSpeedMultiplier * pulseEfficiency();
+                time += edelta() * speedScl * Vars.state.rules.unitBuildSpeedMultiplier * pEfficiency();
+                progress += edelta() * Vars.state.rules.unitBuildSpeedMultiplier * pEfficiency();
                 speedScl = Mathf.lerpDelta(speedScl, 1f, 0.05f);
             }else{
                 speedScl = Mathf.lerpDelta(speedScl, 0f, 0.05f);
@@ -243,7 +243,7 @@ public class PulseUnitFactory extends PulseUnitBlock{
                     payload = new UnitPayload(plan.unit.create(team));
                     payVector.setZero();
                     consume();
-                    customConsume();
+                    pConsume();
                     Events.fire(new UnitCreateEvent(payload.unit, this));
                 }
 

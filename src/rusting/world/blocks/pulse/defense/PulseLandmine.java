@@ -90,7 +90,7 @@ public class PulseLandmine extends PulseBlock {
         public void unitOn(Unit unit) {
             if(allConsValid() && timer.get(0, reloadTime)){
                 consume();
-                customConsume();
+                pConsume();
                 for(int i = 0; i < shots; i++){
                     projectile.create(this, team, x, y, Mathf.range(360));
                 }

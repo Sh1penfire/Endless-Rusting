@@ -140,7 +140,7 @@ public class PulseSapper extends PulseBlock {
             }
 
             distributeTo.each(build -> {
-                if(build.receivePulse(pulsePressure/distributeTo.size, this)) removePulse(pulsePressure/distributeTo.size);
+                if(build.canReceivePulse(pulsePressure/distributeTo.size, this)) removePulse(build.addPulse(pulsePressure/distributeTo.size));
             });
         }
 

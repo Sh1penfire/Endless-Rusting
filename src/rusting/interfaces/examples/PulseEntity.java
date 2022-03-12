@@ -21,6 +21,7 @@ public class PulseEntity implements Pulsec {
         overload.pulse -= drain * overloadf() * overloadf();
         normalizePulse();
     }
+
     @Override
     public boolean canReceivePulse(float pulse, Pulsec source) {
         return !closed;

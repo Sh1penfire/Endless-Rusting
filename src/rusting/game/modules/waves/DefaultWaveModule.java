@@ -2,8 +2,6 @@ package rusting.game.modules.waves;
 
 import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.Log;
-import mindustry.Vars;
 import mindustry.gen.Unit;
 import rusting.game.BaseSpawnGroup;
 import rusting.game.modules.WaveModule;
@@ -15,7 +13,6 @@ public class DefaultWaveModule extends WaveModule {
     public Seq<BaseSpawnGroup> groups = Seq.with();
     @Override
     public void wave() {
-        Log.info("wave sending!");
         groups.each(group -> {
             if(group.getSpawned(state.wave) > 0) {
                 int spawned = group.getSpawned(state.wave);
@@ -25,6 +22,5 @@ public class DefaultWaveModule extends WaveModule {
                 }
             }
         });
-        Log.info("wave finish!");
     }
 }

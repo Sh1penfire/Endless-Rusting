@@ -19,7 +19,7 @@ public class PulseSource extends PulseNode{
         }
 
         @Override
-        public boolean receivePulse(float pulse, Pulsec source) {
+        public boolean canReceivePulse(float pulse, Pulsec source) {
             return false;
         }
 
@@ -30,20 +30,20 @@ public class PulseSource extends PulseNode{
                 //cap out Pulse of all blocks adjacent to the block
                 if(b instanceof PulseBlockc) ((PulseBlockc) b).addPulse();
             });
-                final int[] index = {0};
-                connections.each(l -> {
-                    Building j = world.build(l);
-                    //need to double check, jic, because I've experienced crashes while a generator was pumping out energy
-                    if(!(j instanceof PulseBlockc)){
-                        connections.remove(connections.indexOf(l));
-                        return;
-                    }
-                    if(chargef() <= 0 || j == null) return;
-                    if(index[0] > connectionsPotential) connections.remove(l);
-                    float energyTransmitted = Math.min(storage.pulse, energyTransmission);
-                    ((PulseBlockc)j).addPulse();
-                    index[0]++;
-                });
+            final int[] index = {0};
+            connections.each(l -> {
+                Building j = world.build(l);
+                //need to double check, jic, because I've experienced crashes while a generator was pumping out energy
+                if(!(j instanceof PulseBlockc)){
+                    connections.remove(connections.indexOf(l));
+                    return;
+                }
+                if(chargef() <= 0 || j == null) return;
+                if(index[0] > connectionsPotential) connections.remove(l);
+                float energyTransmitted = Math.min(storage.pulse, energyTransmission);
+                ((PulseBlockc)j).addPulse();
+                index[0]++;
+            });
         }
     }
 }

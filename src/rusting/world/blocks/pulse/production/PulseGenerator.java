@@ -2,7 +2,6 @@ package rusting.world.blocks.pulse.production;
 
 import arc.util.Time;
 import mindustry.world.meta.Stat;
-import rusting.interfaces.Pulsec;
 import rusting.world.blocks.pulse.distribution.PulseNode;
 
 public class PulseGenerator extends PulseNode {
@@ -41,16 +40,16 @@ public class PulseGenerator extends PulseNode {
             super.updateTile();
             if(currentProductionTime >= productionTime && allConsValid() && canReceivePulse(pulseAmount, this)) {
                 consume();
-                customConsume();
+                pConsume();
                 producePulse();
                 currentProductionTime = 0;
             }
-            else currentProductionTime += pulseEfficiency() * Time.delta;
+            else currentProductionTime += pEfficiency() * Time.delta;
         }
 
         //something can happen when the generator makes a pulse, just override the function instead
         public void producePulse(){
-            receivePulse(pulseAmount, (Pulsec) this);
+            addPulse(pulseAmount, this);
         }
     }
 }

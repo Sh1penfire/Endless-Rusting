@@ -115,7 +115,7 @@ public class PulseGenericCrafter extends PulseBlock {
         @Override
         public void updateTile(){
             super.updateTile();
-                if(consValid() && customConsumeValid()){
+                if(allConsValid()){
 
                     progress += getProgressIncrease(craftTime);
                     totalProgress += delta();
@@ -161,7 +161,7 @@ public class PulseGenericCrafter extends PulseBlock {
 
         @Override
         public boolean shouldAmbientSound(){
-            return cons.valid() & customConsumeValid();
+            return cons.valid() & pConsValid();
         }
 
         public void dumpOutputs(){

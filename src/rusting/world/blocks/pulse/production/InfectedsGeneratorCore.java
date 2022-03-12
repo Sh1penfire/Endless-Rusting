@@ -92,18 +92,18 @@ public class InfectedsGeneratorCore extends PulseGenerator{
                 unit.team(team);
                 unit.set(x, y);
             }
-            totalProgress += pulseEfficiency() * Time.delta * warmup;
-            if(cons.valid() && customConsumeValid()) {
-                warmup = Mathf.approachDelta(warmup, 1, pulseEfficiency() * Time.delta / 100);
+            totalProgress += pEfficiency() * Time.delta * warmup;
+            if(allConsValid()) {
+                warmup = Mathf.approachDelta(warmup, 1, pEfficiency() * Time.delta / 100);
             }
-            else warmup = Mathf.approachDelta(warmup, 0, pulseEfficiency() * Time.delta / 100);
-            if(overloaded() && isShooting()) shootWarmup = Mathf.approachDelta(shootWarmup, 1, pulseEfficiency() * Time.delta / 840);
-            else shootWarmup = Mathf.approachDelta(shootWarmup, 0, pulseEfficiency() * Time.delta / 150);
+            else warmup = Mathf.approachDelta(warmup, 0, pEfficiency() * Time.delta / 100);
+            if(overloaded() && isShooting()) shootWarmup = Mathf.approachDelta(shootWarmup, 1, pEfficiency() * Time.delta / 840);
+            else shootWarmup = Mathf.approachDelta(shootWarmup, 0, pEfficiency() * Time.delta / 150);
             if(canShoot()) target = Units.closestTarget(team, x, y, projectileRange());
             if(isShooting()) {
                 updateTargetPos();
             }
-            topRotorRotation += pulseEfficiency() * Time.delta * topRotatorSpeed * shootWarmup;
+            topRotorRotation += pEfficiency() * Time.delta * topRotatorSpeed * shootWarmup;
         }
 
         public boolean canShoot(){
@@ -137,7 +137,7 @@ public class InfectedsGeneratorCore extends PulseGenerator{
                     Tmp.v1.trns(angle, projectileOffset);
                     projectile.create(this, team, x + Tmp.v1.x, y + Tmp.v1.y, angle, 0.8f * size * minShootWarmup, 1/minShootWarmup);
                 }
-                else reload += pulseEfficiency() * Time.delta * minShootWarmup;
+                else reload += pEfficiency() * Time.delta * minShootWarmup;
             }
         }
 

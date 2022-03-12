@@ -93,7 +93,7 @@ public class PulsePulsar extends PulseBlock {
         }
 
         public boolean canShoot(){
-            return customConsumeValid() && target != null;
+            return pConsValid() && target != null;
         }
 
         @Override
@@ -114,7 +114,7 @@ public class PulsePulsar extends PulseBlock {
                                 shootSound.at(x, y, Mathf.random(shootSoundPitchMin, shootSoundPitchMax));
 
                                 consume();
-                                customConsume();
+                                pConsume();
                             }
                         });
                     }
@@ -126,7 +126,7 @@ public class PulsePulsar extends PulseBlock {
                         shootSound.at(x, y, Mathf.random(shootSoundPitchMin, shootSoundPitchMax));
 
                         consume();
-                        customConsume();
+                        pConsume();
                     }
                 }
 

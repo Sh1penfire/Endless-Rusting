@@ -1,6 +1,7 @@
 package rusting.content;
 
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.struct.*;
 import mindustry.content.*;
 import mindustry.ctype.ContentList;
@@ -40,8 +41,7 @@ import rusting.world.blocks.power.AttributeBurnerGenerator;
 import rusting.world.blocks.production.ConditionalDrill;
 import rusting.world.blocks.pulse.PulseBlock;
 import rusting.world.blocks.pulse.PulseBoulder;
-import rusting.world.blocks.pulse.crafting.PulseCondensary;
-import rusting.world.blocks.pulse.crafting.PulseGenericCrafter;
+import rusting.world.blocks.pulse.crafting.*;
 import rusting.world.blocks.pulse.defense.*;
 import rusting.world.blocks.pulse.distribution.*;
 import rusting.world.blocks.pulse.production.*;
@@ -106,7 +106,7 @@ public class RustingBlocks implements ContentList{
         //Siphon
         pulseSiphon,
         //crafting
-        pulseGraphiteForge, pulseCondensary, pulseMelomaeMixer, pulseGelPress,
+        pulseGraphiteForge, pulseGlassForgery, pulseCondensary, pulseMelomaeMixer, pulseGelPress,
         //Walls
         pulseBarrier, pulseBarrierLarge,
         //Research
@@ -776,9 +776,10 @@ public class RustingBlocks implements ContentList{
         terraConveyor = new FrictionConveyor("terra-conveyor"){{
             requirements(Category.distribution, with(Items.copper, 2, RustingItems.taconite, 1));
             health = 95;
-            speed = 0.04f;
+            speed = 0.05f;
             displayedSpeed = 5.5f;
             floating = true;
+            Draw.mixcol();
         }};
 
         //endregion distribution
@@ -964,6 +965,10 @@ public class RustingBlocks implements ContentList{
             outputItems = ItemStack.with(Items.graphite, 2, Items.silicon, 1);
         }};
 
+        pulseGlassForgery = new PulseForgery("pulse-glass-forgery"){{
+
+        }};
+
         pulseCondensary = new PulseCondensary("pulse-melonaleum-condensery"){{
             requirements(Category.crafting, with(Items.copper, 345, Items.coal, 235, Items.silicon, 200, Items.titanium, 185, Items.metaglass, 130));
             centerResearchRequirements(true, with(Items.coal, 65, Items.silicon, 45, Items.pyratite, 25, Items.metaglass, 85));
@@ -1025,9 +1030,12 @@ public class RustingBlocks implements ContentList{
             centerResearchRequirements(true, with(Items.copper, 115, Items.coal, 65, Items.titanium, 30));
             size = 1;
             health = 410 * size * size;
-            drain = 0.000035f;
-            pulseCapacity = 55;
-            canOverload = false;
+            drain = 0.35f;
+            pulseCapacity = 240;
+            overloadCapacity = 1350;
+            canOverload = true;
+            shieldRadius = 10;
+            shieldSides = 4;
         }};
 
         pulseBarrierLarge = new PulseBarrier("pulse-barrier-large"){{
@@ -1698,8 +1706,9 @@ public class RustingBlocks implements ContentList{
             health = 185 * size * size;
 
 
-            canOverload = false;
+            canOverload = true;
             pulseCapacity = 125;
+            overloadCapacity = 1075;
 
             customConsumes.pulse = 10.875f;
 

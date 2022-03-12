@@ -123,14 +123,14 @@ public class DysfunctionalMonolith extends PulseBlock {
                     findTarget();
                     retargetTime = 0;
                 }
-                else retargetTime += Math.min(pulseEfficiency(), 1);
+                else retargetTime += Math.min(pEfficiency(), 1);
             }
 
             if (shooting()){
                 holloPointAlpha = Math.min(holloPointAlpha + 0.01f, 1);
                 if(!logicControlled()) {
                     targetPos.set(target.x(), target.y());
-                    holloPos.sub(x, y).lerp(Tmp.v1.set(targetPos).sub(x, y), Math.min(0.1f * pulseEfficiency(), 1)).clamp(0, Math.max(dst(targetPos.x, targetPos.y) - 3, 0)).add(x, y);
+                    holloPos.sub(x, y).lerp(Tmp.v1.set(targetPos).sub(x, y), Math.min(0.1f * pEfficiency(), 1)).clamp(0, Math.max(dst(targetPos.x, targetPos.y) - 3, 0)).add(x, y);
                 }
                 else holloPos = targetPos;
                 if (allConsValid() && reload >= 1) {
@@ -152,7 +152,7 @@ public class DysfunctionalMonolith extends PulseBlock {
         }
 
         public float deltaReload(){
-            return Time.delta * 1 / reloadTime * pulseEfficiency();
+            return Time.delta * 1 / reloadTime * pEfficiency();
         }
 
         public boolean shooting(){
@@ -195,7 +195,7 @@ public class DysfunctionalMonolith extends PulseBlock {
             reload = 0;
             lockonTime = 0;
             consume();
-            customConsume();
+            pConsume();
         }
 
         public void bullet(BulletType bullet, float speedScl){

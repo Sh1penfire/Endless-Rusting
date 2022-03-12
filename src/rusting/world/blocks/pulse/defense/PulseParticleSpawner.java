@@ -42,12 +42,12 @@ public class PulseParticleSpawner extends PulseBlock {
         float warmup = 0;
 
         @Override
-        public void update() {
+        public void updateTile() {
             super.update();
             if(allConsValid()) {
                 warmup = Mathf.lerpDelta(warmup, 1, warmupRate);
                 if (effects.length > 0) {
-                    particleSpawnInterval += pulseEfficiency() * effectFrequency;
+                    particleSpawnInterval += pEfficiency() * effectFrequency;
                 }
 
                 if (particleSpawnInterval >= 1) {
@@ -57,7 +57,7 @@ public class PulseParticleSpawner extends PulseBlock {
 
                 if (consumeTimer >= consumeFrequency) {
                     consume();
-                    customConsume();
+                    pConsume();
                     consumeTimer = 0;
                 }
                 consumeTimer++;

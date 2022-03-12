@@ -16,6 +16,7 @@ import mindustry.ui.Cicon;
 import rusting.content.Palr;
 import rusting.content.RustingStatusEffects;
 import rusting.entities.units.flying.CraeUnitEntity;
+import rusting.interfaces.Pulsec;
 
 import static mindustry.Vars.state;
 
@@ -80,7 +81,7 @@ public class CraeUnitType extends BaseUnitType {
             bars.add(new Bar("stat.health", Pal.health, unit::healthf).blink(Color.white));
             bars.row();
 
-            CraeUnitEntity craeUnit = ((CraeUnitEntity) unit);
+            Pulsec craeUnit = ((Pulsec) unit);
             bars.add(new Bar(Core.bundle.get("pulsestat.pulse"), Palr.pulseChargeEnd, craeUnit::chargef).blink(Color.cyan));
             bars.row();
 
