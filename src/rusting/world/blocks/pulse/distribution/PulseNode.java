@@ -426,18 +426,14 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
                 rpos = ((int) r.d());
                 connections.add(rpos);
             }
-            if(revision >= 1){
-                previousConnections = new Seq<Integer>();
-                previousConnections.clear();
-                n = r.s();
-                for(int i = 0;  i < n; i++){
-                    rpos = ((int) r.d());
-                    previousConnections.add(rpos);
-                }
+            previousConnections = new Seq<Integer>();
+            previousConnections.clear();
+            n = r.s();
+            for(int i = 0; i < n; i++){
+                rpos = ((int) r.d());
+                previousConnections.add(rpos);
             }
-            if(revision >= 2){
-                closed = r.f();
-            }
+            closed = r.f();
         }
     }
 }

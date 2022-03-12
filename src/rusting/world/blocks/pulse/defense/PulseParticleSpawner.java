@@ -43,7 +43,7 @@ public class PulseParticleSpawner extends PulseBlock {
 
         @Override
         public void updateTile() {
-            super.update();
+            super.updateTile();
             if(allConsValid()) {
                 warmup = Mathf.lerpDelta(warmup, 1, warmupRate);
                 if (effects.length > 0) {

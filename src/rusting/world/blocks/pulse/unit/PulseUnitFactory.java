@@ -275,11 +275,6 @@ public class PulseUnitFactory extends PulseUnitBlock{
         }
 
         @Override
-        public byte version(){
-            return 1;
-        }
-
-        @Override
         public void write(Writes write){
             super.write(write);
             write.f(progress);

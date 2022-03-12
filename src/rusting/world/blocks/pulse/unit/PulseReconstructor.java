@@ -244,9 +244,7 @@ public class PulseReconstructor extends PulseUnitBlock{
         public void read(Reads read, byte revision){
             super.read(read, revision);
 
-            if(revision == 1){
-                progress = read.f();
-            }
+            progress = read.f();
         }
     }
 }

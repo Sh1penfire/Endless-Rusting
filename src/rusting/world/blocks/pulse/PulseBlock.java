@@ -396,16 +396,26 @@ public class PulseBlock extends Block implements ResearchableBlock {
             Draw.reset();
         };
 
+        /*
+        @Override
+        public byte version() {
+            return 1;
+        }
+
+         */
+
         @Override
         public void write(Writes w){
             super.write(w);
             w.f(storage.pulse);
+            w.f(overload.pulse);
         }
 
         @Override
-        public void read(Reads read, byte revision){
-            super.read(read, revision);
-            storage.pulse = read.f();
+        public void read(Reads r, byte revision){
+            super.read(r, revision);
+            storage.pulse = r.f();
+
         }
     }
 }

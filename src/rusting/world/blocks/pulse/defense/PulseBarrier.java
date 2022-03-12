@@ -187,7 +187,7 @@ public class PulseBarrier extends PulseBlock {
         @Override
         public void read(Reads r, byte revision) {
             super.read(r, revision);
-            if(revision == 1) closed = r.f();
+            closed = r.f();
         }
     }
 }
