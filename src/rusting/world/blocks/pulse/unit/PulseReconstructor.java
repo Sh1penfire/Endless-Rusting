@@ -229,11 +229,6 @@ public class PulseReconstructor extends PulseUnitBlock{
         }
 
         @Override
-        public byte version(){
-            return 1;
-        }
-
-        @Override
         public void write(Writes write){
             super.write(write);
 
@@ -244,7 +239,7 @@ public class PulseReconstructor extends PulseUnitBlock{
         public void read(Reads read, byte revision){
             super.read(read, revision);
 
-            progress = read.f();
+           progress = read.f();
         }
     }
 }

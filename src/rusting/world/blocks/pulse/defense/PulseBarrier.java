@@ -174,11 +174,6 @@ public class PulseBarrier extends PulseBlock {
         }
 
         @Override
-        public byte version() {
-            return 1;
-        }
-
-        @Override
         public void write(Writes w) {
             super.write(w);
             w.f(closed);

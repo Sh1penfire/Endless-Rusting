@@ -395,11 +395,6 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
         }
 
         @Override
-        public byte version() {
-            return 2;
-        }
-
-        @Override
         public void write(Writes w){
             super.write(w);
             w.f(reload);
@@ -422,14 +417,15 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             connections = new Seq<Integer>();
             connections.clear();
             int rpos;
-            for(int i = 0;  i < n; i++){
+            for(int i = 0; i < n; i++){
                 rpos = ((int) r.d());
+                Log.info(n);
                 connections.add(rpos);
             }
             previousConnections = new Seq<Integer>();
             previousConnections.clear();
             n = r.s();
-            for(int i = 0; i < n; i++){
+            for(int i = 0;  i < n; i++){
                 rpos = ((int) r.d());
                 previousConnections.add(rpos);
             }
