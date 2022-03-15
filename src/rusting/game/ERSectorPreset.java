@@ -2,11 +2,14 @@ package rusting.game;
 
 import arc.Core;
 import arc.Events;
+import arc.graphics.g2d.TextureRegion;
+import arc.scene.style.TextureRegionDrawable;
 import mindustry.Vars;
 import mindustry.content.TechTree;
 import mindustry.game.EventType;
 import mindustry.type.Planet;
 import mindustry.type.SectorPreset;
+import mindustry.ui.Cicon;
 import rusting.Varsr;
 import rusting.util.MusicControl.MusicSecController;
 
@@ -15,6 +18,8 @@ public class ERSectorPreset extends SectorPreset {
     //the earlier that a Seq of music is added, the more likely it'll play
     public MusicSecController musicSecController = new MusicSecController();
     public float musicChance = 0.0015f;
+
+    public TextureRegionDrawable icon = null;
 
     public ERSectorPreset(String name, Planet planet, int sector) {
         super(name, planet, sector);
@@ -32,6 +37,12 @@ public class ERSectorPreset extends SectorPreset {
     @Override
     public void load() {
         super.load();
+        icon = Core.atlas.getDrawable(name);
+    }
+
+    @Override
+    public TextureRegion icon(Cicon c) {
+        return icon.getRegion();
     }
 
     public void loadBundles(){
@@ -43,8 +54,7 @@ public class ERSectorPreset extends SectorPreset {
                 if(unlockedInCampaign && !o.complete()) unlockedInCampaign = false;
             });
         }
-
-        if(unlocked || alwaysUnlocked) localizedName = Core.bundle.get("sector." + name + ".name");
+        if(unlocked || alwaysUnlocked || Varsr.debug || Varsr.showAllSectors) localizedName = Core.bundle.get("sector." + name + ".name");
         else localizedName = "???";
         if(Varsr.showAllSectors || alwaysUnlocked || (unlocked() && unlockedInCampaign)){
             description = Core.bundle.get("sector." + name + ".description");

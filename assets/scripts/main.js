@@ -6,6 +6,12 @@ Events.on(ClientLoadEvent,
             unit.omniMovement = true;
             unit.faceTarget = false;
             unit.targetFlags = [BlockFlag.turret, null];
+            
+            Vars.content.sectors().each(s => {
+                if(s.minfo.mod != null && s.minfo.mod.name == "endless-rusting" && s.icon != Core.atlas.getDrawable("error")){
+                    s.uiIcon = s.fullIcon = s.icon.getRegion();
+                }
+            });
         }
         else unit.targetFlag = BlockFlag.turret;
     }

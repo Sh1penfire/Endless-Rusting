@@ -65,7 +65,7 @@ public class Varsr implements Loadable {
     public static String defaultUsername;
     public static boolean debug = false;
     public static float lerpedPlayerElevation = 0;
-    public static boolean showAllSectors = false;
+    public static boolean showAllSectors = true;
     public static boolean customCoreUsed = false;
 
     public static void setup(){
@@ -112,7 +112,8 @@ public class Varsr implements Loadable {
         username = Core.settings.getString("settings.er.username", defaultUsername);
         if(username.equals("")) username = defaultUsername;
         debug = Core.settings.getBool("settings.er.debug", false);
-        showAllSectors  = Core.settings.getBool("settings.er.showallsectors", false);
+        //less brutal on the player :)
+        showAllSectors  = Core.settings.getBool("settings.er.showallsectors", true);
         ui = new RustingUI();
 
         ui.init();
