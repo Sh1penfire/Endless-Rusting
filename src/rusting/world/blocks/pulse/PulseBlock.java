@@ -280,7 +280,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
         @Override
         public void update() {
             super.update();
-            overload.pulse -= drain * overloadf() * overloadf();
+            if(canOverload) overload.pulse -= drain * overloadf() * overloadf();
             normalizePulse();
         }
 
@@ -326,7 +326,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
             float before = totalPulse();
             storage.pulse -= pulse;
             normalizePulse();
-            return totalPulse() - before;
+            return before - totalPulse();
         }
 
         @Override
@@ -347,7 +347,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
         @Override
         public float chargef(boolean overloadaccount) {
-            return overloadaccount ? (storage.pulse + overload.pulse)/(pulseCapacity + overloadCapacity) : storage.pulse/pulseCapacity;
+            return overloadaccount && canOverload ? (storage.pulse + overload.pulse)/(pulseCapacity + overloadCapacity) : storage.pulse/pulseCapacity;
         }
 
         @Override
@@ -415,7 +415,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
         public void read(Reads r, byte revision){
             super.read(r, revision);
             storage.pulse = r.f();
-
+            overload.pulse = r.f();
         }
     }
 }

@@ -106,7 +106,7 @@ public class RustingBlocks implements ContentList{
         //Siphon
         pulseSiphon,
         //crafting
-        pulseGraphiteForge, pulseGlassForgery, pulseCondensary, pulseMelomaeMixer, pulseGelPress,
+        pulseGraphiteForge, pulseGlassFoundry, pulseCondensary, pulseMelomaeMixer, pulseGelPress,
         //Walls
         pulseBarrier, pulseBarrierLarge,
         //Research
@@ -585,7 +585,6 @@ public class RustingBlocks implements ContentList{
             drawer = new DrawLiquidSmelter();
 
             consumes.items(with(Items.coal, 3, RustingItems.taconite, 5));
-            consumes.liquid(Liquids.water, 0.155f);
         }};
 
         desalinationMixer = new GenericCrafter("desalination-mixer"){{
@@ -952,7 +951,7 @@ public class RustingBlocks implements ContentList{
             centerResearchRequirements(false, with(Items.coal, 125, Items.silicon, 45, Items.metaglass, 65, Items.titanium, 85));
             drawer = new DrawPulseSpinningCrafter();
             size = 2;
-            itemCapacity = 30;
+            itemCapacity = 20;
             drain = 0.05f;
             pulseCapacity = 240;
             canOverload = false;
@@ -965,8 +964,22 @@ public class RustingBlocks implements ContentList{
             outputItems = ItemStack.with(Items.graphite, 2, Items.silicon, 1);
         }};
 
-        pulseGlassForgery = new PulseForgery("pulse-glass-forgery"){{
+        pulseGlassFoundry = new PulseForgery("pulse-glass-foundry"){{
+            requirements(Category.crafting, with(Items.graphite, 65, Items.silicon, 25, Items.titanium, 35));
+            centerResearchRequirements(false, with(Items.coal, 125, Items.silicon, 45, Items.metaglass, 65, Items.titanium, 85));
+            size = 2;
+            itemCapacity = 30;
+            drain = 0.05f;
+            pulseCapacity = 240;
+            canOverload = false;
+            minRequiredPulsePercent = 0.45f;
+            customConsumes.pulse = 14;
+            craftTime = 75;
+            updateEffectChance = 0.05f;
 
+            consumes.items(ItemStack.with(Items.lead, 6, Items.sand, 15));
+
+            outputItems = ItemStack.with(Items.metaglass, 10, Items.silicon, 4);
         }};
 
         pulseCondensary = new PulseCondensary("pulse-melonaleum-condensery"){{

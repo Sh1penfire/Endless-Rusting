@@ -34,6 +34,9 @@ public class PulseCanal extends PulseBlock {
         liquidPressure = 1.025f;
         pulsePressure = 10f;
         pulseCapacity = 15;
+        //trust me overloading canals gets weird
+        overloadCapacity = 0;
+        canOverload = false;
     }
 
     @Override
@@ -105,7 +108,7 @@ public class PulseCanal extends PulseBlock {
         public void updateTile(){
             if(canalEnding != null && canalEnding.build instanceof PulseCanalc && ((PulseCanalc) canalEnding.build).canReceive(this)){
                 distributeTo = (PulseCanalc) canalEnding.build;
-                if(storage.pulse >= moveAmount()){
+                if(storage.pulse >= 0.01f){
                     movePulse();
                 }
             }

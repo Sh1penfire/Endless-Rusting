@@ -138,6 +138,7 @@ public class Drawr {
     public static void drawShine(TextureRegion region, float x, float y, float rotation, float alpha){
         Draw.alpha((1 - Vars.state.rules.ambientLight.a) * alpha);
         Draw.rect(region, x, y, rotation);
+        Draw.alpha(1);
     }
 
     public static void drawPixmapWeapons(Pixmap stencil, Weapon w, boolean top, boolean pastMainRegion){

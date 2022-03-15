@@ -1,6 +1,7 @@
 package rusting.entities.units.flying;
 
 import arc.graphics.g2d.Draw;
+import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
@@ -8,19 +9,31 @@ import mindustry.content.StatusEffects;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.type.StatusEffect;
+import mindustry.type.UnitType;
 import rusting.content.RustingUnits;
 import rusting.entities.units.BaseUnitEntity;
 import rusting.entities.units.CraeUnitType;
+import rusting.interfaces.Pulsec;
+import rusting.world.modules.PulseModule;
 
-public class CraeUnitEntity extends BaseUnitEntity {
+public class CraeUnitEntity extends BaseUnitEntity implements Pulsec {
+
+    public PulseModule storage = new PulseModule();
+    public PulseModule overload = new PulseModule();
 
     //blacklisted effects for the sake of the ai
     private static Seq<String> blacklistedStatusEffects = Seq.with("betamindy-amnesia");
     private float shake = 0;
     public float xOffset = 0, yOffset = 0;
     public float alphaDraw = 0;
-    public float pulse = 0;
     private Team lastTeam;
+    public CraeUnitType cType = null;
+
+    @Override
+    public void setType(UnitType type) {
+        super.setType(type);
+        cType = unitType();
+    }
 
     public CraeUnitType unitType(){
         return type instanceof CraeUnitType ? (CraeUnitType) type : null;
@@ -55,8 +68,8 @@ public class CraeUnitEntity extends BaseUnitEntity {
     @Override
     public void update() {
         super.update();
-        //self explanatory, since the units shoudn't be able to change teams
-        if(lastTeam == null) lastTeam = team;
+        //self explanatory, since the units shoudn't be able to change teams, period.
+        if(lastTeam == null || controller instanceof Player) lastTeam = team;
         if(team != lastTeam) team = lastTeam;
     }
 
@@ -72,21 +85,114 @@ public class CraeUnitEntity extends BaseUnitEntity {
         super.destroy();
     }
 
+
     @Override
-    public void write(Writes w) {
-        super.write(w);
-        w.f(pulse);
+    public boolean canReceivePulse(float pulse, Pulsec source) {
+        return true;
     }
 
     @Override
-    public void read(Reads r){
-        super.read(r);
-        pulse = r.f();
+    public boolean connectableTo() {
+        return true;
+    }
+
+    @Override
+    public void addPulse() {
+        storage.pulse = cType.pulseCapacity;
+    }
+
+    @Override
+    public float addPulse(float pulse) {
+        return addPulse(pulse, this);
+    }
+
+    @Override
+    public float addPulse(float pulse, Pulsec source) {
+        float before = totalPulse();
+        overload.pulse += Mathf.clamp((storage.pulse += pulse) - cType.pulseCapacity, 0, cType.overloadCapacity);
+        normalizePulse();
+        return totalPulse() - before;
+    }
+
+    public float totalPulse(){
+        return storage.pulse + overload.pulse;
+    }
+
+    @Override
+    public float removePulse(float pulse) {
+        return removePulse(pulse, this);
+    }
+
+    @Override
+    public float removePulse(float pulse, Pulsec source) {
+        float before = totalPulse();
+        storage.pulse -= pulse;
+        normalizePulse();
+        return before - totalPulse();
+    }
+
+    @Override
+    public void normalizePulse() {
+        storage.pulse = Mathf.clamp(storage.pulse, 0, cType.pulseCapacity);
+        overload.pulse = Mathf.clamp(overload.pulse, 0, cType.overloadCapacity);
+    }
+
+    @Override
+    public void normalizeOverload() {
+        overload.pulse = Mathf.clamp(overload.pulse, 0, cType.pulseCapacity);
+    }
+
+    @Override
+    public float chargef() {
+        return chargef(false);
+    }
+
+    @Override
+    public float chargef(boolean overloadaccount) {
+        return overloadaccount ? (storage.pulse + overload.pulse)/(cType.pulseCapacity + cType.overloadCapacity) : storage.pulse/cType.pulseCapacity;
+    }
+
+    @Override
+    public float overloadf(){
+        return overload.pulse/cType.overloadCapacity;
+    }
+
+    @Override
+    public PulseModule pulseModule() {
+        return storage;
+    }
+
+    @Override
+    public PulseModule overloadModule() {
+        return overload;
+    }
+
+    @Override
+    public float getX() {
+        return x;
+    }
+
+    @Override
+    public float getY() {
+        return y;
+    }
+
+    @Override
+    public void write(Writes w) {
+        super.write(w);
+        w.f(storage.pulse);
+        w.f(overload.pulse);
+    }
+
+    @Override
+    public void read(Reads r, byte revision) {
+        super.read(r, revision);
+        storage.pulse = r.f();
+        overload.pulse = r.f();
     }
 
     @Override
     public int classId(){
         return RustingUnits.classID(CraeUnitEntity.class);
     }
-
 }

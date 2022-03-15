@@ -341,6 +341,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             Fill.circle(sourcx, sourcy, 1.35f);
             Draw.reset();
         }
+
         @Override
         public void draw() {
             Draw.rect(region, x, y, 0);
@@ -400,6 +401,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             w.f(reload);
             w.s(connections.size);
             for(int i = 0;  i < connections.size; i++){
+                Log.info(connections.size);
                 w.d(connections.get(i));
             }
             w.s(previousConnections.size);
@@ -414,18 +416,16 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             super.read(r, revision);
             reload = r.f();
             int n = r.s();
-            connections = new Seq<Integer>();
             connections.clear();
             int rpos;
             for(int i = 0; i < n; i++){
                 rpos = ((int) r.d());
-                Log.info(n);
                 connections.add(rpos);
             }
             previousConnections = new Seq<Integer>();
             previousConnections.clear();
             n = r.s();
-            for(int i = 0;  i < n; i++){
+            for(int i = 0; i < n; i++){
                 rpos = ((int) r.d());
                 previousConnections.add(rpos);
             }

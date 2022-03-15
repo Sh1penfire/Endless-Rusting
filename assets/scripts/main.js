@@ -11,6 +11,7 @@ Events.on(ClientLoadEvent,
     }
 );
 
+/*
 let button = Version.number >= 7 ? Core.atlas.getDrawable("button") : Tex.button;
 
 let buttonOver = Version.number >= 7 ? Core.atlas.getDrawable("check-over") : Tex.buttonOver;
@@ -142,3 +143,4 @@ Events.run(Trigger.update, () => {
     }
     visibilityState.update();
 });
+*/

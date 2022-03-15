@@ -92,7 +92,6 @@ public class RustingUnits implements ContentList{
         }
     }
 
-
     public static <T extends Entityc> int classID(Class<T> type){
         return idMap.get(type, -1);
     }
@@ -131,7 +130,8 @@ public class RustingUnits implements ContentList{
             speed = 0.78f;
             armor = 7;
             health = 450;
-            mineSpeed = 2.25f;
+            mineSpeed = 5.25f;
+            mineTier = 2;
             buildSpeed = 1.25f;
 
             itemCapacity = 55;
@@ -229,7 +229,7 @@ public class RustingUnits implements ContentList{
             mineTier = 3;
             mineSpeed = 1.5f;
 
-            pulseStorage = 25;
+            pulseCapacity = 25;
             repairRange = 40;
 
             projectileDeathSpawnInterval = 3;
@@ -270,7 +270,7 @@ public class RustingUnits implements ContentList{
             mineTier = 3;
             mineSpeed = 2.3f;
 
-            pulseStorage = 65;
+            pulseCapacity = 65;
             repairRange = 50;
 
 
@@ -310,7 +310,7 @@ public class RustingUnits implements ContentList{
 
             isCounted = false;
 
-            pulseStorage = 85;
+            pulseCapacity = 85;
             repairRange = 90;
             pulseAmount = 3.25f;
             pulseGenRange = 120;

@@ -64,7 +64,7 @@ public class PulseGenericCrafter extends PulseBlock {
                 @Override
                 public void display(Table table) {
                     for(ItemStack stack : outputItems){
-                        table.add(new ItemDisplay(stack.item, stack.amount, false)).padRight(5);
+                        table.add(new ItemDisplay(stack.item, stack.amount, true)).padRight(5);
                     }
                 }
             });
@@ -115,24 +115,29 @@ public class PulseGenericCrafter extends PulseBlock {
         @Override
         public void updateTile(){
             super.updateTile();
-                if(allConsValid()){
+            if(allConsValid()){
 
-                    progress += getProgressIncrease(craftTime);
-                    totalProgress += delta();
-                    warmup = Mathf.approachDelta(warmup, 1f, warmupSpeed);
+                progress += getProgressIncrease(craftTime);
+                totalProgress += delta();
+                warmup = Mathf.approachDelta(warmup, 1f, warmupSpeed);
 
-                    if(Mathf.chanceDelta(updateEffectChance)){
-                        updateEffect.at(x + Mathf.range(size * 4f), y + Mathf.range(size * 4));
-                    }
-                }else{
-                    warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
+                if(Mathf.chanceDelta(updateEffectChance)){
+                    updateEffect.at(x + Mathf.range(size * 4f), y + Mathf.range(size * 4));
                 }
+            }else{
+                warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
+            }
 
-                if(progress >= 1f){
-                    craft();
-                }
+            if(progress >= 1f){
+                craft();
+            }
 
-                dumpOutputs();
+            dumpOutputs();
+        }
+
+        @Override
+        public float getProgressIncrease(float baseTime) {
+            return 1.0F / baseTime * pDelta();
         }
 
         public void craft(){

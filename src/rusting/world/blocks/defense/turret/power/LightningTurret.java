@@ -37,6 +37,17 @@ public class LightningTurret extends PulseBlock {
     public float reloadTime = 8;
     public float rotationSpeed = 5;
 
+    //amount of jumps a single lightning can have
+    public int chainLightning = 2;
+    //range that lightning can chain
+    public float chainRange = 0;
+    //how much lightning is produced compared to the precent of overload
+    public LightningProv amount = (b) -> (int) (b.overloadf() * chainLightning);
+
+    interface LightningProv{
+        int get(LightningTurretBuild build);
+    }
+
     public Sound shootSound = Sounds.none;
     public float range = 15;
     public float recoilAmount = 2, restitution = 0.1f;

@@ -1428,7 +1428,7 @@ public class RustingBullets implements ContentList{
             despawnEffect = Fx.plasticburn;
             frontColor = Palr.pulseChargeStart;
             backColor = Palr.pulseChargeStart;
-            trailEffect = Fxr.whoosh;
+            trailColor = Palr.pulseBullet;
             status = shieldShatter;
             trailChance = 0.35f;
             drag = -0.001f;
@@ -1454,7 +1454,7 @@ public class RustingBullets implements ContentList{
             despawnEffect = Fx.plasticburn;
             frontColor = Palr.pulseChargeStart;
             backColor = Palr.pulseChargeEnd;
-            trailEffect = Fxr.whoosh;
+            trailColor = Palr.pulseBullet;
             status = shieldShatter;
             trailChance = 0.35f;
             drag = -0.001f;
@@ -2015,7 +2015,7 @@ public class RustingBullets implements ContentList{
             despawnEffect = Fx.plasticburn;
             frontColor = Palr.pulseChargeStart;
             backColor = Palr.pulseChargeStart;
-            trailEffect = Fxr.whoosh;
+            trailColor = Palr.pulseBullet;
             status = shieldShatter;
             trailChance = 0.35f;
             drag = -0.001f;

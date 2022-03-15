@@ -22,7 +22,8 @@ import static mindustry.Vars.state;
 
 public class CraeUnitType extends BaseUnitType {
 
-    public float pulseStorage = 0;
+    public float pulseCapacity = 0;
+    public float overloadCapacity = 0;
     public float overloadedOpacity = 0.3f;
     public float repairRange = 0;
     public float pulseAmount = 0;

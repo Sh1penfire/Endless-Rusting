@@ -45,7 +45,7 @@ public class PulseEntity implements Pulsec {
     @Override
     public float addPulse(float pulse, Pulsec source) {
         float before = totalPulse();
-        overload.pulse += (storage.pulse += pulse) % pulseCapacity;
+        overload.pulse += Mathf.clamp((storage.pulse += pulse) - pulseCapacity, 0, overloadCapacity);
         normalizePulse();
         return totalPulse() - before;
     }
@@ -62,9 +62,9 @@ public class PulseEntity implements Pulsec {
     @Override
     public float removePulse(float pulse, Pulsec source) {
         float before = totalPulse();
-        overload.pulse += (storage.pulse += pulse) % pulseCapacity;
+        storage.pulse -= pulse;
         normalizePulse();
-        return totalPulse() - before;
+        return before - totalPulse();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class PulseEntity implements Pulsec {
 
     @Override
     public float chargef(boolean overloadaccount) {
-        return overloadaccount ? storage.pulse/ pulseCapacity : (storage.pulse + overload.pulse)/(pulseCapacity + overloadCapacity);
+        return overloadaccount ? (storage.pulse + overload.pulse)/(pulseCapacity + overloadCapacity) : storage.pulse/ pulseCapacity;
     }
 
     @Override
