@@ -37,6 +37,16 @@ public class PulsePoint extends PulseBlock {
         projectile = null;
     }
 
+    @Override
+    public boolean canShoot() {
+        return true;
+    }
+
+    @Override
+    public float projectileRange() {
+        return range;
+    }
+
     public class PulsePointBuild extends PulseBlockBuild{
         public Pulsec target;
         public float targetRot = 0;

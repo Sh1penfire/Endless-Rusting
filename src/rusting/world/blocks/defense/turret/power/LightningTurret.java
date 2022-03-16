@@ -86,6 +86,11 @@ public class LightningTurret extends PulseBlock {
     }
 
     @Override
+    public float projectileRange() {
+        return range;
+    }
+
+    @Override
     public void load() {
         super.load();
         baseRegion = Core.atlas.find("endless-rusting-pulse-base" + size);

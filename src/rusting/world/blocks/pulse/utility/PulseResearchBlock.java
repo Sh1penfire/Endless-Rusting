@@ -70,7 +70,7 @@ public class PulseResearchBlock extends PulseBlock implements ResearchCenter{
     @Override
     public boolean canPlaceOn(Tile tile, Team team){
         //must have been researched, but for now checks if research center exists
-        if(getCenterTeam(team) != null) return false;
+        if(Varsr.research.getCenter(researchTypes, team) != null) return false;
         return super.canPlaceOn(tile, team);
     }
 

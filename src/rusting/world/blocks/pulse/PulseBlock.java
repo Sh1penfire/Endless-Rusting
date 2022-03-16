@@ -227,7 +227,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
     }
 
     public boolean canShoot(){
-        return canOverload;
+        return canOverload && projectile != null;
     }
 
     public static boolean validCenter(Team team){
