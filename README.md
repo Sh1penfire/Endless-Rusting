@@ -99,7 +99,7 @@ With multiple guardian waves, during the canonical 23 waves, you might want to g
 
 Difficulty: Peaceful/Easy
 
-###Plantae Preservae Domae
+### Plantae Preservae Domae
 ![image](https://user-images.githubusercontent.com/73347888/125019908-289fce80-e0bb-11eb-835c-ea0e116c0127.png)
 
 Intro: Conflict between the enemy and the natives is in session, as they knew you'd try to come ask for help. Unfortunately for the Crux, it seems like the natives were ready to repourpose the resource collecting base into a fortress. The place is flooded, and a river runs through the middle of the map. Sand is quite abundant, as with the other resources here, such as the copper, lead and coal.
