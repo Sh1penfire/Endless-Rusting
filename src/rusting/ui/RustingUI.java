@@ -27,10 +27,6 @@ public class RustingUI implements ApplicationListener, Loadable {
     public LoadoutResistFrag loadoutResistance;
     public UnitSelectFrag unitSelect;
 
-    public WidgetGroup planetsUI;
-    private PlanetDialog planet;
-    private LaunchLoadoutDialog loadout;
-
     @Override
     public void init(){
         Texr.load();
@@ -42,29 +38,5 @@ public class RustingUI implements ApplicationListener, Loadable {
         achievements = new ERAchievementsDialog();
         loadoutResistance = new LoadoutResistFrag();
         unitSelect = new UnitSelectFrag();
-        planetsUI = new WidgetGroup();
-
-        Core.scene.add(planetsUI);
-
-        Events.on(EventType.ClientLoadEvent.class, e -> {
-            Core.app.post(() -> {
-                loadoutResistance.build(Vars.ui.menuGroup);
-                unitSelect.build(Vars.ui.menuGroup);
-            });
-        });
-
-        Vars.ui.planet.loadouts.shown(() -> {
-            updateResistTable();
-        });
-
-        Vars.ui.planet.loadouts.hidden(() -> {
-            loadoutResistance.visible = false;
-        });
-
-    }
-
-    public void updateResistTable(){
-        planet = Vars.ui.planet;
-        loadoutResistance.visible = (planet.selected.preset != null && planet.selected.preset instanceof ERSectorPreset);
     }
 }
