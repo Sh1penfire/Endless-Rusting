@@ -1,14 +1,17 @@
 package rusting.entities.bullet;
 
 import arc.func.Cons;
+import arc.math.Angles;
+import arc.math.Mathf;
 import arc.util.Nullable;
 import arc.util.Time;
+import mindustry.entities.Units;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.Team;
 import mindustry.gen.*;
 
 //includes cons for some methods in BulletType
-public class ConsBulletType extends BasicBulletType {
+public class BaseBulletType extends BasicBulletType {
     @Nullable
     public Cons<Bullet> consUpdate;
 
@@ -18,13 +21,15 @@ public class ConsBulletType extends BasicBulletType {
     @Nullable
     public Cons<Bullet> consHit;
 
+    public HomingType homingType;
+
     public boolean useRange = false;
     public float range = 0;
     public float trueSpeed = speed;
     public boolean useTrueSpeed = true;
     public float rotationOffset = 0;
 
-    public ConsBulletType(float speed, float damage, String sprite){
+    public BaseBulletType(float speed, float damage, String sprite){
         super(speed, damage, sprite);
     }
 
@@ -36,7 +41,15 @@ public class ConsBulletType extends BasicBulletType {
     @Override
     public void update(Bullet b) {
         if(consUpdate != null) consUpdate.get(b);
-        super.update(b);
+
+        if (this.weaveMag > 0.0F) {
+            b.vel.rotate(Mathf.sin(b.time + 3.1415927F * this.weaveScale / 2.0F, this.weaveScale, this.weaveMag * (float)(Mathf.randomSeed((long)b.id, 0, 1) == 1 ? -1 : 1)) * Time.delta);
+        }
+
+        if (this.trailChance > 0.0F && Mathf.chanceDelta((double)this.trailChance)) {
+            this.trailEffect.at(b.x, b.y, this.trailParam, this.trailColor);
+        }
+
 
     }
 
@@ -78,5 +91,26 @@ public class ConsBulletType extends BasicBulletType {
 
         if(keepVelocity && owner instanceof Velc) bullet.vel.add(((Velc) bullet.owner).vel());
         return bullet;
+    }
+
+
+    public abstract class HomingType{
+        public BaseBulletType type;
+        public abstract void update(Bullet b);
+    }
+
+    public class GenericHoming extends HomingType{
+        @Override
+        public void update(Bullet b){
+            if (type.homingPower > 1.0E-4F && b.time >= type.homingDelay) {
+                Teamc target = Units.closestTarget(b.team, b.x, b.y, type.homingRange, (e) -> {
+                    return e.isGrounded() && type.collidesGround || e.isFlying() && type.collidesAir;
+                }, (t) -> type.collidesGround
+                );
+                if (target != null) {
+                    b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), type.homingPower * Time.delta * 60));
+                }
+            }
+        }
     }
 }

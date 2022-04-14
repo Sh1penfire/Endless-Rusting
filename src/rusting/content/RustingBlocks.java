@@ -1777,7 +1777,7 @@ public class RustingBlocks implements ContentList{
             range = 152;
             shootLength = 7;
             spread = 2;
-            inaccuracy = 4;
+            inaccuracy = 6;
             xRand = 5;
             shots = 2;
             reloadTime = 4.75f;
@@ -1844,9 +1844,9 @@ public class RustingBlocks implements ContentList{
         refract = new ItemTurret("refract"){{
             requirements(Category.turret, with(Items.copper, 40, Items.graphite, 17));
             ammo(
-                Items.graphite, RustingBullets.denseLightRoundaboutLeft,
-                RustingItems.halsinte, RustingBullets.saltyLightRoundaboutLeft,
-                RustingItems.melonaleum, RustingBullets.craeLightRoundaboutLeft
+                Items.graphite, RustingBullets.denseRoundaboutLight,
+                RustingItems.halsinte, RustingBullets.saltyRoundaboutLight,
+                RustingItems.melonaleum, RustingBullets.craeRoundaboutLight
             );
 
             health = 340;
@@ -1864,9 +1864,9 @@ public class RustingBlocks implements ContentList{
         diffract = new ItemTurret("diffract"){{
             requirements(Category.turret, with(Items.copper, 85,  Items.lead, 70, Items.graphite, 55));
             ammo(
-                Items.graphite, RustingBullets.denseLightGlaive,
-                RustingItems.melonaleum, RustingBullets.craeLightGlaive,
-                RustingItems.halsinte, RustingBullets.saltyLightGlaive
+                Items.graphite, RustingBullets.denseGlaiveHeavy,
+                RustingItems.melonaleum, RustingBullets.craeGlaiveHeavy,
+                RustingItems.halsinte, RustingBullets.saltyGlaiveHeavy
             );
 
             ammoPerShot = 4;
@@ -1886,8 +1886,8 @@ public class RustingBlocks implements ContentList{
         reflect = new BoomerangTurret("reflect"){{
             requirements(Category.turret, with(Items.copper, 40, Items.graphite, 17));
             ammo(
-                Items.graphite, RustingBullets.craeLightGlaiveLeft,
-                RustingItems.halsinte, RustingBullets.saltyLightRoundaboutLeft
+                Items.graphite, RustingBullets.craeGlaiveLight,
+                RustingItems.halsinte, RustingBullets.saltyRoundaboutLight
             );
             buildVisibility = BuildVisibility.hidden;
 

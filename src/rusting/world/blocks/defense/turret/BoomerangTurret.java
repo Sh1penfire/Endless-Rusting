@@ -5,7 +5,6 @@ import arc.util.Time;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
-import rusting.entities.bullet.BoomerangBulletType;
 
 public class BoomerangTurret extends AutoreloadItemTurret {
 
@@ -28,7 +27,7 @@ public class BoomerangTurret extends AutoreloadItemTurret {
                     effects();
                     float lifeScl = type.scaleVelocity ? Mathf.clamp(Mathf.dst(x + tr.x, y + tr.y, targetPos.x, targetPos.y) / type.range(), minRange / type.range(), range / type.range()) : 1f;
 
-                    ((BoomerangBulletType) type).createBoomerang(this, team, x + tr.x, y + tr.y, i * spread + rotation, type.damage, 1f + Mathf.range(velocityInaccuracy), lifeScl, this);
+                    type.create(this, team, x + tr.x, y + tr.y, i * spread + rotation, type.damage, 1f + Mathf.range(velocityInaccuracy), lifeScl, this);
                 });
             }
 

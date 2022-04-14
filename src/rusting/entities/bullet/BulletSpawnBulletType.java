@@ -18,7 +18,7 @@ import mindustry.gen.*;
 import mindustry.world.blocks.defense.turrets.Turret.TurretBuild;
 import rusting.content.Palr;
 
-public class BulletSpawnBulletType extends ConsBulletType{
+public class BulletSpawnBulletType extends BaseBulletType {
 
     //fired on bullet hit/despawn. Correctly rotated.
     public BulletType finalFragBullet = null;

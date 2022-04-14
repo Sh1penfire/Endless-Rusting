@@ -13,7 +13,7 @@ import rusting.content.Palr;
 import rusting.world.blocks.defense.turret.HarpoonTurret.HarpoonTurretBuild;
 
 //a special class for bullets which are used in the harpoon gun
-public class BlockHarpoonBulletType extends ConsBulletType{
+public class BlockHarpoonBulletType extends BaseBulletType {
 
     public float shredDamage = 0;
     //chance per tick

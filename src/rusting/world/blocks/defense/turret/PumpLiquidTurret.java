@@ -3,6 +3,7 @@ package rusting.world.blocks.defense.turret;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.math.Mathf;
 import arc.util.Time;
 import mindustry.type.Liquid;
 import mindustry.ui.Cicon;
@@ -17,6 +18,7 @@ import static mindustry.Vars.world;
 public class PumpLiquidTurret extends LiquidTurret {
 
     public float pumpSpeed = 0.045f;
+    public float effectChance = 0.024f;
 
     public PumpLiquidTurret(String name) {
         super(name);
@@ -63,7 +65,12 @@ public class PumpLiquidTurret extends LiquidTurret {
         @Override
         public void updateTile() {
             super.updateTile();
-            if((liquids().current() == tile.floor().liquidDrop || canPump(tile)) && liquids().currentAmount() + pumpSpeed * Time.delta < liquidCapacity) liquids.add(tile.floor().liquidDrop, pumpSpeed * Time.delta );
+            if((liquids().current() == tile.floor().liquidDrop || canPump(tile)) && liquids().currentAmount() + pumpSpeed * Time.delta < liquidCapacity) {
+                liquids.add(tile.floor().liquidDrop, pumpSpeed * Time.delta);
+
+                float worldSize = size * tilesize;
+                if(Mathf.chance(effectChance)) tile.floor().liquidDrop.effect.effect.at(x + Mathf.random(worldSize) - worldSize/2, y + Mathf.random(worldSize) - worldSize/2);
+            }
         }
     }
 }

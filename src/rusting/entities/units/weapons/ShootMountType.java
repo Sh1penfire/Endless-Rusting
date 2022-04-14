@@ -3,8 +3,6 @@ package rusting.entities.units.weapons;
 import arc.math.Angles;
 import arc.math.geom.Vec2;
 import arc.util.Time;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
 import rusting.interfaces.SpecialWeaponsUnit;
 
 public class ShootMountType extends MountType {
@@ -66,16 +64,6 @@ public class ShootMountType extends MountType {
 
         public Vec2 getShootPos(){
             return new Vec2(x, y).rotate(owner.self().rotation - 90).add(owner.self().x, owner.self().y).add(new Vec2(shootX, shootY).rotate(getRotation() - 90));
-        }
-
-        @Override
-        public void write(Writes w) {
-            super.write(w);
-        }
-
-        @Override
-        public void read(Reads r, byte revision) {
-            super.read(r, revision);
         }
     }
 }

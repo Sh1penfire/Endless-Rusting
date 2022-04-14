@@ -96,9 +96,11 @@ public class RustingUnits implements ContentList{
         return idMap.get(type, -1);
     }
 
+    public static CraeUnitType
+            //support Pulse
+            duono, duoly, duanga;
+
     public static UnitType
-        //support Pulse
-        duono, duoly, duanga,
         //hunter Pulse
         posobility, austute,
         //Acrilimyal's drone army
@@ -139,7 +141,7 @@ public class RustingUnits implements ContentList{
 
             weapons.addAll(
                 new Weapon("glimpse-sidearm"){{
-                    bullet = new ConsBulletType(5.2f, 45, "missile"){{
+                    bullet = new BaseBulletType(5.2f, 45, "missile"){{
                         consUpdate = RustingBullets.velbasedHomingNoLife;
                         useRange = true;
                         useTrueSpeed = true;
@@ -202,7 +204,7 @@ public class RustingUnits implements ContentList{
                 new Weapon("clear"){{
                     reload = 45;
                     shots = 0;
-                    bullet = new ConsBulletType(6, 14, "clear"){{
+                    bullet = new BaseBulletType(6, 14, "clear"){{
                         range = RustingBullets.darkPellet.range() * 2;
                         shootEffect = Fx.none;
                         smokeEffect = Fx.none;
@@ -359,7 +361,7 @@ public class RustingUnits implements ContentList{
             drag = 0.05f;
             weapons.add(
                     new Weapon("clear") {{
-                        bullet = new ConsBulletType(0.001f, 0, "clear"){{
+                        bullet = new BaseBulletType(0.001f, 0, "clear"){{
                             range = 280;
                             useRange = true;
                         }};
@@ -368,6 +370,7 @@ public class RustingUnits implements ContentList{
             );
             specialMounts.add(
                     new PointLaserMountType("austute-laser"){{
+                        laserSpeed = 0.5f;
                         reloadTime = 75;
                         rotateSpeed = 0;
                     }}
@@ -482,7 +485,7 @@ public class RustingUnits implements ContentList{
                         reload = 50;
                         shake = 5;
                         shootSound = Sounds.bang;
-                        bullet = new ConsBulletType(0, 350, "none"){{
+                        bullet = new BaseBulletType(0, 350, "none"){{
                             useRange = true;
                             range = 75;
                             killShooter = true;
@@ -596,7 +599,7 @@ public class RustingUnits implements ContentList{
                     reload = 250;
                     shake = 5;
                     shootSound = Sounds.bang;
-                    bullet = new ConsBulletType(0.725f, 35, "shell"){{
+                    bullet = new BaseBulletType(0.725f, 35, "shell"){{
                         width = 15;
                         height = 15;
                         lifetime = 150;
@@ -672,7 +675,7 @@ public class RustingUnits implements ContentList{
                     shootSound = Sounds.spark;
                     soundPitchMin = 0.65f;
                     soundPitchMax = 0.85f;
-                    bullet = new ConsBulletType(5, 1, "bullet"){{
+                    bullet = new BaseBulletType(5, 1, "bullet"){{
                         useRange = true;
                         range = 175.5f;
                         width = 8;
@@ -1139,7 +1142,7 @@ public class RustingUnits implements ContentList{
                     shots = 0;
                     shootStatus = StatusEffects.unmoving;
                     shootStatusDuration = 25;
-                    bullet = new ConsBulletType(6, 14, "clear"){{
+                    bullet = new BaseBulletType(6, 14, "clear"){{
                         range = 170;
                         shootEffect = Fx.none;
                         smokeEffect = Fx.none;
@@ -1165,7 +1168,7 @@ public class RustingUnits implements ContentList{
                     inaccuracy = 5f;
 
 
-                    bulletType = new ConsBulletType(3.5f, 75, "missile"){{
+                    bulletType = new BaseBulletType(3.5f, 75, "missile"){{
                         consUpdate = RustingBullets.velbasedHomingNoLife;
                         useRange = true;
                         useTrueSpeed = true;
@@ -1310,7 +1313,7 @@ public class RustingUnits implements ContentList{
             );
             weapons.addAll(
                 new Weapon("none"){{
-                    bullet = RustingBullets.saltyLightGlaive;
+                    bullet = RustingBullets.saltyGlaiveHeavy;
                     shootCone = 360;
                     shots = 5;
                     shotDelay = 5;
@@ -1320,7 +1323,7 @@ public class RustingUnits implements ContentList{
                     mirror = false;
                 }},
                 new Weapon("none"){{
-                    bullet = RustingBullets.saltyLightGlaive;
+                    bullet = RustingBullets.saltyGlaiveHeavy;
                     shootCone = 360;
                     shots = 5;
                     shotDelay = 5;

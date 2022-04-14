@@ -11,7 +11,7 @@ import mindustry.gen.Bullet;
 import mindustry.gen.Teamc;
 import rusting.graphics.Drawr;
 
-public class LandmineBulletType extends ConsBulletType {
+public class LandmineBulletType extends BaseBulletType {
 
     public boolean drawDefault = false;
     public float armingMulti = 2;

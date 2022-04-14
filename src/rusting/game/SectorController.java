@@ -4,7 +4,7 @@ import arc.struct.IntMap;
 
 /**
  A controller for a sector. Map using {@link SectorController#mapSector} a short for {@link ScriptedSectorHandler} to use.
- Intended to only be instantiated once!
+ Instantiate as a static field
  */
 public abstract class SectorController {
     public static IntMap<SectorController> idMap = IntMap.of();

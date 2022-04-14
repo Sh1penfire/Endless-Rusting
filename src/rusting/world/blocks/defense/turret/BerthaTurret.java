@@ -149,6 +149,7 @@ public class BerthaTurret extends PowerTurret {
             super.updateTile();
             //increase reload until a single tick can make it shoot
             if(active && hasAmmo() && !isShooting() && reload >= reloadTime - baseReloadSpeed()) reload = Math.min(reload + baseReloadSpeed(), reloadTime - 1/reloadTime);
+            unit.ammo(charge/maxCharge);
         }
 
         @Override

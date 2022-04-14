@@ -74,9 +74,9 @@ public class RustingBullets implements ContentList{
         //generator core nuke
         infectedGeneratorCoreNuke,
         //boomerangs
-        craeLightRoundaboutRight, craeLightRoundaboutLeft, saltyLightRoundaboutRight, saltyLightRoundaboutLeft, denseLightRoundaboutLeft, denseLightRoundaboutRight,
+        craeRoundaboutLight, saltyRoundaboutLight, denseRoundaboutLight,
         //glaivs
-        craeLightGlaive, denseLightGlaive, pulsenLightGlaive, craeLightGlaiveRight, craeLightGlaiveLeft, saltyLightGlaive,
+        craeLightGlaive, denseGlaiveHeavy, craeGlaiveLight, craeGlaiveHeavy, saltyGlaiveHeavy,
         //artillary bolts
         saltyBolt,
         //instant bouncing bullets
@@ -185,7 +185,7 @@ public class RustingBullets implements ContentList{
 
             if(!(bullet.owner instanceof Ranged) || bullet.time < bullet.type.homingDelay) return;
 
-            trueBulletSpeed = bullet.type instanceof ConsBulletType ? ((ConsBulletType) bullet.type).trueSpeed : bullet.type.speed;
+            trueBulletSpeed = bullet.type instanceof BaseBulletType ? ((BaseBulletType) bullet.type).trueSpeed : bullet.type.speed;
             Tmp.v1.set(bullet.x, bullet.y);
             //handle modded cases of bullet owners first
             if(bullet.owner instanceof Targeting){
@@ -556,7 +556,7 @@ public class RustingBullets implements ContentList{
             drag = 0.0015f;
         }};
 
-        fraeShard = new ConsBulletType(10, 25, "bullet"){{
+        fraeShard = new BaseBulletType(10, 25, "bullet"){{
             consUpdate = new Cons<Bullet>() {
                 @Override
                 public void get(Bullet bullet) {
@@ -579,7 +579,7 @@ public class RustingBullets implements ContentList{
             hitEffect = Fx.hitFuse;
         }};
 
-        paveShard = new ConsBulletType(12, 115, "bullet"){{
+        paveShard = new BaseBulletType(12, 115, "bullet"){{
             consUpdate = bullet -> {
 
                 Fxr.singingFlame.at(bullet.x, bullet.y, bullet.rotation() + Mathr.helix(7, 45, bullet.fin()));
@@ -805,7 +805,7 @@ public class RustingBullets implements ContentList{
             reflectable = false;
         }};
 
-        mhemQuadStorm = new ConsBulletType(2.85f, 3.5f, "shell"){{
+        mhemQuadStorm = new BaseBulletType(2.85f, 3.5f, "shell"){{
 
             scaleVelocity = true;
             hitShake = 1f;
@@ -828,7 +828,7 @@ public class RustingBullets implements ContentList{
             drag = 0.13f;
         }};
 
-        craeQuadStorm = new ConsBulletType(1.7f, 15.5f, "large-bomb"){{
+        craeQuadStorm = new BaseBulletType(1.7f, 15.5f, "large-bomb"){{
 
             hitShake = 1f;
             frontColor = Palr.pulseBullet;
@@ -1293,9 +1293,8 @@ public class RustingBullets implements ContentList{
 
         }};
 
-        denseLightRoundaboutRight =  new BoomerangBulletType(1, 15, "endless-rusting-boomerang"){{
+        denseRoundaboutLight =  new BoomerangBulletType(1, 15, "endless-rusting-boomerang"){{
 
-            other = denseLightRoundaboutLeft;
             width = 16;
             height = 19;
             lifetime = 120;
@@ -1307,8 +1306,6 @@ public class RustingBullets implements ContentList{
             rotateVisualMag = 0.6f;
             rotScaleMin = 0f;
             rotScaleMax = 0.7f;
-            rotateRight = true;
-            reverseBoomerangRotScale = true;
             hitEffect = Fx.hitFuse;
             despawnEffect = Fx.smeltsmoke;
             frontColor = Palr.pulseChargeStart;
@@ -1319,9 +1316,7 @@ public class RustingBullets implements ContentList{
             drag = -0.001f;
         }};
 
-        saltyLightRoundaboutRight = new BoomerangBulletType(2, 15, "endless-rusting-boomerang"){{
-
-            other = saltyLightRoundaboutLeft;
+        saltyRoundaboutLight = new BoomerangBulletType(2, 15, "endless-rusting-boomerang"){{
 
             reloadMultiplier = 0.85f;
             width = 14;
@@ -1335,8 +1330,6 @@ public class RustingBullets implements ContentList{
             rotateVisualMag = 0.6f;
             rotScaleMin = 0.1f;
             rotScaleMax = 1f;
-            rotateRight = true;
-            reverseBoomerangRotScale = true;
             hitEffect = Fx.hitFuse;
             despawnEffect = Fx.smeltsmoke;
             frontColor = Color.white;
@@ -1350,9 +1343,7 @@ public class RustingBullets implements ContentList{
             fragBullets = 2;
         }};
 
-        saltyLightRoundaboutLeft = new BoomerangBulletType(2, 15, "endless-rusting-boomerang"){{
-
-            other = saltyLightRoundaboutRight;
+        saltyRoundaboutLight = new BoomerangBulletType(2, 15, "endless-rusting-boomerang"){{
 
             reloadMultiplier = 0.85f;
             width = 14;
@@ -1366,8 +1357,6 @@ public class RustingBullets implements ContentList{
             rotateVisualMag = 0.6f;
             rotScaleMin = 0.1f;
             rotScaleMax = 1f;
-            rotateRight = false;
-            reverseBoomerangRotScale = false;
             hitEffect = Fx.hitFuse;
             despawnEffect = Fx.smeltsmoke;
             frontColor = Color.white;
@@ -1381,36 +1370,7 @@ public class RustingBullets implements ContentList{
             fragBullets = 2;
         }};
 
-        denseLightRoundaboutLeft = new BoomerangBulletType(1, 15, "endless-rusting-boomerang"){{
-
-            other = denseLightRoundaboutRight;
-
-            width = 16;
-            height = 19;
-            lifetime = 120;
-            homingPower = 0.05f;
-            homingRange = 45f;
-            trailWidth = 0;
-            trailLength = 0;
-            rotateMag = 1;
-            rotateVisualMag = 0.6f;
-            rotScaleMin = 0f;
-            rotScaleMax = 0.7f;
-            rotateRight = false;
-            reverseBoomerangRotScale = true;
-            hitEffect = Fx.hitFuse;
-            despawnEffect = Fx.smeltsmoke;
-            frontColor = Palr.pulseChargeStart;
-            backColor = Palr.pulseChargeEnd;
-            trailEffect = Fx.plasticburn;
-            status = shieldShatter;
-            trailChance = 0.35f;
-            drag = -0.001f;
-        }};
-
-        craeLightRoundaboutRight = new BoomerangBulletType(2, 11, "endless-rusting-boomerang"){{
-
-            other = craeLightRoundaboutLeft;
+        craeRoundaboutLight = new BoomerangBulletType(2, 11, "endless-rusting-boomerang"){{
 
             reloadMultiplier = 1.35f;
 
@@ -1422,8 +1382,6 @@ public class RustingBullets implements ContentList{
             rotateMag = 3;
             rotScaleMin = 0f;
             rotScaleMax = 0.7f;
-            rotateRight = true;
-            reverseBoomerangRotScale = true;
             hitEffect = Fx.hitFuse;
             despawnEffect = Fx.plasticburn;
             frontColor = Palr.pulseChargeStart;
@@ -1434,33 +1392,7 @@ public class RustingBullets implements ContentList{
             drag = -0.001f;
         }};
 
-        craeLightRoundaboutLeft = new BoomerangBulletType(2, 8, "endless-rusting-boomerang"){{
-
-            other = craeLightRoundaboutRight;
-
-            reloadMultiplier = 1.35f;
-
-            width = 12;
-            height = 14;
-            lifetime = 150;
-            homingPower = 0.05f;
-            homingRange = 45f;
-            rotateMag = 3;
-            rotScaleMin = 0f;
-            rotScaleMax = 0.7f;
-            rotateRight = false;
-            reverseBoomerangRotScale = true;
-            hitEffect = Fx.hitFuse;
-            despawnEffect = Fx.plasticburn;
-            frontColor = Palr.pulseChargeStart;
-            backColor = Palr.pulseChargeEnd;
-            trailColor = Palr.pulseBullet;
-            status = shieldShatter;
-            trailChance = 0.35f;
-            drag = -0.001f;
-        }};
-
-        craeLightGlaive = new BoomerangBulletType(1, 25, "endless-rusting-glave"){{
+        craeGlaiveHeavy = new BoomerangBulletType(1, 25, "endless-rusting-glave"){{
 
             homingPower = 0.025f;
 
@@ -1472,8 +1404,8 @@ public class RustingBullets implements ContentList{
                 @Override
                 public void get(Bullet bullet) {
                     for(int i = 0; i <  5; i++) {
-                        ((BoomerangBulletType) craeLightRoundaboutLeft).createBoomerang(bullet.owner, bullet.team, bullet.x, bullet.y, i * 72 + bullet.rotation(), craeLightRoundaboutLeft.damage / 2, 0.85f, 1, 0);
-                        ((BoomerangBulletType) craeLightRoundaboutRight).createBoomerang(bullet.owner, bullet.team, bullet.x, bullet.y, i * 72 + bullet.rotation(), craeLightRoundaboutRight.damage / 2, 0.45f, 1, 0);
+                        ((BoomerangBulletType) craeRoundaboutLight).create(bullet.owner, bullet.team, bullet.x, bullet.y, i * 72 + bullet.rotation(), craeRoundaboutLight.damage / 2, 0.85f, 1, 0, -1);
+                        ((BoomerangBulletType) craeRoundaboutLight).create(bullet.owner, bullet.team, bullet.x, bullet.y, i * 72 + bullet.rotation(), craeRoundaboutLight.damage / 2, 0.45f, 1, 0, 1);
                     }
                 }
             };
@@ -1498,12 +1430,13 @@ public class RustingBullets implements ContentList{
             drag = -0.001f;
         }};
 
-        denseLightGlaive = new BoomerangBulletType(1.35f, 85, "endless-rusting-glave-large"){{
+        denseGlaiveHeavy = new BoomerangBulletType(1.35f, 85, "endless-rusting-glave-large"){{
             homingPower = 0.125f;
             homingRange = 8;
             homingDelay = 80;
             trueSpeed = 0.05f;
 
+            rotationScale = BoomerangBulletType.inverseScale;
             consUpdate = velbasedHoming;
             consDespawned = consHit;
 
@@ -1533,8 +1466,7 @@ public class RustingBullets implements ContentList{
             drag = -0.05f;
         }};
 
-        craeLightGlaiveRight = new BoomerangBulletType(2, 15, "endless-rusting-glave"){{
-            other = craeLightGlaiveLeft;
+        craeGlaiveLight = new BoomerangBulletType(2, 15, "endless-rusting-glave"){{
 
             width = 9;
             height = 9;
@@ -1547,7 +1479,6 @@ public class RustingBullets implements ContentList{
             rotateMag = 5;
             rotScaleMin = 0.2f;
             rotScaleMax = 0.2f;
-            rotateRight = true;
             stayInRange = true;
             hitEffect = Fx.hitFuse;
             despawnEffect = Fx.plasticburn;
@@ -1557,32 +1488,7 @@ public class RustingBullets implements ContentList{
             drag = -0.001f;
         }};
 
-        craeLightGlaiveLeft = new BoomerangBulletType(2, 15, "endless-rusting-glave"){{
-            other = craeLightGlaiveRight;
-
-            width = 9;
-            height = 9;
-            lifetime = 165;
-            homingPower = 0.25f;
-            pierceCap = -1;
-            shrinkX = 0;
-            shrinkY = 0;
-            bounceCap = 0;
-            rotateMag = 5;
-            rotScaleMin = 0.2f;
-            rotScaleMax = 0.2f;
-            rotateRight = false;
-            stayInRange = true;
-            hitEffect = Fx.hitFuse;
-            despawnEffect = Fx.plasticburn;
-            frontColor = Palr.pulseChargeStart;
-            backColor = Palr.pulseBullet;
-            status = shieldShatter;
-            statusDuration = 60;
-            drag = -0.001f;
-        }};
-
-        saltyLightGlaive = new BoomerangBulletType(3f, 75, "endless-rusting-glave-large"){{
+        saltyGlaiveHeavy = new BoomerangBulletType(3f, 75, "endless-rusting-glave-large"){{
 
             consDespawned = b -> {
 
@@ -1617,7 +1523,7 @@ public class RustingBullets implements ContentList{
             status = hailsalilty;
             drag = -0.001f;
             ammoMultiplier = 1;
-            fragBullet = saltyLightRoundaboutRight;
+            fragBullet = saltyRoundaboutLight;
             fragBullets = 3;
             fragVelocityMin = 3;
             fragLifeMin = 0.15f;
@@ -1903,7 +1809,9 @@ public class RustingBullets implements ContentList{
             reflectable = false;
         }};
 
-        longThorFlame = new BulletType(4.35f, 34.5f){{
+        longThorFlame = new PelletBulletType(4.35f, 34.5f, modname + "-clear"){{
+            bulletPierceCap = 15;
+            bulletDamage = 2;
             ammoMultiplier = 6f;
             hitSize = 9f;
             lifetime = 35f;
@@ -1919,7 +1827,9 @@ public class RustingBullets implements ContentList{
             keepVelocity = false;
         }};
 
-        shortPyraFlame = new BulletType(3.35f, 24.5f){{
+        shortPyraFlame = new PelletBulletType(3.35f, 24.5f, modname + "-clear"){{
+            bulletPierceCap = 5;
+            bulletDamage = 15;
             ammoMultiplier = 4f;
             hitSize = 9f;
             lifetime = 14f;
@@ -1935,7 +1845,9 @@ public class RustingBullets implements ContentList{
             keepVelocity = false;
         }};
 
-        longPyraFlame = new BulletType(4.35f, 16.5f){{
+        longPyraFlame = new PelletBulletType(4.35f, 16.5f, modname + "-clear"){{
+            bulletPierceCap = 15;
+            bulletDamage = 5;
             ammoMultiplier = 4f;
             hitSize = 9f;
             lifetime = 35f;
@@ -1991,14 +1903,13 @@ public class RustingBullets implements ContentList{
             bleedEffect = balancedPulsation;
         }};
 
-        ddd = new ConsBulletType(5, 0, "none"){{
+        ddd = new BaseBulletType(5, 0, "none"){{
             consHit = b -> {
                 GraphicEffects.glitch();
             };
         }};
 
         eee = new BoomerangBulletType(2.5f, 500, "none"){{
-            other = eee;
 
             reloadMultiplier = 1.35f;
 
@@ -2009,8 +1920,6 @@ public class RustingBullets implements ContentList{
             rotScaleMin = 0f;
             rotScaleMax = 0.7f;
             bounceCap = 1;
-            rotateRight = true;
-            reverseBoomerangRotScale = true;
             hitEffect = Fx.hitFuse;
             despawnEffect = Fx.plasticburn;
             frontColor = Palr.pulseChargeStart;
@@ -2022,7 +1931,7 @@ public class RustingBullets implements ContentList{
             buildingDamageMultiplier = 10;
         }};
 
-        fff = new ConsBulletType(3, 150, "none"){{
+        fff = new BaseBulletType(3, 150, "none"){{
             consUpdate = velbasedHoming;
             homingPower = 0.01f;
             homingRange = 0;

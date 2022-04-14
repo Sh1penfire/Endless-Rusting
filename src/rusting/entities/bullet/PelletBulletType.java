@@ -8,7 +8,7 @@ import arc.util.Time;
 import mindustry.gen.Bullet;
 import mindustry.gen.Groups;
 
-public class PelletBulletType extends ConsBulletType{
+public class PelletBulletType extends BaseBulletType {
     public PelletBulletType(float speed, float damage, String sprite) {
         super(speed, damage, sprite);
     }

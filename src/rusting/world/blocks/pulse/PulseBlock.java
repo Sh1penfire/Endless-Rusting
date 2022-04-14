@@ -268,6 +268,12 @@ public class PulseBlock extends Block implements ResearchableBlock {
         }
 
         @Override
+        public void consume() {
+            super.consume();
+            removePulse(customConsumes.pulse);
+        }
+
+        @Override
         public float range() {
             return projectileRange();
         }

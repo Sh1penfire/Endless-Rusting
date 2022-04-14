@@ -121,6 +121,10 @@ public class PlayerCore extends CoreBlock {
             }
         }
 
+        public float progressf(){
+            return progress/constructTime;
+        }
+
         @Override
         public void draw() {
             super.draw();

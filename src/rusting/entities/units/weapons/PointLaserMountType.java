@@ -36,7 +36,7 @@ public class PointLaserMountType extends ShootMountType{
 
     public float width = 3, shineBaseWidth = 6, length = 45;
     public float stumpOffset = 8;
-    public float laserSpeed = 3.5f;
+    public float laserSpeed = 1.15f;
 
     public int shineSides = 8;
     public float shineCycle = 0.025f, shineCycleMag = 0.75f, shineWidth = 3, shineLength = 23, shineSize = 5, shineVary = 3;
@@ -52,6 +52,9 @@ public class PointLaserMountType extends ShootMountType{
     public Effect passiveEffect = Fxr.craeBeamHit;
     public Color frontColor = Palr.pulseShieldStart, backColor = Palr.pulseChargeEnd, heatColor = Palr.pulseChargeStart;
 
+    public float maxLaserSpeed = laserSpeed * 4;
+    public float laserRotateSpeed = 0.3f;
+
     public PointLaserMountType(String name) {
         super(name);
         mountType = PointLaserUnitMount::new;
@@ -65,7 +68,8 @@ public class PointLaserMountType extends ShootMountType{
         }
 
         //laser position is it's own thing
-        public Vec2 laserPosition = new Vec2(x, y), targetPosition = new Vec2(x, y);
+        public Vec2 laserPosition = new Vec2(0 ,0), targetPosition = new Vec2();
+        public Vec2 focusVelocity = new Vec2();
 
         //shoot duration is how long the turret has left to shoot, charge is the progress to being fully charged and the reload is the normal reload value
         public float shootDuration = 0, reload = 0;
@@ -91,7 +95,12 @@ public class PointLaserMountType extends ShootMountType{
 
             tr.trns(rotation, shootDst).add(getPos());
 
-            laserPosition.add(Tmp.v1.trns(laserPosition.angleTo(targetPosition), Math.min(laserSpeed * Time.delta, laserPosition.dst(targetPosition)))).sub(getPos()).limit(range).add(getPos());
+            if(shootDuration >= 0) {
+                focusVelocity.add(Tmp.v2.trns(laserPosition.angleTo(targetPosition), Math.min(laserSpeed * Time.delta, laserPosition.dst(targetPosition)))).clamp(0, maxLaserSpeed);
+                focusVelocity.rotateTo(focusVelocity.angleTo(targetPosition), laserRotateSpeed);
+                laserPosition.add(focusVelocity);
+            }
+            else laserPosition.set(targetPosition);
             trail.update(laserPosition.x, laserPosition.y);
             jtrail.update(laserPosition.x, laserPosition.y);
         }

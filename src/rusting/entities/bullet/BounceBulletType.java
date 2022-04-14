@@ -10,7 +10,7 @@ import mindustry.gen.*;
 import rusting.graphics.JagedTrail;
 import rusting.graphics.PoolableTrail;
 
-public class BounceBulletType extends ConsBulletType {
+public class BounceBulletType extends BaseBulletType {
     //how much of it's velocity is kept on bounce
     public double bounciness = 1;
     //Cap for how many times it can bounce. Set to -1 to disable, 0 or null to stop bouncing.

@@ -15,7 +15,7 @@ import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 
 //laser but focused on a single point. Can be giving the option to collide with units or blocks on the path to the target
-public class PointLaserBulletType extends ConsBulletType {
+public class PointLaserBulletType extends BaseBulletType {
     public boolean extend = false;
     public float length = 45;
     public float stumpOffset = 3;

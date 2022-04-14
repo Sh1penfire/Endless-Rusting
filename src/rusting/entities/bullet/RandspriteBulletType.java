@@ -9,7 +9,7 @@ import arc.struct.Seq;
 import arc.util.Tmp;
 import mindustry.gen.Bullet;
 
-public class RandspriteBulletType extends ConsBulletType{
+public class RandspriteBulletType extends BaseBulletType {
 
     int variants = 9;
     Seq<TextureRegion> frontRegions = Seq.with(), backRegions = Seq.with();
