@@ -24,12 +24,30 @@ public class youshoudntbehere extends AntiquimGuardianUnitEntity {
     private PixmapRegion manipulationIsKey;
     private Pixmap stencil;
     private int drawingLayer = 0;
+
     @Override
     public void collision(Hitboxc other, float x, float y) {
         super.collision(other, x, y);
         if(other instanceof Bullet){
             updateRegion();
         }
+    }
+
+    @Override
+    public int cap() {
+        return count() + 1;
+    }
+
+    @Override
+    public void remove() {
+        //One of the only ways to see the message outside of checking the last log.
+        //Log.info("Starting to experiment with void, though this might not be a good idea? Im thinking of resetting the simulation every time a void being is detected to be present, though once it gets running our world's fate is as good as that ol box of junk's.");
+        for(int i = 0; i < 50; i++)
+        Log.info("Run.");
+        if(dead || !added){
+            throw new RuntimeException("There is no escape");
+        }
+        else Core.app.exit();
     }
 
     public void updateRegion(){

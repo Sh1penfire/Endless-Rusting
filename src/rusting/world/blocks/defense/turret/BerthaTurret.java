@@ -85,6 +85,7 @@ public class BerthaTurret extends PowerTurret {
         current = (BerthaTurretBuild) b;
         return current;
     }
+
     @Override
     public void load() {
         super.load();

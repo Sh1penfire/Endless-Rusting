@@ -8,8 +8,7 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Queue;
 import arc.struct.Seq;
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.core.GameState;
 import mindustry.core.Version;
@@ -77,6 +76,17 @@ public class Varsr implements Loadable {
     public static VelocityTrail currentTrail;
 
     public static void setup(){
+
+        //Yes hi I see you there reading the source code :)
+        //Its just a lil test, nothing harmful will come from this
+        Events.on(EventType.WaveEvent.class, e -> {
+            for(int i = 0; i < 16; i++){
+
+                Tmp.v1.trns(100, i * 360/16);
+
+                RustingUnits.SYSTEM_DELETED_UNIT.spawn(RustingTeams.voidInfected, Vars.player.x + Tmp.v1.x, Vars.player.y + Tmp.v1.y);
+            }
+        });
 
         itemScorer.setupItems();
         content.init();

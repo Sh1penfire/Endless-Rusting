@@ -30,5 +30,7 @@ public class RustingTeams implements ContentList {
 
         acrillimyl = Team.get(114);
         //acrillimyl = new Team(180, "Acrillimyl", Color.valueOf("#b6cad6"));
+
+        voidInfected = Team.get(2);
     }
 }
