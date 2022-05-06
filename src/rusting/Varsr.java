@@ -3,10 +3,13 @@ package rusting;
 import arc.Core;
 import arc.Events;
 import arc.assets.Loadable;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Queue;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Log;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.core.GameState;
 import mindustry.core.Version;
@@ -14,6 +17,7 @@ import mindustry.game.EventType;
 import mindustry.game.EventType.Trigger;
 import mindustry.gen.Building;
 import mindustry.gen.Groups;
+import mindustry.graphics.Layer;
 import mindustry.net.Net;
 import mindustry.net.Packet;
 import mindustry.type.ItemStack;
@@ -27,6 +31,9 @@ import rusting.core.holder.ItemScoreHolder;
 import rusting.ctype.UnlockableAchievement;
 import rusting.entities.abilities.SpeedupAbility;
 import rusting.game.*;
+import rusting.graphics.RustedShaders;
+import rusting.graphics.RustedShaders.GlitchEffectShader;
+import rusting.graphics.VelocityTrail;
 import rusting.net.ControlPacket;
 import rusting.ui.RustingUI;
 import rusting.util.MusicControl;
@@ -67,6 +74,7 @@ public class Varsr implements Loadable {
     public static float lerpedPlayerElevation = 0;
     public static boolean showAllSectors = true;
     public static boolean customCoreUsed = false;
+    public static VelocityTrail currentTrail;
 
     public static void setup(){
 
@@ -105,6 +113,7 @@ public class Varsr implements Loadable {
                         "}"
         );
         Vars.mods.getScripts().runConsole("importl(\"rusting\")");
+        Vars.mods.getScripts().runConsole("importl(\"rusting.graphics\")");
         Vars.mods.getScripts().runConsole("importl(\"rusting.content\")");
         Vars.mods.getScripts().runConsole("importl(\"rusting.ctype\")");
 
@@ -186,8 +195,16 @@ public class Varsr implements Loadable {
             if(sectors.controller != null) sectors.controller.update();
         });
 
+        TextureRegion region = Core.atlas.find("endless-rusting-PLACEHOLDER5");
         Events.on(Trigger.draw.getClass(), e -> {
-            if(sectors.controller != null) sectors.controller.draw();
+                if(sectors.controller != null) sectors.controller.draw();
+                Draw.draw(Layer.flyingUnit + 1, () -> {
+                        GlitchEffectShader s = RustedShaders.testShader;
+                        s.screenTex = region.texture;
+                        Draw.shader(RustedShaders.testShader);
+                        Draw.rect(region, Vars.player.x, Vars.player.y, -90);
+                        Draw.shader();
+                });
         });
 
         Log.info("Loaded Varsr");

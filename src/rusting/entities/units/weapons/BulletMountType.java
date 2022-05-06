@@ -14,7 +14,7 @@ public class BulletMountType extends ShootMountType {
     public float shake = 0, shakeDuration = 60;
     public int shots = 1;
     public float spacing = 0, inaccuracy = 0, velocityRand = 0.15f;
-    public BulletType bulletType = RustingBullets.ddd;
+    public BulletType bullet = RustingBullets.ddd;
     public Sound shootSound = Sounds.bang;
 
     public BulletMountType(String name) {
@@ -39,12 +39,12 @@ public class BulletMountType extends ShootMountType {
         public void shoot() {
             reload = 0;
             bullet(getRotation());
-            owner.self().vel.add(Tmp.v1.trns(getRotation() + 180.0F, bulletType.recoil));
-            effects(bulletType);
+            owner.self().vel.add(Tmp.v1.trns(getRotation() + 180.0F, bullet.recoil));
+            effects(bullet);
         }
 
         public Bullet bullet(float angle){
-            return bulletType.create(
+            return bullet.create(
                     owner.self(),
                     owner.self().team,
                     Tmp.v1.set(getShootPos()).x, getShootPos().y, angle);
@@ -60,12 +60,12 @@ public class BulletMountType extends ShootMountType {
 
         @Override
         public boolean shouldReload() {
-            return reload < reloadTime;
+            return reload < BulletMountType.this.reload;
         }
 
         @Override
         public boolean canShoot() {
-            return reload >= reloadTime && !owner.self().disarmed();
+            return reload >= BulletMountType.this.reload && !owner.self().disarmed();
         }
     }
 }

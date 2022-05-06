@@ -86,7 +86,7 @@ public class PulsePreciseLaserTurret extends PulseBlock {
         public boolean isCharging = false, shootingLaser = false;
 
         public PoolableTrail trail = new PoolableTrail(25);
-        public JagedTrail jtrail = new JagedTrail(13, 1);
+        public JaggedTrail jtrail = new JaggedTrail(13, 1);
 
         public @Nullable
         BlockUnitc unit;

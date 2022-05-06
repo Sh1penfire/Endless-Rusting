@@ -12,7 +12,7 @@ public class ShootMountType extends MountType {
         mountType = ShootUnitMount::new;
     }
 
-    public float reloadTime = 85;
+    public float reload = 85;
 
     //the offset from the weapon that the attack starts from
     public float shootX = 0, shootY = 0;
@@ -51,7 +51,7 @@ public class ShootMountType extends MountType {
         }
 
         public boolean shouldReload(){
-            return reload < reloadTime;
+            return reload < ShootMountType.this.reload;
         }
 
         public boolean canShoot(){

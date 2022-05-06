@@ -26,7 +26,7 @@ public class ShotgunMountType extends BulletMountType{
 
     public ShotgunMountType(String name) {
         super(name);
-        reloadTime = 15;
+        reload = 15;
         mountType = ShotgunUnitMount::new;
     }
 
@@ -47,7 +47,7 @@ public class ShotgunMountType extends BulletMountType{
 
         if (shoot.isShooting()) {
             shoot.reload += Time.delta * unit.self().reloadMultiplier();
-            if(shoot.reload >= reloadTime && shoot.shells > 0) {
+            if(shoot.reload >= reload && shoot.shells > 0) {
                 shoot.shoot();
             }
         }
@@ -65,7 +65,7 @@ public class ShotgunMountType extends BulletMountType{
             consecutive++;
             if(consecutive >= shellSpace) crit = true;
             Tmp.v1.set(getPos().add(Tmp.v2.set(shootX, shootY).rotate(getRotation() - 90)));
-            BulletType shot = crit && critBullet != null ? critBullet : bulletType;
+            BulletType shot = crit && critBullet != null ? critBullet : bullet;
             Angles.shotgun(crit ? critShots : shots, spacing, getRotation(), f -> {
                 Bullet b = shot.create(
                         owner.self(),
@@ -82,7 +82,7 @@ public class ShotgunMountType extends BulletMountType{
             });
             shells -= 1;
             reload = 0;
-            effects(bulletType);
+            effects(bullet);
             crit = false;
         }
 

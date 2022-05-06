@@ -2,7 +2,7 @@ package rusting.graphics;
 
 import arc.Core;
 import arc.graphics.Color;
-import arc.graphics.g2d.TextureRegion;
+import arc.graphics.g2d.*;
 import arc.scene.ui.Image;
 import arc.struct.Seq;
 import mindustry.Vars;

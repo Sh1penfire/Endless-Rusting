@@ -38,7 +38,6 @@ import rusting.entities.units.spider.SpecialWeaponsSpider;
 import rusting.entities.units.weapons.*;
 import rusting.interfaces.Targeting;
 
-
 import static arc.graphics.g2d.Draw.color;
 import static rusting.EndlessRusting.modname;
 import static rusting.content.RustingAISwitches.*;
@@ -124,6 +123,7 @@ public class RustingUnits implements ContentList{
     @Override
     public void load() {
         setupID();
+
         glimpse = new PlayerUnitType("glimpse"){{
             defaultController = GroundAI::new;
 
@@ -184,14 +184,14 @@ public class RustingUnits implements ContentList{
 
             specialMounts.addAll(
                     new ShotgunMountType("unwavering-shotgun") {{
-                        bulletType = RustingBullets.darkPellet;
+                        bullet = RustingBullets.darkPellet;
                         critBullet = RustingBullets.darkPelletCrit;
                         critShootEffect = Fxr.blackenedShotgunCrit;
                         critLifetimeMulti = 5;
                         critShots = 15;
                         rotateSpeed = 15;
                         shellReloadTime = 35;
-                        reloadTime = 12;
+                        reload = 12;
                         shots = 12;
                         velocityRand = 0.9f;
                         inaccuracy = 25;
@@ -371,7 +371,7 @@ public class RustingUnits implements ContentList{
             specialMounts.add(
                     new PointLaserMountType("austute-laser"){{
                         laserSpeed = 0.5f;
-                        reloadTime = 75;
+                        reload = 75;
                         rotateSpeed = 0;
                     }}
             );
@@ -755,7 +755,7 @@ public class RustingUnits implements ContentList{
             immunities.addAll(StatusEffects.unmoving, RustingStatusEffects.balancedPulsation);
         }};
 
-        marrow = new BaseUnitType("marrow"){{
+        marrow = new SpecialWeaponsUnitType("marrow"){{
             hitSize = 8;
             health = 215;
             armor = 1;
@@ -769,7 +769,7 @@ public class RustingUnits implements ContentList{
             commandLimit = 4;
             mechLegColor = Palr.dustriken;
             //v7 compatability
-            constructor = BaseUnit::new;
+            constructor = SpecialWeaponsMech::new;
             abilities.add(
                     new RegenerationAbility(0.1f)
             );
@@ -789,13 +789,39 @@ public class RustingUnits implements ContentList{
                 new Weapon("none") {{
                     x = 4;
                     y = 4.25f;
-                    shots = 3;
-                    spacing = 3;
-                    shotDelay = 5;
+                    shots = 0;
                     bullet = RustingBullets.horizonInstalt;
-                    shootSound = Sounds.bang;
+                    shootSound = Sounds.none;
                     reload = 115;
                 }}
+            );
+            specialMounts.add(
+                    new BulletMountType(modname + "-marrow-sidearm"){{
+                        x = 3.25f;
+                        y = 3.75f;
+                        rotateSpeed = 0;
+                        bullet = RustingBullets.horizonInstalt;
+                        shootSound = Sounds.bang;
+                        reload = 115;
+                        shots = 1;
+                            parts.addAll(
+                                    new MountPart(modname + "-marrow-sidearm-front"){{
+                                        x = 3.25f;
+                                        y = 4.75f;
+                                        recoil = 1;
+                                        restitution = 0.06f;
+                                        layerOffset = -0.05f;
+                                        top = true;
+                                    }},
+                                    new MountPart(modname + "-marrow-sidearm-back"){{
+                                        x = 4.25f;
+                                        y = -2.25f;
+                                        recoil = 4;
+                                        layerOffset = -0.05f;
+                                        top = true;
+                                    }}
+                            );
+                    }}
             );
 
         }};
@@ -1087,7 +1113,7 @@ public class RustingUnits implements ContentList{
 
             specialMounts.addAll(
                 new BulletMountType(modname + "-diaphysis-harpoon-launcher"){{
-                bulletType = RustingBullets.stingrayShard;
+                bullet = RustingBullets.stingrayShard;
                 rotateSpeed = 0;
                 y = -5;
                 x = 0;
@@ -1154,7 +1180,7 @@ public class RustingUnits implements ContentList{
 
             constructor = SpecialWeaponsMech::new;
             specialMounts.add(
-                new BulletMountType(modname + "epiphysis-launcher"){{
+                new BulletMountType(modname + "-epiphysis-launcher"){{
                     x = 0;
                     y = 0;
                     restitution = 0.005f;
@@ -1164,11 +1190,11 @@ public class RustingUnits implements ContentList{
                     shootSound = Sounds.missile;
                     shots = 1;
                     range = 65;
-                    reloadTime = 175;
+                    reload = 175;
                     inaccuracy = 5f;
 
 
-                    bulletType = new BaseBulletType(3.5f, 75, "missile"){{
+                    bullet = new BaseBulletType(3.5f, 75, "missile"){{
                         consUpdate = RustingBullets.velbasedHomingNoLife;
                         useRange = true;
                         useTrueSpeed = true;
@@ -1217,8 +1243,8 @@ public class RustingUnits implements ContentList{
                     shots = 3;
                     inaccuracy = 12;
                     velocityRand = 2;
-                    reloadTime = 350;
-                    bulletType = new LandmineBulletType(0.45f, 50, "shell"){{
+                    reload = 350;
+                    bullet = new LandmineBulletType(0.45f, 50, "shell"){{
                         drawDefault = true;
                         colorStart = Palr.lightstriken;
                         colorEnd = Palr.darkerPulseChargeStart;

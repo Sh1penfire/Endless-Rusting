@@ -5,11 +5,11 @@ import arc.math.Mathf;
 import arc.math.geom.Vec3;
 import arc.util.pooling.Pools;
 
-public class JagedTrail extends PoolableTrail{
+public class JaggedTrail extends PoolableTrail{
 
     public float varyDst;
 
-    public JagedTrail(int length, float varyDst) {
+    public JaggedTrail(int length, float varyDst) {
         super(length);
         this.varyDst = varyDst;
     }

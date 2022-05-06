@@ -19,8 +19,7 @@ import mindustry.graphics.Layer;
 import mindustry.type.StatusEffect;
 import rusting.content.Fxr;
 import rusting.content.Palr;
-import rusting.graphics.JagedTrail;
-import rusting.graphics.PoolableTrail;
+import rusting.graphics.*;
 
 import static arc.util.Time.time;
 
@@ -75,14 +74,14 @@ public class PointLaserMountType extends ShootMountType{
         public float shootDuration = 0, reload = 0;
 
         public PoolableTrail trail = new PoolableTrail(25);
-        public JagedTrail jtrail = new JagedTrail(13, 1);
+        public JaggedTrail jtrail = new JaggedTrail(13, 1);
 
         @Override
         public void update() {
             targetPosition.set(owner.self().aimX(), owner.self().aimY());
             rotation = Angles.moveToward(rotation, Tmp.v1.set(getPos()).angleTo(targetPosition), rotateSpeed * Time.delta);
 
-            if(reload >= reloadTime && isShooting()){
+            if(reload >= PointLaserMountType.this.reload && isShooting()){
                 shootDuration = duration;
                 reload = 0;
             }
@@ -96,7 +95,7 @@ public class PointLaserMountType extends ShootMountType{
             tr.trns(rotation, shootDst).add(getPos());
 
             if(shootDuration >= 0) {
-                focusVelocity.add(Tmp.v2.trns(laserPosition.angleTo(targetPosition), Math.min(laserSpeed * Time.delta, laserPosition.dst(targetPosition)))).clamp(0, maxLaserSpeed);
+                focusVelocity.add(Tmp.v2.trns(laserPosition.angleTo(targetPosition), Math.min(laserSpeed, laserPosition.dst(targetPosition)))).clamp(0, maxLaserSpeed * Time.delta);
                 focusVelocity.rotateTo(focusVelocity.angleTo(targetPosition), laserRotateSpeed);
                 laserPosition.add(focusVelocity);
             }

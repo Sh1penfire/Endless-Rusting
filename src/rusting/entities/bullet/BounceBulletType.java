@@ -7,8 +7,7 @@ import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.entities.Units;
 import mindustry.gen.*;
-import rusting.graphics.JagedTrail;
-import rusting.graphics.PoolableTrail;
+import rusting.graphics.*;
 
 public class BounceBulletType extends BaseBulletType {
     //how much of it's velocity is kept on bounce
@@ -50,7 +49,7 @@ public class BounceBulletType extends BaseBulletType {
     public void init(Bullet b) {
         super.init(b);
         b.data = Seq.with(Seq.with(Pools.obtain(PoolableTrail.class, () -> new PoolableTrail(trailLength))), new Bounces(), null);
-        if(jagged) trails(b).add(Pools.obtain(JagedTrail.class, () -> new JagedTrail(trailLength/2, hitSize/2)));
+        if(jagged) trails(b).add(Pools.obtain(JaggedTrail.class, () -> new JaggedTrail(trailLength/2, hitSize/2)));
     }
 
     public Seq<PoolableTrail> trails(Bullet b){

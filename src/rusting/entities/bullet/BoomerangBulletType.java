@@ -17,6 +17,7 @@ public class BoomerangBulletType extends BounceBulletType {
     public float drawAlpha = 1f;
     public float totalRotation;
     public float rotateMag = 1f, rotScaling = 1, rotScaleMin = 0.1f, rotScaleMax = 1, rotateVisualMag = 1;
+    public float rotateDirection = 0;
     public boolean stayInRange = false;
     public Func<Bullet, Float> rotationScale = b -> b.fout();
 
@@ -74,9 +75,9 @@ public class BoomerangBulletType extends BounceBulletType {
     @Override
     public Bullet create(@Nullable Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data) {
         Bullet boomerang = super.create(owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data);
-        boomerang.fdata = 1;
-        if (Mathf.randomSeed((int) Time.time * 2, 0, 1) > 0.5f) {
-            boomerang.fdata = -1;
+        boomerang.fdata = rotateDirection;
+        if (rotateDirection == 0) {
+            boomerang.fdata = Mathf.round(Mathf.randomSeed((int) Time.time * 2, 0, 1)) * 2 - 1;
         }
         return boomerang;
     }

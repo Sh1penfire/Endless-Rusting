@@ -149,7 +149,6 @@ Events.run(Trigger.update, () => {
     }
     visibilityState.update();
 });
-*/
 
 Events.run(Trigger.update, () => {
     Groups.unit.each(u =>{
@@ -163,3 +162,60 @@ Events.run(Trigger.update, () => {
         });
     });
 });
+
+let trailObject = {
+    length: 40,
+    pointSpacing: 1,
+    maxPointSpacing: 2.5,
+    maxSpeed: 3,
+    tension: 0.25,
+    lerpSpeed: 0.05,
+    continuation: 0.1,
+    segPoses: [],
+    newPoses: [],
+    segVelocity: [],
+    init(){
+        for(let i = 0; i < this.length; i++){
+            this.segPoses.push(new Vec2(0, 0));
+            this.newPoses.push(new Vec2(0, 0));
+            this.segVelocity.push(new Vec2(0, 0));
+        }
+        this.segPoses[this.length] = this.segPoses[this.length - 1];
+    },
+    update(targetPos, velocity){
+        this.segPoses[0] = targetPos;
+        this.segVelocity[0] = velocity;
+        for(let i = 1; i < this.length - 1; i++){
+            let segment = this.segPoses[i];
+            let previous = this.segPoses[i - 1];
+            let previousVel = this.segVelocity[i - 1];
+            
+            let distanceVec = new Vec2();
+            let newPos = this.newPoses[i];
+            distanceVec.trns(segment.angleTo(previous), Math.min((segment.dst(previous) - this.pointSpacing) * this.tension, this.maxSpeed));
+            this.segVelocity[i].lerp(distanceVec, this.lerpSpeed).lerp(previousVel, this.continuation);
+            newPos.set(segment).add(this.segVelocity[i]);
+        }
+        for(let i = 1; i < this.length - 1; i++){
+            let segment = this.segPoses[i];
+            let previous = this.segPoses[i - 1];
+            let newPos = this.newPoses[i];
+            segment.set(newPos);
+            segment.sub(previous).clamp(0, this.maxPointSpacing).add(previous);
+        }
+    },
+    draw(){
+        for(let i = 0; i < this.length - 1; i++){
+            let segment = this.segPoses[i];
+            let velocity = this.segVelocity[i];
+            Fill.circle(segment.x, segment.y, 4);
+            Lines.line(segment.x, segment.y, Tmp.v1.set(segment).add(Tmp.v2.set(velocity).scl(10)).x, Tmp.v1.y);
+        }
+    }
+    
+};
+trailObject.init();
+function currentTrail(){return trailObject;};
+Events.run(Trigger.update, () => currentTrail().update(Vars.player.unit(), Vars.player.unit().vel));
+Events.run(Trigger.draw, () => currentTrail().draw());
+*/
