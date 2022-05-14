@@ -7,7 +7,7 @@ import arc.struct.Seq;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.content.TechTree.TechNode;
-import mindustry.ctype.ContentList;
+
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType;
 import mindustry.type.ItemStack;
@@ -22,12 +22,12 @@ import static rusting.content.RustingBlocks.*;
 import static rusting.content.RustingSectorPresets.*;
 import static rusting.game.RustedObjectives.SettingLockedObjective;
 
-public class RustingTechTree implements ContentList {
+public class RustingTechTree {
     static TechTree.TechNode context = null;
-    private String blockNameKey = "";
+    private static String blockNameKey = "";
 
-    @Override
-    public void load(){
+    
+    public static void load(){
 
         Events.on(EventType.BlockDestroyEvent.class, e -> {
             if(Vars.state.isCampaign() && e.tile.build != null && e.tile.build.team != Vars.state.rules.defaultTeam) {
@@ -305,12 +305,12 @@ public class RustingTechTree implements ContentList {
                 node(plantaePresevereDomae, Seq.with(new SectorComplete(incipiensGrounds), new Research(navalFactory)), () -> {
                     node(volenChannels, Seq.with(new SectorComplete(plantaePresevereDomae), new Research(hail), new Research(lancer), new Research(UnitTypes.horizon), new Produce(Items.pyratite)), () -> {
                         node(sulphuricSea, Seq.with(new SectorComplete(volenChannels), new SectorComplete(crystallineCrags), new SectorComplete(pulsatingGroves), new Research(triagon), new Research(steamGenerator), new Research(laserDrill), new Objective() {
-                            @Override
+                            
                             public boolean complete() {
                                 return sectorComplete(volenChannels) && sectorComplete(crystallineCrags) && sectorComplete(pulsatingGroves);
                             }
 
-                            @Override
+                            
                             public String display() {
                                 return Varsr.username + ", defeat and destroy the bases listed above, and your final campaign challenge (For now) in the mod awaits.";
                             }
@@ -374,7 +374,7 @@ public class RustingTechTree implements ContentList {
     }
 
     private static void nodeProduce(UnlockableContent content, Seq<Objective> objectives, Runnable children){
-        node(content, content.researchRequirements(), objectives.and(new Produce(content)), false, children);
+        node(content, content.researchRequirements(), objectives.add(new Produce(content)), false, children);
     }
 
     private static void nodeProduce(UnlockableContent content, Runnable children){

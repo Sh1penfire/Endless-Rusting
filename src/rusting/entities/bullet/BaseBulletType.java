@@ -65,11 +65,6 @@ public class BaseBulletType extends BasicBulletType {
         super.despawned(b);
     }
 
-    @Override
-    public float range() {
-        return useRange ? range : super.range();
-    }
-
     public Bullet create(@Nullable Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data){
         Bullet bullet = Bullet.create();
         bullet.type = this;

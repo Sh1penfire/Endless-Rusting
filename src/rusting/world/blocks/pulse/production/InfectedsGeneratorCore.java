@@ -218,7 +218,7 @@ public class InfectedsGeneratorCore extends PulseGenerator{
                     Draw.color(Palr.pulseChargeStart, Palr.pulseBullet, shootWarmup);
                     Draw.alpha(shootWarmup);
                     Lines.stroke(shootWarmup/i * 3);
-                    Lines.swirl(x, y, 20 - 2 * i, 86/360, lastShootRot - 86/2);
+                    Lines.arc(x, y, 20 - 2 * i, 86/360, lastShootRot - 86/2);
                 }
             }
         }

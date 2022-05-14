@@ -55,7 +55,7 @@ public class WelcomingDialog extends CustomBaseDialog {
                 t.add("@name").padRight(10);
                 t.field(Core.settings.getString("name"), text -> {
                     name = text;
-                }).pad(8).addInputDialog(Vars.maxNameLength);
+                }).pad(8);//.addInputDialog(Vars.maxNameLength);
             });
             table.row();
 

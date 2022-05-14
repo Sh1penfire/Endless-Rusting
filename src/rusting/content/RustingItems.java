@@ -1,15 +1,15 @@
 package rusting.content;
 
 import arc.graphics.Color;
-import mindustry.ctype.ContentList;
+
 import mindustry.type.Item;
 
-public class RustingItems implements ContentList {
+public class RustingItems {
     public static Item
         melonaleum, bulastelt, taconite, halsinte, cameoShardling, camaintAmalgam, gelChip, decilita;
     ;
-    @Override
-    public void load() {
+    
+    public static void load() {
         melonaleum = new Item("melonaleum", Color.valueOf("#6572ca")){{
             flammability = 0.1f;
             explosiveness = 3.75f;

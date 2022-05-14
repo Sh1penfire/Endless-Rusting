@@ -78,7 +78,7 @@ public class PulseContactSender extends PulseControlModule{
         Seq<Double>[] informationStore = new Seq[]{new Seq(), new Seq(), new Seq(), new Seq()};
 
         @Override
-        public boolean onConfigureTileTapped(Building other){
+        public boolean onConfigureBuildTapped(Building other){
 
             if(this == other){
                 deselect();
@@ -92,7 +92,7 @@ public class PulseContactSender extends PulseControlModule{
             }
 
 
-            return super.onConfigureTileTapped(other);
+            return super.onConfigureBuildTapped(other);
         }
 
         public void updateProx(){

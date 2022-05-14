@@ -109,7 +109,7 @@ public class PulseParticleSpawner extends PulseBlock {
         @Override
         public void draw() {
             super.draw();
-            if(lightRadius > 0) Drawf.light(Team.derelict, x, y, lightRadius * warmup, lightColor, lightAlpha * warmup);
+            if(lightRadius > 0) Drawf.light(x, y, lightRadius * warmup, lightColor, lightAlpha * warmup);
         }
     }
 }

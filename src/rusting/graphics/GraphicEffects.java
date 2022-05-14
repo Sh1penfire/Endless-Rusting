@@ -1,13 +1,6 @@
 package rusting.graphics;
 
-import arc.Core;
 import arc.graphics.Color;
-import arc.graphics.g2d.*;
-import arc.scene.ui.Image;
-import arc.struct.Seq;
-import mindustry.Vars;
-import mindustry.entities.bullet.BasicBulletType;
-import mindustry.ui.Cicon;
 import rusting.content.Fxr;
 
 public class GraphicEffects {
@@ -19,7 +12,9 @@ public class GraphicEffects {
         Fxr.lineCircles.at(x, y, 0, trailColour, floatArr);
     }
 
+    //TODO: Advnaced glitch effect with shaders
     public static void glitch(){
+        /*
         Seq<TextureRegion[]> h = Seq.with();
         int i = 0;
         boolean continued = true;

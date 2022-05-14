@@ -45,13 +45,8 @@ public class PulseChainNode extends PulseNode {
         }
 
         @Override
-        public boolean pConsValid() {
-            return false;
-        }
-
-        @Override
         public boolean allConsValid() {
-            return cons.valid() && pConsValid();
+            return canConsume() && pConsValid();
         }
 
         public void affectChained(){

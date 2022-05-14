@@ -5,11 +5,9 @@ import arc.Graphics;
 import arc.Graphics.Cursor.SystemCursor;
 import arc.backend.sdl.SdlGraphics;
 import arc.graphics.Pixmap;
-import arc.graphics.Pixmap.PixmapFilter;
 import arc.graphics.Pixmaps;
 import arc.struct.ObjectMap;
 import arc.util.OS;
-import mindustry.gen.Groups;
 
 import static mindustry.ui.Fonts.cursorScale;
 import static rusting.EndlessRusting.modname;
@@ -95,7 +93,7 @@ public class Graphicsr {
         int scale = cursorScale() * scaleOffset;
         Pixmap base = Core.atlas.getPixmap(modname + "-" + filename).crop();
         if(cursorScale() != 1 && !OS.isAndroid && !OS.isIos) {
-            Pixmap result = Pixmaps.scale(base, base.getWidth() * scale, base.getHeight() * scale, PixmapFilter.nearestNeighbour);
+            Pixmap result = Pixmaps.scale(base, base.getWidth() * scale, base.getHeight() * scale, true);
             base.dispose();
             return (SdlGraphics.SdlCursor) Core.graphics.newCursor(result, result.getWidth() / 2, result.getHeight() / 2);
         }

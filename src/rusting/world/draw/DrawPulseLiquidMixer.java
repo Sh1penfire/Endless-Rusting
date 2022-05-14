@@ -16,7 +16,7 @@ public class DrawPulseLiquidMixer extends DrawPulseBlock{
 
         Draw.rect(bottom, build.x, build.y, rotation);
 
-        if(build.liquids.total() > 0.001f){
+        if(build.liquids.currentAmount() > 0.001f){
             Draw.color(((PulseGenericCrafter)build.block).outputLiquid.liquid.color);
             Draw.alpha(build.liquids.get(((PulseGenericCrafter)build.block).outputLiquid.liquid) / build.block.liquidCapacity);
             Draw.rect(liquid, build.x, build.y, rotation);

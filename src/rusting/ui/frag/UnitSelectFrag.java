@@ -20,12 +20,11 @@ import mindustry.gen.Groups;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.ui.Bar;
-import mindustry.ui.fragments.Fragment;
 import rusting.Varsr;
 import rusting.world.blocks.PlayerCore;
 import rusting.world.blocks.PlayerCore.PlayerCoreBuild;
 
-public class UnitSelectFrag extends Fragment {
+public class UnitSelectFrag {
     public Boolp visibility = () -> (Vars.player.unit() == null || Vars.player.unit().isNull()) && Varsr.customCoreUsed;
     public Table container;
 
@@ -64,7 +63,6 @@ public class UnitSelectFrag extends Fragment {
         return currentCore;
     };
 
-    @Override
     public void build(Group parent) {
         shownState = new VisibilityState() {
             public VisibilityState transitionTo(){

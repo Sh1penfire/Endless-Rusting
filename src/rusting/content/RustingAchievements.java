@@ -3,7 +3,6 @@ package rusting.content;
 import arc.Events;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
-import mindustry.ctype.ContentList;
 import mindustry.game.EventType;
 import rusting.Varsr;
 import rusting.ctype.SectorBasedAchievement;
@@ -12,7 +11,7 @@ import rusting.game.RustingEvents.AchievementUnlockEvent;
 
 import static mindustry.Vars.state;
 
-public class RustingAchievements implements ContentList {
+public class RustingAchievements {
 
     public static UnlockableAchievement
     //planet 1
@@ -20,8 +19,8 @@ public class RustingAchievements implements ContentList {
     //msc
     youMonster, giganticQuestionMark, GTFO;
 
-    @Override
-    public void load() {
+    
+    public static void load() {
 
         shardlingSteps = new SectorBasedAchievement( "shardling-steps", 36, RustingPlanets.err) {{
 

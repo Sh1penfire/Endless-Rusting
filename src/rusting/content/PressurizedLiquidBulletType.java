@@ -23,7 +23,7 @@ public class PressurizedLiquidBulletType extends PointBulletType {
         this.liquid = liquid;
     }
 
-    @Override
+    
     public void init(Bullet b) {
         super.init(b);
 

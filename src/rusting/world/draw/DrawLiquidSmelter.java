@@ -5,6 +5,7 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.util.*;
+import mindustry.gen.Building;
 import mindustry.graphics.*;
 import mindustry.world.*;
 import mindustry.world.blocks.production.GenericCrafter.*;
@@ -29,37 +30,38 @@ public class DrawLiquidSmelter extends DrawBlock {
     }
 
     @Override
-    public void draw(GenericCrafterBuild entity){
+    public void draw(Building entity){
+        GenericCrafterBuild crafter = (GenericCrafterBuild) entity;
 
-        Draw.rect(entity.block.region, entity.x, entity.y, entity.block.rotate ? entity.rotdeg() : 0);
+        Draw.rect(crafter.block.region, crafter.x, crafter.y, crafter.block.rotate ? crafter.rotdeg() : 0);
 
-        if(entity.liquids.total() > 0.001f){
-            Draw.color(entity.liquids().current().color);
-            Draw.alpha(entity.liquids().currentAmount() / entity.block.liquidCapacity);
-            Draw.rect(liquid, entity.x, entity.y, entity.block.rotate ? entity.rotdeg() : 0);
+        if(crafter.liquids.currentAmount() > 0.001f){
+            Draw.color(crafter.liquids().current().color);
+            Draw.alpha(crafter.liquids().currentAmount() / crafter.block.liquidCapacity);
+            Draw.rect(liquid, crafter.x, crafter.y, crafter.block.rotate ? crafter.rotdeg() : 0);
             Draw.color();
         }
 
-        if(entity.warmup > 0f && flameColor.a > 0.001f){
+        if(crafter.warmup > 0f && flameColor.a > 0.001f){
             float g = 0.3f;
             float r = 0.06f;
             float cr = Mathf.random(0.1f);
 
             Draw.z(Layer.block + 0.01f);
 
-            Draw.alpha(entity.warmup);
-            Draw.rect(top, entity.x, entity.y);
+            Draw.alpha(crafter.warmup);
+            Draw.rect(top, crafter.x, crafter.y);
 
-            Draw.alpha(((1f - g) + Mathf.absin(Time.time, 8f, g) + Mathf.random(r) - r) * entity.warmup);
+            Draw.alpha(((1f - g) + Mathf.absin(Time.time, 8f, g) + Mathf.random(r) - r) * crafter.warmup);
 
             Draw.tint(flameColor);
-            Fill.circle(entity.x, entity.y, flameRadius + Mathf.absin(Time.time, flameRadiusScl, flameRadiusMag) + cr);
-            Draw.color(1f, 1f, 1f, entity.warmup);
-            Fill.circle(entity.x, entity.y, flameRadiusIn + Mathf.absin(Time.time, flameRadiusScl, flameRadiusInMag) + cr);
+            Fill.circle(crafter.x, crafter.y, flameRadius + Mathf.absin(Time.time, flameRadiusScl, flameRadiusMag) + cr);
+            Draw.color(1f, 1f, 1f, crafter.warmup);
+            Fill.circle(crafter.x, crafter.y, flameRadiusIn + Mathf.absin(Time.time, flameRadiusScl, flameRadiusInMag) + cr);
 
             Draw.color();
         }
 
-        Draw.rect(top, entity.x, entity.y, entity.block.rotate ? entity.rotdeg() : 0);
+        Draw.rect(top, crafter.x, crafter.y, crafter.block.rotate ? crafter.rotdeg() : 0);
     }
 }

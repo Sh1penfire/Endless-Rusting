@@ -37,8 +37,9 @@ public class InstantBounceBulletType extends BounceBulletType{
     }
 
     @Override
-    public float range() {
-        return length;
+    public void init() {
+        super.init();
+        if(range == 0) range = length;
     }
 
     @Override
@@ -105,7 +106,7 @@ public class InstantBounceBulletType extends BounceBulletType{
                 b.x = targ.x() + Angles.trnsx(angle, 1);
                 b.y = targ.y() + Angles.trnsy(angle, 1);;
 
-                hitTile(b, (Building) targ, ((Building) targ).health, false);
+                hitTile(b, (Building) targ, b.x, b.y, ((Building) targ).health, false);
                 b.fdata *= bounciness;
                 x = b.x;
                 y = b.y;

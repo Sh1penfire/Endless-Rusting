@@ -120,7 +120,7 @@ public class PulseForgery extends PulseGenericCrafter{
     };
 
     @Override
-    public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list) {
+    public void drawPlanRegion(BuildPlan req, Eachable<BuildPlan> list) {
         float x = req.getX(), y = req.getY(), rotation = req.rotation;
         Draw.rect(ventlessRegion, x, y);
         Draw.rect(ventRegion, x, y, rotation * 90);

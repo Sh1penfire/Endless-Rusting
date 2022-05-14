@@ -2,14 +2,14 @@ package rusting.content;
 
 import arc.graphics.Color;
 import mindustry.Vars;
-import mindustry.ctype.ContentList;
+
 import mindustry.game.Team;
 
-public class RustingTeams implements ContentList {
+public class RustingTeams {
     public static Team
     antiquumNatives, acrillimyl, pulseInfected, voidInfected;
-    @Override
-    public void load() {
+    
+    public static void load() {
         Vars.mods.getScripts().runConsole(
             "let natives = extend(Team, 113, \"Antiquum Natives\", Color.valueOf(\"#70696c\"), {});" +
             "let acrillimyl = extend(Team, 114, \"Antiquum Natives\", Color.valueOf(\"#b6cad6\"), {});" +

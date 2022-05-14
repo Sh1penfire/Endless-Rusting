@@ -2,14 +2,11 @@ package rusting.game;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.g2d.TextureRegion;
 import arc.scene.style.TextureRegionDrawable;
 import mindustry.Vars;
-import mindustry.content.TechTree;
 import mindustry.game.EventType;
 import mindustry.type.Planet;
 import mindustry.type.SectorPreset;
-import mindustry.ui.Cicon;
 import rusting.Varsr;
 import rusting.util.MusicControl.MusicSecController;
 
@@ -33,24 +30,16 @@ public class ERSectorPreset extends SectorPreset {
         super.init();
         if(musicSecController.musicMap.size > 0) Varsr.music.musicSectors.add(this);
     }
-
     @Override
-    public void load() {
-        super.load();
-        icon = Core.atlas.getDrawable(name);
+    public void loadIcon() {
+        fullIcon = uiIcon = Core.atlas.find(name);
     }
-
-    @Override
-    public TextureRegion icon(Cicon c) {
-        return icon.getRegion();
-    }
-
     public void loadBundles(){
         unlockedInCampaign = true;
 
         if(!alwaysUnlocked && !Varsr.debug){
             unlockedInCampaign = !Vars.enableConsole;
-            TechTree.get(this).objectives.each(o -> {
+            techNode.objectives.each(o -> {
                 if(unlockedInCampaign && !o.complete()) unlockedInCampaign = false;
             });
         }

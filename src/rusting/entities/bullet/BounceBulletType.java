@@ -63,16 +63,6 @@ public class BounceBulletType extends BaseBulletType {
     @Override
     public void init() {
         super.init();
-        if(useRange && range == -1){
-            useRange = false;
-            range = range();
-            useRange = true;
-        }
-    }
-
-    @Override
-    public float range() {
-        return useRange ? range : super.range();
     }
 
     @Override
@@ -112,10 +102,9 @@ public class BounceBulletType extends BaseBulletType {
 
 
     @Override
-    public void hitTile(Bullet b, Building build, float initialHealth, boolean direct) {
-        super.hitTile(b, build, initialHealth, direct);
+    public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) {
+        super.hitTile(b, build, x, y, initialHealth, direct);
         bounces(b).bounceAmount += 1;
-        float x = b.x, y = b.y;
         float difX = Math.abs(b.vel.x - x), difY = Math.abs(b.vel.y - y);
         if(build != null){
             difX = Math.abs(build.x - x);

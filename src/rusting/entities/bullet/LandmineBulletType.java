@@ -69,7 +69,7 @@ public class LandmineBulletType extends BaseBulletType {
             float indScaling = b.fout() / indicatorPercent;
             Draw.color(colorStart, colorEnd, scaling);
             Draw.alpha(scaling);
-            Lines.swirl(b.x, b.y, indicatorRadius, indScaling, b.fout() * 360 + rotation);
+            Lines.arc(b.x, b.y, indicatorRadius, indScaling, b.fout() * 360 + rotation);
         }
     }
 }

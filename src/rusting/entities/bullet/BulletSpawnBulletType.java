@@ -28,7 +28,7 @@ public class BulletSpawnBulletType extends BaseBulletType {
 
     public static class BulletSpawner{
         //Bullelt to shoot. Shoudn't be null
-        public BulletType bullet = Bullets.standardCopper;
+        public BulletType bullet = Bullets.placeholder;
         //how much time it takes to shoot the bullet
         public float reloadTime = 1;
         //time between the bullet first spawning and despawning that the spawner can't fire
@@ -78,13 +78,11 @@ public class BulletSpawnBulletType extends BaseBulletType {
     @Override
     public void init() {
         super.init();
-        if(useRange && range <= 0) {
+        if(range <= 0) {
             bullets.each(b -> {
-                if (b.bullet.range() > range && b.bullet != this) range = b.bullet.range();
+                if (b.bullet.range > range && b.bullet != this) range = b.bullet.range;
             });
-            useRange = false;
-            range += range();
-            useRange = true;
+            range += calculateRange();
         }
     }
 
@@ -116,7 +114,7 @@ public class BulletSpawnBulletType extends BaseBulletType {
                     }
                 }
                 else if(spawner.bulletTargeting){
-                    Teamc targ = Units.closestTarget(b.team, b.x, b.y, spawner.bullet.range(), u -> spawner.bullet.collidesGround && !u.isFlying() || spawner.bullet.collidesAir && u.isFlying());
+                    Teamc targ = Units.closestTarget(b.team, b.x, b.y, spawner.bullet.range, u -> spawner.bullet.collidesGround && !u.isFlying() || spawner.bullet.collidesAir && u.isFlying());
                     if(targ instanceof Posc){
                         rotation = b.angleTo(targ);
                         if(spawner.idleInaccuracy != 0) rotation += Math.random() * spawner.inaccuracy;
@@ -141,7 +139,7 @@ public class BulletSpawnBulletType extends BaseBulletType {
         if(finalFragBullet != null){
             for(int i = 0; i < finalFragBullets; i++){
                 float len = Mathf.random(1f, 7f);
-                float a = b.fdata + Mathf.range(fragCone/2) + fragAngle;
+                float a = b.fdata + Mathf.range(fragSpread/2) + fragAngle;
                 finalFragBullet.create(b, x + Angles.trnsx(a, len), y + Angles.trnsy(a, len), a, Mathf.random(fragVelocityMin, fragVelocityMax), Mathf.random(fragLifeMin, fragLifeMax));
             }
         }
@@ -161,11 +159,6 @@ public class BulletSpawnBulletType extends BaseBulletType {
             Lines.stroke((scaling - i) * spacing/5);
             Lines.circle(b.x, b.y, (scaling - i) * spacing + i + drawSize);
         }
-    }
-
-    @Override
-    public float range() {
-        return useRange ? range : super.range();
     }
 
     public Bullet create(@Nullable Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data){

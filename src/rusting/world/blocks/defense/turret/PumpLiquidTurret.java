@@ -6,7 +6,6 @@ import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
 import arc.util.Time;
 import mindustry.type.Liquid;
-import mindustry.ui.Cicon;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.meta.Stat;
@@ -55,9 +54,9 @@ public class PumpLiquidTurret extends LiquidTurret {
             float width = drawPlaceText(Core.bundle.formatFloat("bar.pumpspeed", amount * pumpSpeed * 60f, 0), x, y, valid);
             float dx = x * tilesize + offset - width/2f - 4f, dy = y * tilesize + offset + size * tilesize / 2f + 5;
             Draw.mixcol(Color.darkGray, 1f);
-            Draw.rect(liquidDrop.icon(Cicon.small), dx, dy - 1);
+            Draw.rect(liquidDrop.uiIcon, dx, dy - 1);
             Draw.reset();
-            Draw.rect(liquidDrop.icon(Cicon.small), dx, dy);
+            Draw.rect(liquidDrop.uiIcon, dx, dy);
         }
     }
 

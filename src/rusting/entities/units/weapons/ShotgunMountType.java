@@ -12,6 +12,7 @@ import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Bullet;
 import rusting.interfaces.SpecialWeaponsUnit;
+import rusting.math.Angler;
 
 public class ShotgunMountType extends BulletMountType{
     public BulletType critBullet;
@@ -66,7 +67,7 @@ public class ShotgunMountType extends BulletMountType{
             if(consecutive >= shellSpace) crit = true;
             Tmp.v1.set(getPos().add(Tmp.v2.set(shootX, shootY).rotate(getRotation() - 90)));
             BulletType shot = crit && critBullet != null ? critBullet : bullet;
-            Angles.shotgun(crit ? critShots : shots, spacing, getRotation(), f -> {
+            Angler.shotgun(crit ? critShots : shots, spacing, getRotation(), f -> {
                 Bullet b = shot.create(
                         owner.self(),
                         owner.self().team,

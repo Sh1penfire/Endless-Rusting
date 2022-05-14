@@ -1,16 +1,16 @@
 package rusting.content;
 
 import arc.graphics.Color;
-import mindustry.ctype.ContentList;
+
 import mindustry.type.Liquid;
 
-public class RustingLiquids implements ContentList {
+public class RustingLiquids {
 
     static Liquid
             melomae, cameaint;
 
-    @Override
-    public void load() {
+    
+    public static void load() {
         melomae = new Liquid("melomae"){{
             viscosity = 0.7f;
             heatCapacity = 0.325f;

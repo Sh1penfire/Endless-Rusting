@@ -14,10 +14,10 @@ import mindustry.gen.Building;
 import mindustry.gen.Posc;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
-import mindustry.world.blocks.defense.turrets.PowerTurret;
+import mindustry.world.blocks.defense.turrets.Turret;
 import rusting.math.Mathr;
 
-public class HealerBeamTurret extends PowerTurret {
+public class HealerBeamTurret extends Turret {
 
     //offset from the block that the beam starts from
     public float firingDistance = 4;
@@ -36,6 +36,8 @@ public class HealerBeamTurret extends PowerTurret {
     //how long the turret has to stay still for before firing
     public float stillTime = 15;
 
+    public float reloadTime = 150;
+
     public boolean requiresWarmup = true;
 
     public HealerBeamTurret(String name) {
@@ -43,7 +45,7 @@ public class HealerBeamTurret extends PowerTurret {
         heatColor = Pal.heal;
     }
 
-    public class HealerBeamTurretBuild extends PowerTurretBuild{
+    public class HealerBeamTurretBuild extends TurretBuild {
 
         //stands for last position x and last position y
         public Vec2 LTP = new Vec2(0, 0);
@@ -82,10 +84,10 @@ public class HealerBeamTurret extends PowerTurret {
 
         @Override
         protected void updateShooting() {
-            if(reload >= reloadTime && !charging){
+            if(reload >= reloadTime){
                 BulletType type = peekAmmo();
 
-                shoot(type);
+                shoot();
 
                 reload = 0f;
             }else{
@@ -133,11 +135,6 @@ public class HealerBeamTurret extends PowerTurret {
 
             //wait what's this?
             wasShooting = false;
-
-            //no
-            recoil = Mathf.lerpDelta(recoil, 0f, restitution);
-            //no.
-            heat = Mathf.lerpDelta(heat, 0f, cooldown);
 
             //no...
             unit.health(health);
@@ -190,10 +187,6 @@ public class HealerBeamTurret extends PowerTurret {
                     }
                 }
             }
-
-            if(acceptCoolant){
-                updateCooling();
-            }
         }
 
         @Override
@@ -223,13 +216,11 @@ public class HealerBeamTurret extends PowerTurret {
             else return false;
         }
 
-        @Override
-        protected void shoot(BulletType type) {
+        protected void shoot() {
             if(((logicControlled() || isControlled()) && within(targetPos, range)) || target != null && target instanceof Building && ((Building) target).damaged() && validateTarget()) {
                 setLastP();
                 healTargets();
             }
-            else if(canShootBullet) super.shoot(type);
         }
 
         public void healTarget(Posc targ){
@@ -246,14 +237,13 @@ public class HealerBeamTurret extends PowerTurret {
             if((logicControlled() || isControlled()) && within(targetPos, range)){
                 Building TempBuild = Vars.world.buildWorld(LTP.x, LTP.y);
                 if(TempBuild != null && TempBuild.team == team && TempBuild.damaged()){
-                    recoil = recoilAmount;
+                    recoil = HealerBeamTurret.this.recoil;
                     heat = 1;
                     healBuilding(TempBuild);
                 }
             }
             else if(target != null && target instanceof Building && ((Building) target).damaged() && validateTarget()){
-                this.recoil = 1;
-                recoil = recoilAmount;
+                recoil = HealerBeamTurret.this.recoil;
                 heat = 1;
                 healTarget(target);
             }

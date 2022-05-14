@@ -12,7 +12,6 @@ import mindustry.entities.abilities.Ability;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.ui.Bar;
-import mindustry.ui.Cicon;
 import rusting.content.Palr;
 import rusting.content.RustingStatusEffects;
 import rusting.entities.units.flying.CraeUnitEntity;
@@ -70,7 +69,7 @@ public class CraeUnitType extends BaseUnitType {
 
         table.table(t -> {
             t.left();
-            t.add(new Image(icon(Cicon.medium))).size(8 * 4).scaling(Scaling.fit);
+            t.add(new Image(uiIcon)).size(8 * 4).scaling(Scaling.fit);
             t.labelWrap(localizedName).left().width(190f).padLeft(5);
         }).growX().left();
         table.row();
@@ -87,7 +86,7 @@ public class CraeUnitType extends BaseUnitType {
             bars.row();
 
             if(state.rules.unitAmmo){
-                bars.add(new Bar(ammoType.icon + " " + Core.bundle.get("stat.ammo"), ammoType.barColor, () -> unit.ammo / ammoCapacity));
+                bars.add(new Bar(ammoType.icon() + " " + Core.bundle.get("stat.ammo"), ammoType.barColor(), () -> unit.ammo / ammoCapacity));
                 bars.row();
             }
 

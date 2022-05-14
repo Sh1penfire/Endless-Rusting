@@ -6,19 +6,20 @@ import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.LightningBulletType;
 import mindustry.game.Team;
-import mindustry.gen.*;
-import mindustry.graphics.*;
+import mindustry.gen.Building;
+import mindustry.gen.Groups;
+import mindustry.graphics.Drawf;
+import mindustry.graphics.Pal;
 import mindustry.logic.Ranged;
 import mindustry.type.ItemStack;
 import mindustry.ui.Bar;
-import mindustry.ui.Cicon;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.meta.BlockGroup;
@@ -140,13 +141,13 @@ public class PulseBlock extends Block implements ResearchableBlock {
     @Override
     public void setBars(){
         super.setBars();
-        bars.add("pulse", entity -> new Bar(() ->
+        addBar("pulse", entity -> new Bar(() ->
                 Core.bundle.get("bar.pulse"),
                 () -> Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd,
                         ((PulseBlockBuild) entity).chargef(false)),
                 () -> Mathf.clamp(((PulseBlockBuild) entity).chargef(false))
         ));
-        if(canOverload) bars.add("overload", entity -> new Bar(
+        if(canOverload) addBar("overload", entity -> new Bar(
                 () -> Core.bundle.get("bar.pulseoverload") + ": " + Mathf.floor(((PulseBlockBuild) entity).overloadf() * 10000)/100 + "%",
                 () -> Tmp.c1.set(chargeColourStart).lerp(chargeColourEnd,
                         ((PulseBlockBuild) entity).overloadf()),
@@ -167,7 +168,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
     @Override
     public TextureRegion researchUIcon() {
-        return icon(Cicon.medium);
+        return fullIcon;
     }
 
     @Override
@@ -223,7 +224,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
     //note: only used for display
     public float projectileRange(){
-        return (float) (projectile instanceof LightningBulletType ? (projectile.lightningLength * 2 + projectile.lightningLengthRand) * tilesize : projectile.range() * size * 0.6);
+        return (float) (projectile instanceof LightningBulletType ? (projectile.lightningLength * 2 + projectile.lightningLengthRand) * tilesize : projectile.range * size * 0.6);
     }
 
     public boolean canShoot(){
@@ -264,7 +265,7 @@ public class PulseBlock extends Block implements ResearchableBlock {
 
         @Override
         public boolean allConsValid() {
-            return cons.valid() && pConsValid();
+            return canConsume() && pConsValid();
         }
 
         @Override

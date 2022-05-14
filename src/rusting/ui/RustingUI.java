@@ -11,7 +11,6 @@ import rusting.ui.frag.UnitSelectFrag;
 
 public class RustingUI implements ApplicationListener, Loadable {
 
-    public UnlockDialog unlock;
     public BlockEntryDialog blockEntry;
     public FieldBlockListDialog blocklist;
     public ResearchDialog research;
@@ -24,7 +23,6 @@ public class RustingUI implements ApplicationListener, Loadable {
     @Override
     public void init(){
         Texr.load();
-        unlock = new UnlockDialog();
         blockEntry = new BlockEntryDialog();
         blocklist = new FieldBlockListDialog();
         research = new ResearchDialog();

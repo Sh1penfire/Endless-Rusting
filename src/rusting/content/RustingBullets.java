@@ -7,7 +7,7 @@ import arc.struct.Seq;
 import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.*;
-import mindustry.ctype.ContentList;
+
 import mindustry.entities.Effect;
 import mindustry.entities.Fires;
 import mindustry.entities.bullet.*;
@@ -23,8 +23,8 @@ import rusting.math.Mathr;
 
 import static rusting.EndlessRusting.modname;
 import static rusting.content.RustingStatusEffects.*;
-
-public class RustingBullets implements ContentList{
+//Class which stores bullets used multiple times, and for the sake of cleanlyness in other content classes.
+public class RustingBullets{
 
     //Todo: finish finding bullets via their name, id, relatiiveId and stats
     public static BulletType findBullet(String modname, int id, int relativeId){
@@ -62,7 +62,7 @@ public class RustingBullets implements ContentList{
         //artillery
         mhemQuadStorm, craeQuadStorm, lightfractureTitanim, lightfractureBulat,
         //liquid
-        waterBeamShot, slagBeamShot, cryoBeamShot, oilBeamShot, melomaeShot, melomaeShotLong, heavyMelomaeShot, melomaeBeamShot, cameoShot, heavyCameoShot, cameoBeamShot,
+        waterBeamShot, slagBeamShot, cryoBeamShot, oilBeamShot, waterShot, slagShot, cryoShot, oilShot, melomaeShot, melomaeShotLong, heavyMelomaeShot, melomaeBeamShot, cameoShot, heavyCameoShot, cameoBeamShot,
         //missile/weaving bullets
         craeWeaver, raehWeaver, bigCraeWeaver, paveWeaver, nonweavingPaveWeaver,
         //lightning bullets
@@ -94,8 +94,8 @@ public class RustingBullets implements ContentList{
         ;
     public static PointLaserBulletType craeBeamen;
 
-    @Override
-    public void load(){
+    
+    public static void load(){
 
         homing = bullet -> {
             if(bullet.fdata() != 1 && bullet.collided.size < 2){
@@ -558,7 +558,7 @@ public class RustingBullets implements ContentList{
 
         fraeShard = new BaseBulletType(10, 25, "bullet"){{
             consUpdate = new Cons<Bullet>() {
-                @Override
+                
                 public void get(Bullet bullet) {
                     if(bullet.timer(3, 2)){
                         darkShard.create(bullet.owner, bullet.team, bullet.x, bullet.y, bullet.rotation() - 90, Mathr.helix(7, 1, bullet.fin()));
@@ -760,7 +760,7 @@ public class RustingBullets implements ContentList{
             fragVelocityMin = 0.85f;
             fragLifeMin = 0.75f;
             fragLifeMax = 1.15f;
-            scaleVelocity = true;
+            scaleLife = true;
             reflectable = false;
             status = fragmentaein;
         }};
@@ -802,7 +802,7 @@ public class RustingBullets implements ContentList{
             fragVelocityMin = 0.85f;
             fragLifeMin = 0.75f;
             fragLifeMax = 1.15f;
-            scaleVelocity = true;
+            scaleLife = true;
             status = StatusEffects.corroded;
             statusDuration = 360;
             reflectable = false;
@@ -810,7 +810,7 @@ public class RustingBullets implements ContentList{
 
         mhemQuadStorm = new BaseBulletType(2.85f, 3.5f, "shell"){{
 
-            scaleVelocity = true;
+            scaleLife = true;
             hitShake = 1f;
             frontColor = Palr.lightstriken;
             backColor = Pal.bulletYellowBack;
@@ -899,8 +899,6 @@ public class RustingBullets implements ContentList{
             damage = 9;
             trailEffect = Fx.plasticburn;
             trailSpacing = 7.5f;
-            fragBullet = Bullets.waterShot;
-            fragBullets = 4;
         }};
 
         slagBeamShot = new PressurizedLiquidBulletType(Liquids.slag){{
@@ -908,24 +906,36 @@ public class RustingBullets implements ContentList{
             reloadMultiplier = 0.85f;
             trailEffect = Fx.plasticburn;
             trailSpacing = 7.5f;
-            fragBullet = Bullets.slagShot;
-            fragBullets = 3;
         }};
 
         cryoBeamShot = new PressurizedLiquidBulletType(Liquids.cryofluid){{
             damage = 18;
             trailEffect = Fx.plasticburn;
             trailSpacing = 7.5f;
-            fragBullet = Bullets.cryoShot;
-            fragBullets = 2;
         }};
 
         oilBeamShot = new PressurizedLiquidBulletType(Liquids.oil){{
             damage = 14;
             trailEffect = Fx.plasticburn;
             trailSpacing = 7.5f;
-            fragBullet = Bullets.oilShot;
-            fragBullets = 2;
+        }};
+
+        waterShot = new LiquidBulletType(Liquids.water){{
+            knockback = 0.7f;
+            drag = 0.01f;
+        }};
+
+        slagShot = new LiquidBulletType(Liquids.slag){{
+            damage = 4;
+            drag = 0.01f;
+        }};
+
+        cryoShot = new LiquidBulletType(Liquids.cryofluid){{
+            drag = 0.01f;
+        }};
+
+        oilShot = new LiquidBulletType(Liquids.oil){{
+            drag = 0.01f;
         }};
 
         melomaeShot = new LiquidBulletType(RustingLiquids.melomae){{
@@ -1210,7 +1220,7 @@ public class RustingBullets implements ContentList{
             weaveScale = 5;
             pierce = false;
             pierceBuilding = false;
-            scaleVelocity = true;
+            scaleLife = true;
             trailLength = 12;
             trailWidth = 8;
             hitSound = Sounds.explosion;
@@ -1223,7 +1233,7 @@ public class RustingBullets implements ContentList{
         float bulletRange = 875;
 
         infectedGeneratorCoreNuke = new BulletSpawnBulletType(0, Float.MAX_VALUE, "none"){
-            @Override
+            
             public void update(Bullet b){
                 {
                     float bulletFin, bulletFinpow;
@@ -1283,7 +1293,7 @@ public class RustingBullets implements ContentList{
             weaveScale = 5;
             pierce = false;
             pierceBuilding = false;
-            scaleVelocity = true;
+            scaleLife = true;
             collides = false;
             trailLength = 9;
             trailWidth = 12;
@@ -1404,7 +1414,7 @@ public class RustingBullets implements ContentList{
             };
 
             consHit = new Cons<Bullet>() {
-                @Override
+                
                 public void get(Bullet bullet) {
                     for(int i = 0; i <  5; i++) {
                         ((BoomerangBulletType) craeRoundaboutLight).create(bullet.owner, bullet.team, bullet.x, bullet.y, i * 72 + bullet.rotation(), craeRoundaboutLight.damage / 2, 0.85f, 1, 0, 1);
@@ -1536,7 +1546,7 @@ public class RustingBullets implements ContentList{
             fragLifeMin = 0.15f;
             fragLifeMax = 0.15f;
             fragAngle = 180;
-            fragCone = 35;
+            fragSpread = 35;
             trailColor = Color.white;
             trailEffect = Fxr.salty;
             trailWidth = 4;
@@ -1558,7 +1568,7 @@ public class RustingBullets implements ContentList{
             fragBullets = 9;
             fragBullet = saltyShard;
             trailEffect = Fxr.salty;
-            scaleVelocity = true;
+            scaleLife = true;
             hitSound = Sounds.explosionbig;
             hitSoundPitch = 1.25f;
             hitSoundVolume = 5;
@@ -1599,7 +1609,7 @@ public class RustingBullets implements ContentList{
             hitSound = Sounds.release;
             finalFragBullet = fraeShard;
             finalFragBullets = 1;
-            fragCone = 0;
+            fragSpread = 0;
             fragLifeMin = 1;
             fragLifeMax = 1;
             fragVelocityMin = 1;
@@ -1718,6 +1728,7 @@ public class RustingBullets implements ContentList{
                     inaccuracy = 360;
                 }}
             );
+
             frontColor = Pal.lightPyraFlame;
             backColor = Palr.darkPyraBloom;
             despawnEffect = Fx.sparkShoot;

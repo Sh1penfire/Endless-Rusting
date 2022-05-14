@@ -1,6 +1,5 @@
 package rusting.world.blocks.defense.turret.healer;
 
-import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.geom.Vec2;
@@ -10,9 +9,11 @@ import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.gen.Building;
-import mindustry.graphics.*;
+import mindustry.graphics.Layer;
+import mindustry.graphics.Pal;
 import mindustry.world.Tile;
 import rusting.math.Mathr;
+import rusting.world.blocks.defense.turret.BerthaTurret;
 
 public class ChainHealerBeamTurret extends HealerBeamTurret {
     public int chains = 3;
@@ -38,20 +39,7 @@ public class ChainHealerBeamTurret extends HealerBeamTurret {
 
         @Override
         public void draw() {
-            Draw.rect(baseRegion, x, y);
-            Draw.color();
-
-            Draw.z(Layer.turret);
-
-            tr2.trns(rotation, -recoil);
-
-            Drawf.shadow(region, x + tr2.x - elevation, y + tr2.y - elevation, rotation - 90);
-            drawer.get(this);
-
-            if(heatRegion != Core.atlas.find("error")){
-                heatDrawer.get(this);
-            }
-
+            super.draw();
             Draw.reset();
             for (int i = 0; i < effectRotations.length; i++){
                 int index = i + 1;
@@ -132,7 +120,7 @@ public class ChainHealerBeamTurret extends HealerBeamTurret {
                 if(i == 0) TempBuild = builds.sort(b -> b.dst(orbPos)).get(0);
                 else TempBuild = builds.sort(Building::healthf).get(0);
                 if(TempBuild != null && TempBuild.team == team && TempBuild.damaged()){
-                    recoil = recoilAmount;
+                    recoil = ChainHealerBeamTurret.this.recoil;
                     heat = 1;
                     healBuilding(TempBuild);
                     Tmp.v2.set(TempBuild.x, TempBuild.y);

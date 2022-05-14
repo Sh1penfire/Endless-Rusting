@@ -5,7 +5,6 @@ import arc.struct.Seq;
 import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.type.ItemStack;
-import mindustry.ui.Cicon;
 import mindustry.world.Tile;
 import mindustry.world.blocks.production.GenericCrafter;
 import rusting.Varsr;
@@ -39,7 +38,7 @@ public class ResearchableCrafter extends GenericCrafter implements ResearchableO
 
     @Override
     public TextureRegion researchUIcon() {
-        return icon(Cicon.medium);
+        return uiIcon;
     }
 
     @Override

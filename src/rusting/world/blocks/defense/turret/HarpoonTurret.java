@@ -10,7 +10,8 @@ import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Vec2;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Time;
+import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.entities.Units;
@@ -21,12 +22,14 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
 import rusting.content.Fxr;
 import rusting.entities.bullet.BlockHarpoonBulletType;
 import rusting.graphics.Drawr;
 
-public class HarpoonTurret extends AutoreloadItemTurret {
+public class HarpoonTurret extends ItemTurret {
 
+    public static Vec2 tr = new Vec2(), tr2 = new Vec2();
     private Vec2 drawHarpoonPos = new Vec2();
     public TextureRegion topRegion;
     public float detachRange = 50;
@@ -56,7 +59,7 @@ public class HarpoonTurret extends AutoreloadItemTurret {
         topRegion = Core.atlas.find(name + "-top");
     }
 
-    public class HarpoonTurretBuild extends AutoreloadItemTurretBuild{
+    public class HarpoonTurretBuild extends ItemTurretBuild{
 
         public Vec2 harpoonPosition = new Vec2(x, y);
         public Bullet harpoonBullet;
@@ -92,9 +95,6 @@ public class HarpoonTurret extends AutoreloadItemTurret {
             if(!validateTarget()) target = null;
 
             wasShooting = false;
-
-            recoil = Mathf.lerpDelta(recoil, 0f, restitution);
-            heat = Mathf.lerpDelta(heat, 0f, cooldown);
 
             unit.health(health);
             unit.rotation(rotation);
@@ -140,16 +140,15 @@ public class HarpoonTurret extends AutoreloadItemTurret {
                 }
             }
 
-            if(acceptCoolant){
+            if(coolant != null){
                 updateCooling();
             }
 
             if(harpoonRetracting){
                 harpoonPosition.add(Tmp.v2.trns(Tmp.v1.set(harpoonPosition).angleTo(this.x, this.y), Mathf.clamp(dst(harpoonPosition), 0, retractSpeed * timeScale())));
-                if(within(harpoonPosition, shootLength + 1)){
+                if(within(harpoonPosition, shootY + 1)){
                     harpoonRetracting = false;
                     harpoonShot = false;
-                    reload = reloadTime * autoreloadThreshold;
                     Sounds.click.at(x, y);
                 }
             }
@@ -168,7 +167,7 @@ public class HarpoonTurret extends AutoreloadItemTurret {
                 else {
                     harpoonPosition.set(stuckOn.x, stuckOn.y).add(Tmp.v2.trns(stuckOn.rotation + relativeRotation, distanceOffset));
 
-                    tr.trns(rotation, shootLength);
+                    tr.trns(rotation, shootY);
 
                         if(Tmp.v1.set(stuckOn.x, stuckOn.y).add(stuckOn.vel).dst(x, y) > range){
                             harpoonStuck = false;
@@ -204,9 +203,7 @@ public class HarpoonTurret extends AutoreloadItemTurret {
                         rotation = Mathf.clamp(Angles.moveToward(rotation, toHarpoon, 1f * Time.delta),toHarpoon - 15, toHarpoon + 15);
                 }
             }
-            if(reload <= autoreloadThreshold * reloadTime && !isShooting() && !harpoonShot && !harpoonStuck) {
-                reload = Math.min(reload + Time.delta / reloadTime * baseReloadSpeed() * 60 * 3, autoreloadThreshold * reloadTime);
-            }
+            updateReload();
         }
 
         @Override
@@ -222,7 +219,7 @@ public class HarpoonTurret extends AutoreloadItemTurret {
             float width = 32, height = 32;
             float alpha = 1;
             float harpoonRotation = rotation - (Core.settings.getBool("settings.er.doggoharpoons", false) ? 0 : 90);
-            tr.trns(rotation, shootLength);
+            tr.trns(rotation, shootY);
 
             if(harpoonStuck){
                 bullet = getHarpoon();
@@ -238,7 +235,7 @@ public class HarpoonTurret extends AutoreloadItemTurret {
             else if(hasHarpoon() && !harpoonShot){
                 bullet = getHarpoon();
                 drawHarpoonPos.set(x + tr.x + tr2.x, y + tr.y + tr2.y);
-                alpha = reload/reloadTime;
+                alpha = Math.max( 0, reloadCounter - reload);
                 drawHarpoon = true;
             }
             else if(harpoonShot && harpoonBullet.type instanceof BlockHarpoonBulletType){
@@ -257,7 +254,7 @@ public class HarpoonTurret extends AutoreloadItemTurret {
                 else e = chainShadowOffset;
 
                 if(harpoonStuck || harpoonShot || harpoonRetracting){
-                    tr.trns(rotation, shootLength - 3);
+                    tr.trns(rotation, shootY - 3);
                     Draw.color(Pal.shadow);
                     Drawr.drawChain(bullet.chainRegion, x + tr.x + tr2.x + UnitType.shadowTX * chainShadowOffset, y + tr.y + tr2.y + UnitType.shadowTY * chainShadowOffset, drawHarpoonPos.x + UnitType.shadowTX * e, drawHarpoonPos.y + UnitType.shadowTY * e, -90);
                     Draw.color(Color.white);
@@ -278,11 +275,10 @@ public class HarpoonTurret extends AutoreloadItemTurret {
             Draw.rect(topRegion, x + tr2.x, y + tr2.y, rotation - 90);
         }
 
-        @Override
         protected void bullet(BulletType type, float angle) {
-            float lifeScl = type.scaleVelocity ? Mathf.clamp(Mathf.dst(x + tr.x, y + tr.y, targetPos.x, targetPos.y) / type.range(), minRange / type.range(), range / type.range()) : 1f;
+            float lifeScl = type.scaleLife ? Mathf.clamp(Mathf.dst(x + tr.x, y + tr.y, targetPos.x, targetPos.y) / type.range, minRange / type.range, range / type.range) : 1f;
 
-            harpoonBullet = type.create(this, team, x + tr.x, y + tr.y, angle, 1f + Mathf.range(velocityInaccuracy), lifeScl);
+            harpoonBullet = type.create(this, team, x + tr.x, y + tr.y, angle, 1f + Mathf.range(velocityRnd), lifeScl);
             harpoonShot = true;
         }
 

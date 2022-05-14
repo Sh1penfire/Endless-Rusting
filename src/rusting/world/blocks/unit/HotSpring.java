@@ -1,4 +1,4 @@
-package rusting.world.blocks.pulse.unit;
+package rusting.world.blocks.unit;
 
 import arc.Core;
 import arc.graphics.Color;
@@ -47,11 +47,11 @@ public class HotSpring extends Block {
     @Override
     public void setBars() {
         super.setBars();
-        bars.add("power", entity -> new Bar(() ->
-            Core.bundle.get("bar.hotspringsteam"),
-            () -> Tmp.c1.set(Pal.lightTrail).lerp(Color.white,
-                    ((HotSpringBuild) entity).steam/steamCap),
-            () -> Mathf.clamp(((HotSpringBuild) entity).steam/steamCap)
+        addBar("power", entity -> new Bar(() ->
+                Core.bundle.get("bar.hotspringsteam"),
+                () -> Tmp.c1.set(Pal.lightTrail).lerp(Color.white,
+                        ((HotSpringBuild) entity).steam/steamCap),
+                () -> Mathf.clamp(((HotSpringBuild) entity).steam/steamCap)
         ));
     }
 
@@ -62,7 +62,7 @@ public class HotSpring extends Block {
         @Override
         public void updateTile() {
             super.updateTile();
-            if(cons.valid() && steam < steamCap){
+            if(canConsume() && steam < steamCap){
                 if(progress >= 1){
                     progress %= progress;
                     steam += steamProduced * Time.delta;

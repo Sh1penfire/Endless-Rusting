@@ -1,34 +1,10 @@
 package rusting.ai.types;
 
-import arc.math.Mathf;
-import arc.math.geom.Vec2;
-import arc.struct.Seq;
-import arc.util.*;
-import mindustry.Vars;
 import mindustry.ai.types.FlyingAI;
-import mindustry.content.Blocks;
-import mindustry.entities.Units;
-import mindustry.entities.units.UnitCommand;
-import mindustry.gen.*;
-import mindustry.type.Item;
-import mindustry.world.Tile;
-import mindustry.world.meta.BlockFlag;
-import rusting.Varsr;
-import rusting.content.RustingAISwitches;
-import rusting.entities.units.CraeUnitType;
-import rusting.interfaces.PulseBlockc;
-import rusting.interfaces.Pulsec;
-
-import static mindustry.Vars.indexer;
-import static mindustry.Vars.state;
-
+//TODO: Redo MultiSupportAI
 public class MultiSupportAI extends FlyingAI {
 
-    @Override
-    protected void init() {
-        super.init();
-    }
-
+    /*
     protected Interval mineTimer = new Interval(4);
     protected Interval statTimer = new Interval(25);
 
@@ -55,15 +31,21 @@ public class MultiSupportAI extends FlyingAI {
     public void unit(Unit unit) {
         super.unit(unit);
         if(unit.type instanceof CraeUnitType) {
-            CraeUnitType unitType = (CraeUnitType) unit.type;
-            minRepairRange = unitType.repairRange;
-            pulseAmount = unitType.pulseAmount;
-            pulseGenRange = unitType.pulseGenRange;
-            if(pulseAmount > 0 && pulseGenRange > 0) canGenPulse = true;
-            minRepairRange = Math.min(pulseGenRange, minRepairRange);
         }
         mineItems = Varsr.switches.mineItems.get(unit.type);
     }
+
+    @Override
+    public void init() {
+        super.init();
+        CraeUnitType unitType = (CraeUnitType) unit.type;
+        minRepairRange = unitType.repairRange;
+        pulseAmount = unitType.pulseAmount;
+        pulseGenRange = unitType.pulseGenRange;
+        if(pulseAmount > 0 && pulseGenRange > 0) canGenPulse = true;
+        minRepairRange = Math.min(pulseGenRange, minRepairRange);
+    }
+
 
     @Override
     public void updateMovement(){
@@ -186,7 +168,7 @@ public class MultiSupportAI extends FlyingAI {
             return true;
         }
 
-        if (unit.mineTile != null && !unit.mineTile.within(unit, Vars.miningRange)) {
+        if (unit.mineTile != null && !unit.mineTile.within(unit, unit.type.mineRange)) {
             unit.mineTile(null);
         }
 
@@ -211,9 +193,9 @@ public class MultiSupportAI extends FlyingAI {
                 }
 
                 if (ore != null) {
-                    moveTo(ore, Math.min(unit.range(), Vars.miningRange / 2f), 20f);
+                    moveTo(ore, Math.min(unit.range(), unit.type.mineRange / 2f), 20f);
 
-                    if (unit.within(ore, Vars.miningRange)) {
+                    if (unit.within(ore, unit.type.mineRange)) {
                         unit.mineTile = ore;
                     }
 
@@ -246,7 +228,7 @@ public class MultiSupportAI extends FlyingAI {
     }
 
     @Override
-    protected boolean invalid(Teamc target) {
+    public boolean invalid(Teamc target) {
         return !(target instanceof Building && ((Building) target).damaged()) && super.invalid(target);
     }
 
@@ -301,4 +283,6 @@ public class MultiSupportAI extends FlyingAI {
         }
         return t;
     }
+
+     */
 }

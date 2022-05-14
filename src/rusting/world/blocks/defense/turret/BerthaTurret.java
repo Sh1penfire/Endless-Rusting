@@ -12,16 +12,17 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
 import mindustry.entities.Damage;
-import mindustry.entities.bullet.BulletType;
 import mindustry.gen.*;
 import mindustry.graphics.Layer;
 import mindustry.ui.Bar;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
+import mindustry.world.consumers.ConsumePowerDynamic;
 import rusting.content.*;
 
 //Specialized turret which shoots it's projectile so fast that they instantly travel to their target location, intersecting any enemies along the way.
 public class BerthaTurret extends PowerTurret {
+    public static Vec2 tr = new Vec2(), tr2 = new Vec2();
     protected static  BerthaTurretBuild current = null;
     public float reclaimRate = 0.000416f;
     public float reclaimMax = 1.3f;
@@ -36,6 +37,9 @@ public class BerthaTurret extends PowerTurret {
     //it can stay active for 1500 ticks at most
     public float maxCharge = 1500;
 
+    //power use for the bertha while it's active
+    public float powerUse = 0;
+
 
     public TextureRegion topRegion, outlineRegion, stateRegion, reloadRegion;
     public TextureRegion[] shells = {null, null};
@@ -49,7 +53,7 @@ public class BerthaTurret extends PowerTurret {
 
     public BerthaTurret(String name) {
         super(name);
-        shootShake = 7;
+        shake = 7;
         shootEffect = Fxr.instaltSummonerExplosionLarge;
         targetable = false;
         unitSort = (u, x, y) -> -u.maxHealth;
@@ -102,8 +106,8 @@ public class BerthaTurret extends PowerTurret {
     @Override
     public void setBars() {
         super.setBars();
-        bars.add("turretprep", entity -> new Bar("bar.turretprep", Palr.mhemFactionColour, () -> ((BerthaTurretBuild) entity).preparation/reclaimMax));
-        bars.add("turretcharge", entity -> new Bar(
+        addBar("turretprep", entity -> new Bar("bar.turretprep", Palr.mhemFactionColour, () -> ((BerthaTurretBuild) entity).preparation/reclaimMax));
+        addBar("turretcharge", entity -> new Bar(
                 () -> toTurret(entity).chargef() >= 1 ? Core.bundle.get("bar.turretcharged") : Core.bundle.format("bar.turretcharging",
                         ((int)((
                                 current.active ? current.charge/60/entity.timeScale() : (maxCharge - (current.chargef() * maxCharge))/60/entity.timeScale()
@@ -114,7 +118,7 @@ public class BerthaTurret extends PowerTurret {
 
     @Override
     public void init(){
-        consumes.powerCond(powerUse, TurretBuild::isActive);
+        consume(new ConsumePowerDynamic((b) -> ((TurretBuild)b).isActive() ? powerUse : 0));
         if(realRange == 0) realRange = range;
         super.init();
     }
@@ -132,7 +136,7 @@ public class BerthaTurret extends PowerTurret {
         @Override
         public void updateTile() {
 
-            preparation = Mathf.clamp(preparation + (cons.valid() ? Time.delta * reclaimRate : -0.001f), 0, reclaimMax);
+            preparation = Mathf.clamp(preparation + (canConsume() ? Time.delta * reclaimRate : -0.001f), 0, reclaimMax);
 
             if(preparation < 1 || !active) {
                 if(charge >= maxCharge && auto && target != null) active = true;
@@ -149,7 +153,6 @@ public class BerthaTurret extends PowerTurret {
 
             super.updateTile();
             //increase reload until a single tick can make it shoot
-            if(active && hasAmmo() && !isShooting() && reload >= reloadTime - baseReloadSpeed()) reload = Math.min(reload + baseReloadSpeed(), reloadTime - 1/reloadTime);
             unit.ammo(charge/maxCharge);
         }
 
@@ -181,7 +184,7 @@ public class BerthaTurret extends PowerTurret {
         }
 
         public Vec2 shellPos(int side){
-            return shellPos.set((xOffset + shellReloadOffset * recoil/recoilAmount) * side, yOffset + -shellRecoil * recoil/recoilAmount).rotate(rotation - 90);
+            return shellPos.set((xOffset + shellReloadOffset * recoil/BerthaTurret.this.recoil) * side, yOffset + -shellRecoil * recoil/BerthaTurret.this.recoil).rotate(rotation - 90);
         }
 
         public float prepf(){
@@ -202,14 +205,14 @@ public class BerthaTurret extends PowerTurret {
         }
 
         @Override
-        protected void bullet(BulletType type, float angle) {
-            Bullet b = type.create(this, x, y, angle);
+        protected void handleBullet(Bullet b, float offsetX, float offsetY, float angleOffset) {
             Tmp.v1.set(targetPos).sub(x, y).clamp(-range, range).add(x, y);
             Tmp.v2.set(Tmp.v1).sub(x, y);
             //the end of the range, accounting for inaccuracy
+            float angle = rotation + angleOffset;
             Tmp.v3.trns(angle, Tmp.v2.len()).add(x, y);
 
-            Healthc hit = Damage.linecast(b, x + tr.x, y + tr.y, angle, Tmp.v2.len() + shootLength);
+            Healthc hit = Damage.linecast(b, x + tr.x, y + tr.y, angle, Tmp.v2.len() + shootY);
             if(hit == null || !hit.isValid()){
                 b.set(Tmp.v3);
                 b.update();
@@ -224,7 +227,7 @@ public class BerthaTurret extends PowerTurret {
                 Vec2 shootPos = new Vec2(Tmp.v2.x, Tmp.v2.y);
                 Time.run(Mathf.random() * 5, () -> {
                     Tmp.v3.trns(angle, Mathf.random() * shootPos.len());
-                    Fxr.motionBlurBullet.at(x + Tmp.v3.x, y + Tmp.v3.y, Tmp.v3.angle() + 180, type);
+                    Fxr.motionBlurBullet.at(x + Tmp.v3.x, y + Tmp.v3.y, Tmp.v3.angle() + 180, b.type);
                 });
             }
         }
@@ -239,11 +242,15 @@ public class BerthaTurret extends PowerTurret {
             return active ? super.baseReloadSpeed() : 0;
         }
 
+        public float visualReload(){
+            return Math.max(0, reloadCounter - reload);
+        }
+
         @Override
         public void draw() {
             tr2.trns(rotation, -recoil);
 
-            Draw.rect(baseRegion, x, y);
+            drawBase(tile);
 
             Draw.z(Layer.turret - 1f);
             Draw.alpha(prepf());
@@ -272,7 +279,7 @@ public class BerthaTurret extends PowerTurret {
             }
             else {
                 Draw.color(Color.white);
-                Draw.alpha(reload / reloadTime);
+                Draw.alpha(visualReload());
             }
             Draw.rect(reloadRegion, x + tr2.x, y + tr2.y, rotation - 90);
 

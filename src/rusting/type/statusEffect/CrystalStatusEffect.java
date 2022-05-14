@@ -9,7 +9,6 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Time;
 import mindustry.entities.units.WeaponMount;
-import mindustry.game.Team;
 import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -31,7 +30,7 @@ public class CrystalStatusEffect extends ConsStatusEffect {
         crystalStatusEffectSeq.add(this);
         PixmapRegion region = Core.atlas.getPixmap(name + "-crystal");
         //spagehti...
-        crystalDrawColor = new Color(region.getPixel((int) region.width/2, (int) region.height/2));
+        crystalDrawColor = new Color(region.get((int) region.width/2, (int) region.height/2));
     }
 
     public CrystalStatusEffect(String name) {
@@ -105,7 +104,7 @@ public class CrystalStatusEffect extends ConsStatusEffect {
                 Draw.color();
             }
         }
-        Drawf.light(Team.derelict, unit.x, unit.y, unit.type.hitSize, crystalDrawColor, colorOpacity);
+        Drawf.light(unit.x, unit.y, unit.type.hitSize, crystalDrawColor, colorOpacity);
 
         Draw.reset();
     }

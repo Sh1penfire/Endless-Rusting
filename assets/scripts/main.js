@@ -1,22 +1,3 @@
-Events.on(ClientLoadEvent,
-    e => {
-        let unit = Vars.content.units().find(u => u.name == "endless-rusting-guardian-sulphur-stingray");
-        Log.info("hai");
-        if(Version.number > 6 && !Vars.headless){
-            unit.omniMovement = true;
-            unit.faceTarget = false;
-            unit.targetFlags = [BlockFlag.turret, null];
-            
-            Vars.content.sectors().each(s => {
-                if(s.minfo.mod != null && s.minfo.mod.name == "endless-rusting" && s.icon != Core.atlas.getDrawable("error")){
-                    s.uiIcon = s.fullIcon = s.icon.getRegion();
-                }
-            });
-        }
-        else unit.targetFlag = BlockFlag.turret;
-    }
-);
-
 /*
 let button = Version.number >= 7 ? Core.atlas.getDrawable("button") : Tex.button;
 

@@ -159,7 +159,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
     }
 
     @Override
-    public void drawRequestConfigTop(BuildPlan req, Eachable<BuildPlan> list){
+    public void drawPlanConfigTop(BuildPlan req, Eachable<BuildPlan> list){
         if(req.config instanceof Point2[]){
             Point2[] ps = (Point2[]) req.config;
             for(Point2 point : ps){
@@ -226,8 +226,9 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             super.placed();
         }
 
+
         @Override
-        public boolean onConfigureTileTapped(Building other){
+        public boolean onConfigureBuildTapped(Building other){
 
             if(this == other){
                 deselect();
@@ -241,7 +242,7 @@ public class PulseNode extends PulseBlock implements ResearchableBlock {
             }
 
 
-            return super.onConfigureTileTapped(other);
+            return super.onConfigureBuildTapped(other);
         }
 
         @Override

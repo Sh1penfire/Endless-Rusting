@@ -62,7 +62,7 @@ public class PulseCanal extends PulseBlock {
     }
 
     @Override
-    public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list){
+    public void drawPlanRegion(BuildPlan req, Eachable<BuildPlan> list){
         Draw.rect(baseRegion[0], req.drawx(), req.drawy(), req.rotation * 90);
 
         Drawr.drawShine(shineRegion[0], req.drawx(), req.drawy(),0, 0.25f);

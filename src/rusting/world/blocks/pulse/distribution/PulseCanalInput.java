@@ -50,7 +50,7 @@ public class PulseCanalInput extends PulseCanal {
 
 
     @Override
-    public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list){
+    public void drawPlanRegion(BuildPlan req, Eachable<BuildPlan> list){
         Draw.rect(baseRegion[0], req.drawx(), req.drawy(), req.rotation * 90);
 
         Draw.alpha(0.15f);

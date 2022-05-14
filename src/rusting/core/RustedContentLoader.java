@@ -2,7 +2,6 @@ package rusting.core;
 
 import arc.func.Cons;
 import arc.struct.Seq;
-import mindustry.ctype.ContentList;
 import rusting.ai.AISwitches.AISwitch;
 import rusting.content.*;
 import rusting.ctype.*;
@@ -10,24 +9,6 @@ import rusting.type.Capsule;
 
 //class to store special content, not found in Vars, and ER's content
 public class RustedContentLoader {
-
-    private final Seq<ContentList> contentLists = Seq.with(
-            new RustingTeams(),
-            new RustingResearchTypes(),
-            new RustingAISwitches(),
-            new RustingStatusEffects(),
-            new RustingLiquids(),
-            new RustingItems(),
-            new RustingBullets(),
-            new RustingUnits(),
-            new RustingBlocks(),
-            new RustingWeathers(),
-            new RustingPlanets(),
-            new RustingCapsules(),
-            new RustingAchievements(),
-            new RustingSectorPresets(),
-            new RustingTechTree()
-    );
 
     public Seq<ERContentType> ContentTypes = Seq.with(
             new ERContentType("unused"),
@@ -67,7 +48,22 @@ public class RustedContentLoader {
         for (int i = 0; i < contentMap.length; i++) {
             contentMap[i] = new Seq();
         }
-        contentLists.each(ContentList::load);
+        RustingTeams.load();
+        RustingResearchTypes.load();
+        RustingAISwitches.load();
+        RustingStatusEffects.load();
+        RustingLiquids.load();
+        RustingItems.load();
+        RustingBullets.load();
+        RustingUnits.load();
+        RustingBlocks.load();
+        RustingWeathers.load();
+        RustingPlanets.load();
+        RustingCapsules.load();
+        RustingAchievements.load();
+        RustingSectorPresets.load();
+        //TODO: get back techtree
+        //RustingTechTree.load();
     }
 
     public void init(){

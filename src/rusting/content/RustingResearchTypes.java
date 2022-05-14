@@ -1,16 +1,16 @@
 package rusting.content;
 
-import mindustry.ctype.ContentList;
+
 import rusting.ctype.ResearchType;
 
-public class RustingResearchTypes implements ContentList {
+public class RustingResearchTypes {
 
     public static ResearchType
     pulse, capsule
     ;
 
-    @Override
-    public void load() {
+    
+    public static void load() {
 
         pulse = new ResearchType("pulse") {{
 

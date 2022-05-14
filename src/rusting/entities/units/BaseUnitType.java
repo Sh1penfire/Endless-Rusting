@@ -39,7 +39,7 @@ public class BaseUnitType extends UnitType {
             drawControl(unit);
         }
 
-        if(unit.isFlying() || visualElevation > 0){
+        if(unit.isFlying() || shadowElevation > 0){
             Draw.z(Math.min(Layer.darkness, z - 1f));
             drawShadow(unit);
         }
@@ -74,7 +74,7 @@ public class BaseUnitType extends UnitType {
 
         drawOutline(unit);
         //drawWeaponOutlines(unit);
-        if(engineSize > 0) drawEngine(unit);
+        if(engineSize > 0) drawEngines(unit);
         drawBody(unit);
         if(drawCell) drawCell(unit);
         drawWeapons(unit);
@@ -89,7 +89,7 @@ public class BaseUnitType extends UnitType {
             unit.trns(-legOffset.x, -legOffset.y);
         }
 
-        if(unit.abilities.size > 0){
+        if(unit.abilities.length > 0){
             for(Ability a : unit.abilities){
                 Draw.reset();
                 a.draw(unit);

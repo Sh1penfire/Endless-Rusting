@@ -27,7 +27,7 @@ public class PulseFlowSplitter extends PulseCanal {
     }
 
     @Override
-    public void drawRequestRegion(BuildPlan req, Eachable<BuildPlan> list){
+    public void drawPlanRegion(BuildPlan req, Eachable<BuildPlan> list){
         Draw.rect(baseRegion[0], req.drawx(), req.drawy(), 0);
 
         Drawr.drawShine(shineRegion[0], req.drawx(), req.drawy(),0, 0.25f);

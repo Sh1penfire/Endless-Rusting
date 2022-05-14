@@ -6,20 +6,20 @@ import arc.struct.Seq;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.core.GameState;
-import mindustry.ctype.ContentList;
+
 import mindustry.gen.Groups;
 import rusting.game.*;
 import rusting.game.controller.CrystallineCragsController;
 import rusting.game.controller.ScrapyardController;
 import rusting.util.MusicControl.MusicSecController.MusicSecSegment;
 
-public class RustingSectorPresets implements ContentList {
+public class RustingSectorPresets {
     public static ERSectorPreset
     incipiensGrounds, plantaePresevereDomae, volenChannels, paileanCorridors, saltyShoals, overgrownMines, abystrikenCrevasse, crystallineCrags, pulsatingGroves, sulphuricSea, hangout, preservatory;
     ;
 
-    @Override
-    public void load() {
+    
+    public static void load() {
         incipiensGrounds = new ERSectorPreset("incipiens-grounds", RustingPlanets.err, 36){{
             alwaysUnlocked = true;
             addStartingItems = true;
@@ -92,12 +92,10 @@ public class RustingSectorPresets implements ContentList {
 
         pulsatingGroves = new ERSectorPreset("pulsating-groves", RustingPlanets.err, 56){{
             difficulty = 5;
-            useAI = false;
         }};
 
         sulphuricSea = new ERSectorPreset("sulphur-seas", RustingPlanets.err, 0){{
             difficulty = 8;
-            useAI = false;
             rules = (rules) -> {
                 rules.tags.put("events.er.stingrayfail", "true");
             };

@@ -15,7 +15,6 @@ import mindustry.Vars;
 import mindustry.ctype.UnlockableContent;
 import mindustry.gen.Building;
 import mindustry.graphics.Pal;
-import mindustry.ui.Cicon;
 import mindustry.ui.Fonts;
 import mindustry.world.Tile;
 import rusting.Varsr;
@@ -28,6 +27,7 @@ import rusting.ui.dialog.Texr;
 
 import static mindustry.Vars.*;
 
+//TODO: Redo this and make it much more fitting
 public class FieldBlockListDialog extends CustomBaseDialog {
 
     public Seq<ResearchableObject> researchable = new Seq<ResearchableObject>();
@@ -103,7 +103,7 @@ public class FieldBlockListDialog extends CustomBaseDialog {
                     UnlockableContent unlock = (UnlockableContent) type;
                     if (!unlocked(unlock) || type.getResearchModule().isHidden) return;
                     final boolean isResearched = Varsr.research.researched(player.team(), type, type.researchTypes());
-                    Image image = new Image(unlock.icon(Cicon.medium)).setScaling(Scaling.fit);
+                    Image image = new Image(unlock.uiIcon).setScaling(Scaling.fit);
                     Color imageCol = isResearched ? Color.white : Pal.darkerGray;
                     list.add(image).size(8 * 12).pad(3);
                     ClickListener listener = new ClickListener();
@@ -120,7 +120,7 @@ public class FieldBlockListDialog extends CustomBaseDialog {
                                 Core.app.setClipboardText((char) Fonts.getUnicode(unlock.name) + "");
                                 Vars.ui.showInfoFade("@copied");
                             } else Varsr.ui.blockEntry.show(unlock);
-                        } else if (unlocked(unlock)) Varsr.ui.unlock.show(unlock);
+                        }// else if (unlocked(unlock)) Varsr.ui.unlock.show(unlock);
                     });
                     boolean finalIsResearched1 = isResearched;
                     image.addListener(new Tooltip(t -> {

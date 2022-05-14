@@ -15,10 +15,6 @@ public abstract class UnlockableERContent extends MappableERContent{
     String description, details;
     /** Whether this content is always unlocked. */
     public boolean alwaysUnlocked = false;
-    /** Whether to show the description in the research dialog preview. */
-    public boolean inlineDescription = true;
-    /** Special logic icon ID. */
-    public int iconId = 0;
     /** Icon of the content to use in UI. */
     public Image uiImage;
     /** Icon of the content to use in UI. */

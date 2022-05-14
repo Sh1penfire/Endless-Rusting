@@ -52,21 +52,7 @@ public class AreaHealerBeamTurret extends HealerBeamTurret {
 
         @Override
         public void draw() {
-
-            Draw.rect(baseRegion, x, y);
-            Draw.color();
-
-            Draw.z(Layer.turret);
-
-            tr2.trns(rotation, -recoil);
-
-            Drawf.shadow(region, x + tr2.x - elevation, y + tr2.y - elevation, rotation - 90);
-            drawer.get(this);
-
-            if(heatRegion != Core.atlas.find("error")){
-                heatDrawer.get(this);
-            }
-
+            super.draw();
             Draw.reset();
             for (int i = 0; i < effectRotations.length; i++){
                 int index = i + 1;

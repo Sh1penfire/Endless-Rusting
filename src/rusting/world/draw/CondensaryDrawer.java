@@ -16,9 +16,9 @@ public class CondensaryDrawer extends DrawPulseBlock{
     @Override
     public void draw(PulseGenericCrafterBuild entity) {
         super.draw(entity);
-        if(entity.liquids.total() > 0.001f){
+        if(entity.liquids.currentAmount() > 0.001f){
             Draw.color(entity.liquids.current().color);
-            Draw.alpha(entity.liquids.total() / entity.block.liquidCapacity);
+            Draw.alpha(entity.liquids.currentAmount() / entity.block.liquidCapacity);
             Draw.rect(liquid, entity.x, entity.y, 0);
             Draw.color();
         }

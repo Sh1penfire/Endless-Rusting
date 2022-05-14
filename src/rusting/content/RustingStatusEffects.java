@@ -10,7 +10,7 @@ import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.core.Version;
-import mindustry.ctype.ContentList;
+
 import mindustry.entities.Units;
 import mindustry.game.EventType.Trigger;
 import mindustry.gen.*;
@@ -20,7 +20,7 @@ import rusting.type.statusEffect.*;
 //first time I'm doing this
 @SuppressWarnings("unchecked")
 
-public class RustingStatusEffects implements ContentList {
+public class RustingStatusEffects {
     public static StatusEffect
             weather, hpooned, fuesin, amberstriken, umbrafliction, macrosis, macotagus, balancedPulsation, hailsalilty, causticBurning, deceptione, blackout, potassiumDeficiency, shieldShatter, corruptShield, fragmentaein, guardiansBlight;
     public static Cons
@@ -30,8 +30,8 @@ public class RustingStatusEffects implements ContentList {
     private FloatSeq floatSeq;
     private float index;
 
-    @Override
-    public void load() {
+    
+    public static void load() {
 
         //sued by weather and to see if unit was alive during a weather effect
         weather = new StatusEffect("weather"){
@@ -278,7 +278,7 @@ public class RustingStatusEffects implements ContentList {
         StatusEffects.corroded.effect = Fxr.corrodedEffect;
 
         corruptShieldCons = new Cons() {
-            @Override
+            
             public void get(Object o) {
 
                 //iterate through all bullets

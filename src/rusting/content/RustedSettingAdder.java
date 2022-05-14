@@ -33,7 +33,7 @@ public class RustedSettingAdder {
         Core.settings.put("uiscalechanged", tmp);
 
         Cons dialogShow = new Cons() {
-            @Override
+            
             public void get(Object o) {
                 if(Core.input.keyTap(KeyCode.shiftLeft)) {
                     Varsr.ui.capsuleResearch.show();

@@ -17,7 +17,7 @@ public class DrawPulseLiquidCrafter extends DrawPulseBlock{
 
         Draw.rect(bottom, build.x, build.y, rotation);
 
-        if(build.liquids.total() > 0.001f){
+        if(build.liquids.currentAmount() > 0.001f){
             currentLiquid = build.liquids.current();
             Draw.color(currentLiquid.color);
             Draw.alpha(build.liquids.get(currentLiquid) / build.block.liquidCapacity);

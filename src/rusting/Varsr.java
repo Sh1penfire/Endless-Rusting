@@ -3,12 +3,11 @@ package rusting;
 import arc.Core;
 import arc.Events;
 import arc.assets.Loadable;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Queue;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Log;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.core.GameState;
 import mindustry.core.Version;
@@ -16,7 +15,6 @@ import mindustry.game.EventType;
 import mindustry.game.EventType.Trigger;
 import mindustry.gen.Building;
 import mindustry.gen.Groups;
-import mindustry.graphics.Layer;
 import mindustry.net.Net;
 import mindustry.net.Packet;
 import mindustry.type.ItemStack;
@@ -26,12 +24,9 @@ import rusting.ai.AISwitches;
 import rusting.content.*;
 import rusting.core.RustedContentLoader;
 import rusting.core.Rusting;
-import rusting.core.holder.ItemScoreHolder;
 import rusting.ctype.UnlockableAchievement;
 import rusting.entities.abilities.SpeedupAbility;
 import rusting.game.*;
-import rusting.graphics.RustedShaders;
-import rusting.graphics.RustedShaders.GlitchEffectShader;
 import rusting.graphics.VelocityTrail;
 import rusting.net.ControlPacket;
 import rusting.ui.RustingUI;
@@ -58,7 +53,6 @@ public class Varsr implements Loadable {
 
     public static RustingUI ui;
     public static FormatHolder formats;
-    public static ItemScoreHolder itemScorer;
     public static Rusting rusted;
     public static AISwitches switches = new AISwitches();
     public static RustedContentLoader content = new RustedContentLoader();
@@ -77,18 +71,6 @@ public class Varsr implements Loadable {
 
     public static void setup(){
 
-        //Yes hi I see you there reading the source code :)
-        //Its just a lil test, nothing harmful will come from this
-        Events.on(EventType.WaveEvent.class, e -> {
-            for(int i = 0; i < 16; i++){
-
-                Tmp.v1.trns(100, i * 360/16);
-
-                RustingUnits.SYSTEM_DELETED_UNIT.spawn(RustingTeams.voidInfected, Vars.player.x + Tmp.v1.x, Vars.player.y + Tmp.v1.y);
-            }
-        });
-
-        itemScorer.setupItems();
         content.init();
 
         research.setupMap();
@@ -138,7 +120,6 @@ public class Varsr implements Loadable {
         ui.init();
 
         formats = new FormatHolder();
-        itemScorer = new ItemScoreHolder();
         rusted = null;
 
         defaultDatabaseQuotes = Seq.with(
@@ -205,16 +186,8 @@ public class Varsr implements Loadable {
             if(sectors.controller != null) sectors.controller.update();
         });
 
-        TextureRegion region = Core.atlas.find("endless-rusting-PLACEHOLDER5");
         Events.on(Trigger.draw.getClass(), e -> {
                 if(sectors.controller != null) sectors.controller.draw();
-                Draw.draw(Layer.flyingUnit + 1, () -> {
-                        GlitchEffectShader s = RustedShaders.testShader;
-                        s.screenTex = region.texture;
-                        Draw.shader(RustedShaders.testShader);
-                        Draw.rect(region, Vars.player.x, Vars.player.y, -90);
-                        Draw.shader();
-                });
         });
 
         Log.info("Loaded Varsr");

@@ -32,7 +32,7 @@ public class LightningTurret extends PulseBlock {
     public int lightning = 3;
     public float damage = 3;
     public float healAmount = 0, statusDuration = 160;
-    public float shootLength = 5;
+    public float shootY = 5;
     public float shootCone = 55;
     public float reloadTime = 8;
     public float rotationSpeed = 5;
@@ -140,7 +140,7 @@ public class LightningTurret extends PulseBlock {
         @Override
         public void update() {
             super.update();
-            lightningPos.trns(rotation, shootLength).add(x, y);
+            lightningPos.trns(rotation, shootY).add(x, y);
             updateTargeting();
 
             rotation = Angles.moveToward(rotation, angleTo(aimPos.x, aimPos.y), delta() * rotationSpeed);
@@ -280,7 +280,7 @@ public class LightningTurret extends PulseBlock {
             Draw.blend(Blending.additive);
             Draw.rect(lightRegion, x, y, rotation - 90);
             Draw.blend();
-            Drawf.light(team, x, y, x + Tmp.v1.trns(rotation, beamLength).x, y + Tmp.v1.y, beamWidth, lightColor, beamAlpha * chargef());
+            Drawf.light(x, y, x + Tmp.v1.trns(rotation, beamLength).x, y + Tmp.v1.y, beamWidth, lightColor, beamAlpha * chargef());
             //hell.
 
             boolean advanced = Core.settings.getBool("advancedeffects");

@@ -3,10 +3,9 @@ package rusting.content;
 import arc.func.Prov;
 import arc.graphics.Color;
 import arc.util.Log;
-import arc.util.async.Threads;
+import arc.util.Threads;
 import mindustry.content.Planets;
 import mindustry.core.Version;
-import mindustry.ctype.ContentList;
 import mindustry.graphics.g3d.*;
 import mindustry.type.Planet;
 import rusting.maps.planet.AntiquumPlanetGenerator;
@@ -14,7 +13,7 @@ import rusting.maps.planet.AntiquumPlanetGenerator;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-public class RustingPlanets implements ContentList {
+public class RustingPlanets {
     public static Planet
             oop, err;
 
@@ -52,10 +51,10 @@ public class RustingPlanets implements ContentList {
         return returnPlanet;
     }
 
-    @Override
-    public void load(){
-        oop = createPlanet("out of place", Planets.sun, 0, 3,
-            () -> new SunMesh(
+    
+    public static void load(){
+        oop = new Planet("out of place", Planets.sun, 3, 0){{
+            meshLoader = () -> new SunMesh(
                     oop, 4,
                 5, 0.3, 1.7, 1.2, 1,
                 1.1f,
@@ -65,19 +64,20 @@ public class RustingPlanets implements ContentList {
                 Color.valueOf("ffc64c"),
                 Color.valueOf("ffe371"),
                 Color.valueOf("f4ee8e")
-            )
-        );
-        oop.bloom = true;
-        oop.accessible = false;
+            );
+            bloom = true;
+            accessible = false;
+        }};
 
-
-        err = createPlanet("antiquum-terrae", oop, 3, 1f, () -> new HexMesh(err, 6));
-        err.generator = new AntiquumPlanetGenerator();
-        err.hasAtmosphere = true;
-        err.atmosphereColor = Palr.camaintLightning;
-        err.atmosphereRadIn = 0.036f;
-        err.atmosphereRadOut = 0.35f;
-        err.startSector = 36;
-        err.alwaysUnlocked = true;
+        err = new Planet("antiquum-terrae", oop, 1f, 3){{
+                meshLoader = () -> new HexMesh(err, 6);
+                generator = new AntiquumPlanetGenerator();
+                hasAtmosphere = true;
+                atmosphereColor = Palr.camaintLightning;
+                atmosphereRadIn = 0.036f;
+                atmosphereRadOut = 0.35f;
+                startSector = 36;
+                alwaysUnlocked = true;
+        }};
     }
 }

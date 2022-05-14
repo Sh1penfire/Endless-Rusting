@@ -7,11 +7,12 @@ import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.math.geom.Point2;
-import arc.util.*;
-import mindustry.content.*;
+import arc.util.Time;
+import arc.util.Tmp;
+import mindustry.content.Items;
+import mindustry.content.Liquids;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BasicBulletType;
-import mindustry.game.Team;
 import mindustry.gen.Unit;
 import mindustry.graphics.*;
 import rusting.entities.units.CraeUnitType;
@@ -425,7 +426,7 @@ public class Fxr{
                     ny = ty + normy * len + Tmp.v3.y + Tmp.v4.y;
                 }
 
-                Drawf.light(Team.derelict, lastx, lasty, nx, ny);
+                Drawf.light(lastx, lasty, nx, ny);
                 lastx = nx;
                 lasty = ny;
                 Lines.linePoint(nx, ny);
@@ -468,14 +469,14 @@ public class Fxr{
                 float distance = Mathf.dst(x, y);
                 Draw.alpha((1 - distance/(splosionRadius/9.5f - 5)) * e.fout() * e.fout() * 0.15f + 0.85f * e.fout() * alphaPercent);
                 Fill.circle(e.x + x,e.y + y, splosionRadius/3.5f);
-                Drawf.light(Team.derelict, e.x + x, e.y + y, splosionRadius/3.5f, Palr.pulseChargeStart, Draw.getColor().a);
+                Drawf.light(e.x + x, e.y + y, splosionRadius/3.5f, Palr.pulseChargeStart, Draw.getColor().a);
             });
 
             randLenVectors(e.id, clouds, splosionRadius/1.5f * e.finpow(), e.rotation,  360, (x, y) -> {
                 float distance = Mathf.dst(x, y);
                 Draw.alpha((1 - distance/(splosionRadius/7.5f - 5)) * e.fout() * e.fout() * 0.25f + 0.75f * e.fout() * e.fout() * alphaPercent);
                 Fill.circle(e.x + x,e.y + y, splosionRadius/7.25f);
-                Drawf.light(Team.derelict, e.x + x, e.y + y, splosionRadius/5.25f, Palr.pulseChargeEnd, e.fout() * 0.65f);
+                Drawf.light(e.x + x, e.y + y, splosionRadius/5.25f, Palr.pulseChargeEnd, e.fout() * 0.65f);
             });
         }),
 
@@ -854,7 +855,7 @@ public class Fxr{
                 Tmp.v1.trns(e.rotation, h.finpow() * (60 + (4 - l[0] + 1) * 18));
                 Draw.color(Palr.lightstriken, Palr.dustriken, h.fin());
                 Lines.stroke((3 + (5 - l[0]) * 0.25f) * h.fout() * h.fout());
-                Lines.swirl(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 2 + 39 * h.finpow(), (115 +55 * h.fout())/360, e.rotation - 57.5f - 27.5f * h.fout());
+                Lines.arc(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 2 + 39 * h.finpow(), (115 +55 * h.fout())/360, e.rotation - 57.5f - 27.5f * h.fout());
             });
         }
         e.scaled(35, h -> {

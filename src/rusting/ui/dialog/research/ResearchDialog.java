@@ -18,7 +18,6 @@ import mindustry.Vars;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.type.ItemStack;
-import mindustry.ui.Cicon;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 import rusting.Varsr;
@@ -75,7 +74,7 @@ public class ResearchDialog extends CustomBaseDialog{
                 int cols = Mathf.clamp((Core.graphics.getWidth() - 30) / (32 + 10), 1, 8);
 
                 for(ItemStack costing: rCost) {
-                    Image itemImage = new Image(new TextureRegionDrawable().set(costing.item.icon(Cicon.medium))).setScaling(Scaling.fit);
+                    Image itemImage = new Image(new TextureRegionDrawable().set(costing.item.uiIcon)).setScaling(Scaling.fit);
 
                     table.stack(
                             itemImage,

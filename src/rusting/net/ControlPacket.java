@@ -8,7 +8,7 @@ import mindustry.input.InputHandler;
 import mindustry.io.TypeIO;
 import mindustry.net.Packet;
 
-public class ControlPacket implements Packet {
+public class ControlPacket extends Packet {
     private int id;
     private Unit control;
 

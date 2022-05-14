@@ -44,7 +44,7 @@ public class PulsePulsar extends PulseBlock {
     public Effect shootStartEffect = Fxr.launchCraeWeavers, shootEffect = Fxr.craeWeaversResidue;
     //range
     public float range = 0;
-    public float velocityInaccuracy = 0;
+    public float velocityRnd = 0;
     public float speedScl = 1;
     public float lifetimeScl = 1;
     public StatusEffect status = RustingStatusEffects.balancedPulsation;
@@ -102,7 +102,7 @@ public class PulsePulsar extends PulseBlock {
         }
 
         public void shoot(){
-            float speedScaling = projectile.scaleVelocity ? projectileRange()/dst(targetPos) : size * 0.6f * speedScl;
+            float speedScaling = projectile.scaleLife ? projectileRange()/dst(targetPos) : size * 0.6f * speedScl;
 
             if(projectile != null){
                 if(bursts > 1){

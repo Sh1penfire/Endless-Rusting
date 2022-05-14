@@ -1,12 +1,11 @@
 package rusting.content;
 
-import mindustry.ctype.ContentList;
 import rusting.ai.AISwitches.AISwitch;
 
-public class RustingAISwitches implements ContentList {
+public class RustingAISwitches {
     public static AISwitch attackSwitch, mineSwitch, healUnitSwitch, healBlockSwitch;
-    @Override
-    public void load() {
+    
+    public static void load() {
 
         attackSwitch = new AISwitch("unit-attack"){{
 

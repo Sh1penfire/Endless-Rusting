@@ -8,7 +8,6 @@ import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.util.*;
 import mindustry.Vars;
-import mindustry.core.Version;
 import mindustry.type.Weapon;
 import rusting.math.Mathr;
 
@@ -17,43 +16,16 @@ import java.lang.reflect.Method;
 
 public class Drawr {
 
-    @Nullable
-    public static boolean initializedMethods = false;
     public static Method drawingMethod = null, flipMethod = null;
-    public static boolean useNewMethods = false;
-
-    public static void setMethods(){
-        if(Version.number >= 7){
-            Log.debug("using latest methods");
-            try {
-                drawingMethod = Pixmap.class.getDeclaredMethod("draw", Pixmap.class, int.class, int.class, int.class, int.class, int.class, int.class);
-                flipMethod = Pixmap.class.getDeclaredMethod("flipX");
-                useNewMethods = true;
-                initializedMethods = true;
-            }
-            catch (NoSuchMethodException err){
-                Log.err("New Arc methods in Drawr #33 not suported!");
-            }
-        }
-        if(drawingMethod == null) {
-            try {
-                drawingMethod = Pixmap.class.getDeclaredMethod("drawPixmap", Pixmap.class, int.class, int.class, int.class, int.class, int.class);
-                useNewMethods = false;
-                initializedMethods = true;
-            } catch (NoSuchMethodException err) {
-                Log.err("Old Arc methods in Drawr #44 not suported!");
-            }
-        }
-    }
 
     //Learned somewhat how to do this from sk's Drawm
     public static Pixmap pigmentae(PixmapRegion map, Color pigment, float percent){
         Pixmap stencil = new Pixmap(map.width, map.height);
             for (int x = 0; x < map.width; x ++){
                 for (int y = 0; y < map.height; y ++){
-                    int point = map.getPixel(x, y);
+                    int point = map.get(x, y);
                     Color lerpPoint = new Color(point).lerp(pigment, percent);
-                    if(lerpPoint.a != percent && lerpPoint.a == pigment.a) stencil.draw(x, y, lerpPoint);
+                    if(lerpPoint.a != percent && lerpPoint.a == pigment.a) stencil.set(x, y, lerpPoint);
                 }
             }
         return stencil;
@@ -68,19 +40,19 @@ public class Drawr {
 
     //I got bored with the names, so I started treating these like maps
     public static Pixmap blend(PixmapRegion map, PixmapRegion information, float percent, boolean clearAlpha, Vec2 size){
-        Pixmap stencil = new Pixmap((int) size.x, (int) size.y, map.pixmap.getFormat());
+        Pixmap stencil = new Pixmap((int) size.x, (int) size.y);
         for (int x = 0; x < map.width; x ++){
             for (int y = 0; y < map.height; y ++){
-                int point = map.getPixel(x, y);
+                int point = map.get(x, y);
                 //dot
                 //dot
                 //dot
                 //tod
                 //To do
-                int info = information.getPixel(x, y);
+                int info = information.get(x, y);
                 Color lerpPoint = new Color(point).lerp(new Color(info), percent);
                 if(clearAlpha) lerpPoint.a = lerpPoint.a < 0.5 ? 0 : 1;
-                stencil.draw(x, y, lerpPoint);
+                stencil.set(x, y, lerpPoint);
             }
         }
         return stencil;
@@ -102,8 +74,8 @@ public class Drawr {
         map.each((x, y) -> {
             pos.set(Mathr.reflect(x, y, map.getWidth()/2, y));
             int point = 0;
-            point = map.getPixel((int) pos.x,(int) pos.y);
-            stencil.draw(point, x, y);
+            point = map.get((int) pos.x,(int) pos.y);
+            stencil.set(point, x, y);
         });
         return stencil;
     };
@@ -119,20 +91,6 @@ public class Drawr {
             Draw.rect(region, Tmp.v1.x, Tmp.v1.y, drawRotation + angleToEnd);
         }
         Draw.rect(region, x, y, region.width/4, pixremainder/4, drawRotation + angleToEnd);
-    }
-
-    public static void drawPulseRegion(TextureRegion region, float x, float y, float rotation, Color drawCol, float alpha){
-        if(RustedShaders.loaded && Core.settings.getBool("pulseshader")){
-            RustedShaders.pulseGradiant.startColor.set(drawCol);
-            RustedShaders.pulseGradiant.alpha = alpha;
-            Draw.shader(RustedShaders.pulseGradiant);
-        }
-        else {
-            Draw.color(drawCol);
-            Draw.alpha(alpha);
-        };
-        Draw.rect(region, x, y, rotation);
-        Draw.shader();
     }
 
     public static void drawShine(TextureRegion region, float x, float y, float rotation, float alpha){

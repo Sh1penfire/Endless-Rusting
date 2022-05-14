@@ -60,7 +60,7 @@ public class youshoudntbehere extends AntiquimGuardianUnitEntity {
         Drawr.pigmentae(manipulationIsKey, Palr.voidBullet);
 
         try{
-            stencil = new Pixmap(manipulationIsKey.width, manipulationIsKey.height, manipulationIsKey.pixmap.getFormat());
+            stencil = new Pixmap(manipulationIsKey.width, manipulationIsKey.height);
         }
         catch (Error e){
             return;
@@ -75,11 +75,11 @@ public class youshoudntbehere extends AntiquimGuardianUnitEntity {
                 float distance = Tmp.v1.set(manipulationIsKey.width/2, manipulationIsKey.height/2).dst(x, y);
 
                 //get color at the current point
-                Color col = Tmp.c1.set(stencil.getPixel(x, y));
+                Color col = Tmp.c1.set(stencil.get(x, y));
 
                 //the closer the point selected is to the center, the more it's lerped into Palr.voidBullet
                 col.lerp(Palr.voidBullet, distance/Mathf.dst(manipulationIsKey.width, manipulationIsKey.height, 0, 0));
-                if(col.a == 1) stencil.draw(x, y, col);
+                if(col.a == 1) stencil.set(x, y, col);
             }
         }
         ourRegionNow.set(new Texture(stencil));

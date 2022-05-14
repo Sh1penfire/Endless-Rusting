@@ -166,7 +166,7 @@ public class PulseGenericCrafter extends PulseBlock {
 
         @Override
         public boolean shouldAmbientSound(){
-            return cons.valid() & pConsValid();
+            return canConsume() & pConsValid();
         }
 
         public void dumpOutputs(){
