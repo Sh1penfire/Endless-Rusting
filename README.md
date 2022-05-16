@@ -2,7 +2,7 @@
 # Endless Rusting
 
 ## About
-Endless Rusting was origionaly made because I wanted to try learn java, but now I'm continuing to work on it because I'm finding it fun. The mod is about fleshing out the lore of PTER, and adding new mechanics which fit with vanilla.
+Endless Rusting was origionaly made because I wanted to try learn java, but now I continued to work on it because I was finding it fun. At the moment, it is only being maintained. The mod is about fleshing out the lore of PTER, and adding new mechanics which fit with vanilla.
 
 ## Dev Note
 Hi, Sh1penfire here. About the development of Endless Rusting, im pututing it on hold. It is no longer my main project but I will continue working on it slowly and releasing patches. If you find any bugs please post an issue, it would be much appreciated :D
