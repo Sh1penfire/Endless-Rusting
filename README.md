@@ -5,11 +5,10 @@
 Endless Rusting was origionaly made because I wanted to try learn java, but now I continued to work on it because I was finding it fun. At the moment, it is only being maintained. The mod is about fleshing out the lore of PTER, and adding new mechanics which fit with vanilla.
 
 ## Dev Note
-Hi, Sh1penfire here. About the development of Endless Rusting, im pututing it on hold. It is no longer my main project but I will continue working on it slowly and releasing patches. If you find any bugs please post an issue, it would be much appreciated :D
-If nescecary, contact me on discord with my tag Sh1penfire#0868
+Hi, Sh1penfire here. About the development of Endless Rusting, im pututing it on hold. It is no longer my main project but I will continue working on it slowly and releasing patches.
 
 ## V7 Compatability
-I've got plans for full v7 compatability, though I'm not sure whats to come. Units are now compatable, and so is the dialog, but I've got to wait and see if everything works for the next BE build.
+Im slowly working on v7 compatability right now, though there is no guarentee I can get it out before the alpha is over...
 
 ## Compiling
 
