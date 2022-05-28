@@ -5,7 +5,17 @@
 Endless Rusting was origionaly made because I wanted to try learn java, but now I continued to work on it because I was finding it fun. At the moment, it is only being maintained. The mod is about fleshing out the lore of PTER, and adding new mechanics which fit with vanilla.
 
 ## Dev Note
-Hi, Sh1penfire here. I am not working on Endless Rusting for the current year, as im going to give Mindustry's newest release some time to develop. After releasing Endless RUsting's v8 I will be done with any major updates and will focus on maintaining the project instead. See you then!
+Hi, Sh1penfire here. I am not working on Endless Rusting for the current year, as im going to give Mindustry's newest release some time to develop. After releasing Endless Rusting's v8 I will be done with any major updates and will focus on maintaining the project instead. This update will not be a few pushes, and will be started as soon as I get back to the project.
+
+A list of things being changed
+-Techtree
+-Blocks and units
+-Items
+-Sectors
+-Gameplay-affecting mechanics
+
+Ill most likely come back to Endless Rusting early next year, but until it comes...
+See you then!
 
 ## Compiling
 
