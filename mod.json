@@ -8,5 +8,6 @@
   "minGameVersion": "126.2",
   "hidden": false,
   "java": true,
-  "repo": "Sh1penfire/Endless-rusting"
+  "repo": "Sh1penfire/Endless-rusting",
+  "hideBrowser": true
 }
