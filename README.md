@@ -5,10 +5,7 @@
 Endless Rusting was origionaly made because I wanted to try learn java, but now I continued to work on it because I was finding it fun. At the moment, it is only being maintained. The mod is about fleshing out the lore of PTER, and adding new mechanics which fit with vanilla.
 
 ## Dev Note
-Hi, Sh1penfire here. I am no longer working on Endless Rusting for the forseeable future.
-
-## V7 Compatability
-Im slowly working on v7 compatability right now, though there is no guarentee I can get it out before the alpha is over...
+Hi, Sh1penfire here. I am not working on Endless Rusting for the current year, as im going to give Mindustry's newest release some time to develop. After releasing Endless RUsting's v8 I will be done with any major updates and will focus on maintaining the project instead. See you then!
 
 ## Compiling
 
