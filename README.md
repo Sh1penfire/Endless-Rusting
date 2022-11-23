@@ -7,7 +7,10 @@ Endless Rusting was origionaly made because I wanted to try learn java, but now 
 ## Dev Note
 Hi, Sh1penfire here. I am not working on Endless Rusting for the current year, as im going to give Mindustry's newest release some time to develop. After releasing Endless Rusting's v8 I will be done with any major updates and will focus on maintaining the project instead. This update will not be a few pushes, and will be started as soon as I get back to the project.
 
-Ill most likely come back to Endless Rusting early next year, but until it comes...
+Im intending to "finish" the project once I port it over, likely ending off with Sulphuric Seas (The Stingray fight) as the last battle.
+It's painful to part with the mod in this way. I believe this will stop me from feeling like I left it unfinished, and will try to polish the experience as much as possible before leaving it as is.
+
+Ill most likely come back to Endless Rusting early next year to port it over, but until it comes...
 See you then!
 
 ## Compiling
