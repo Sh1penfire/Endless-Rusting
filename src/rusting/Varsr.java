@@ -77,17 +77,6 @@ public class Varsr implements Loadable {
 
     public static void setup(){
 
-        //Yes hi I see you there reading the source code :)
-        //Its just a lil test, nothing harmful will come from this
-        Events.on(EventType.WaveEvent.class, e -> {
-            for(int i = 0; i < 16; i++){
-
-                Tmp.v1.trns(100, i * 360/16);
-
-                RustingUnits.SYSTEM_DELETED_UNIT.spawn(RustingTeams.voidInfected, Vars.player.x + Tmp.v1.x, Vars.player.y + Tmp.v1.y);
-            }
-        });
-
         itemScorer.setupItems();
         content.init();
 
@@ -208,13 +197,6 @@ public class Varsr implements Loadable {
         TextureRegion region = Core.atlas.find("endless-rusting-PLACEHOLDER5");
         Events.on(Trigger.draw.getClass(), e -> {
                 if(sectors.controller != null) sectors.controller.draw();
-                Draw.draw(Layer.flyingUnit + 1, () -> {
-                        GlitchEffectShader s = RustedShaders.testShader;
-                        s.screenTex = region.texture;
-                        Draw.shader(RustedShaders.testShader);
-                        Draw.rect(region, Vars.player.x, Vars.player.y, -90);
-                        Draw.shader();
-                });
         });
 
         Log.info("Loaded Varsr");

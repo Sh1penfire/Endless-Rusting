@@ -7,6 +7,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.math.geom.Point2;
+import arc.math.geom.Vec2;
 import arc.util.*;
 import mindustry.content.*;
 import mindustry.entities.Effect;
@@ -516,22 +517,27 @@ public class Fxr{
         }),
 
         stingrayShieldPop = new Effect(115, e -> {
-            Tmp.v2.set(e.x, e.y);
-            if(!(e.data instanceof Unit)) Tmp.v2.set(((Unit) e.data).x, ((Unit) e.data).y);
+            Vec2 unitPos = new Vec2(e.x, e.y);
+            if(!(e.data instanceof Unit)) unitPos.set(((Unit) e.data).x, ((Unit) e.data).y);
             Draw.color(Palr.pulseChargeStart, Palr.pulseBullet, e.fout());
             e.scaled(25, l -> {
                 Lines.stroke(1 - l.finpow());
-                Lines.circle(Tmp.v2.x, Tmp.v2.y, 65 * e.fin());
+                Lines.circle(unitPos.x, unitPos.y, 65 * e.finpow());
             });
             e.scaled(55, l -> {
                 Lines.stroke(l.fslope() * 2);
-                Lines.circle(Tmp.v2.x, Tmp.v2.y, 85);
+                Lines.circle(unitPos.x, unitPos.y, 85);
             });
             Lines.stroke(4 - e.finpow() * 4);
             Lines.circle(e.x, e.y, 48 * e.fin());
             Lines.stroke(2 - e.finpow() * 2);
-            Lines.square(Tmp.v2.x, Tmp.v2.y, 42 * e.fin(), Mathf.absin(Time.delta/5, 360));
-            Lines.square(Tmp.v2.x, Tmp.v2.y, 42 * e.fin(), Mathf.absin(Time.delta/5, 360) + 180);
+            Lines.square(unitPos.x, unitPos.y, 85 * e.finpow(), Mathf.absin(Time.time/5, 360));
+            Lines.square(unitPos.x, unitPos.y, 85 * e.finpow(), Mathf.absin(Time.time/5, 360) + 180);
+            float alphaOut = Interp.slowFast.apply(e.fin());
+            //Apply fslope
+            alphaOut = (0.5F - Math.abs(alphaOut - 0.5F)) * 2.0F;
+
+            Fill.light(unitPos.x, unitPos.y, 16, 85 * e.fout(), Tmp.c1.set(Palr.pulseChargeStart).a(e.finpow()), Tmp.c2.set(Palr.pulseChargeEnd).a(alphaOut));
         }),
 
         craeNukeHit = new Effect(125, 125, e -> {

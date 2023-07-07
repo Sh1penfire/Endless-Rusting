@@ -32,7 +32,6 @@ public class EndlessRusting extends Mod{
     public static RustedSettingAdder settingAdder = new RustedSettingAdder();
     private static Seq<UnitType> immunityUnits;
     private static Seq<UnitType> empImmune;
-    private static Seq<StatusEffect> whitelistedStuns = Seq.with(StatusEffects.unmoving);
 
     public EndlessRusting(){
 

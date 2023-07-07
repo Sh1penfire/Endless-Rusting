@@ -1,5 +1,6 @@
 package rusting.entities.units.flying;
 
+import arc.graphics.Blending;
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
@@ -8,9 +9,12 @@ import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.entities.Units;
+import mindustry.game.Team;
 import mindustry.gen.Bullet;
 import mindustry.gen.Hitboxc;
+import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Trail;
 import rusting.content.*;
@@ -58,13 +62,28 @@ public class StingrayUnitEntity extends AntiquimGuardianUnitEntity {
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+        float tx = x, ty = y;
+        for (int i = 0; i < 8; i++) {
+            Time.run(i * 4 + Mathf.random(3), () -> {
+                Tmp.v1.trns(Mathf.random(360), Mathf.random(35));
+                RustingBullets.boltingVortex.create(this, tx + Tmp.v1.x, ty + Tmp.v1.y, Tmp.v1.angle());
+            });
+        }
+        Fxr.pulseSmoke.at(x, y, 0, new Float[]{125f * Vars.tilesize, 5f});
+        Fxr.craeNukebuthehe.at(x, y, Mathf.random(0, 360));
+        Sounds.laserblast.at(x, y, 0.35f);
+    }
+
+    @Override
     public void update() {
         super.update();
         Tmp.v1.set(trailPos.get(0)).rotate(rotation - 90);
         trailSeq.get(0).update(x + Tmp.v1.x, y + Tmp.v1.y);
         Tmp.v1.set(trailPos.get(1)).rotate(rotation - 90);
         trailSeq.get(1).update(x + Tmp.v1.x, y + Tmp.v1.y);
-        if(shieldCharge >= 2000) {
+        if(shieldCharge >= 2000 && !dead) {
             shieldCharge += addableShieldCharge;
             addableShieldCharge = 1500;
             shieldCharge = 0;
@@ -86,6 +105,7 @@ public class StingrayUnitEntity extends AntiquimGuardianUnitEntity {
     @Override
     public void draw() {
         Draw.reset();
+        Draw.blend(Blending.additive);
         Draw.z(Layer.flyingUnit - 0.1f);
         trailSeq.each(t -> t.draw(Palr.lightstriken, 4));
         if(iframes > 0){
@@ -113,6 +133,7 @@ public class StingrayUnitEntity extends AntiquimGuardianUnitEntity {
             Lines.stroke(3 * tmpFloat * hitTime);
             Lines.circle(x, y, tmpFloat2);
         }
+        Draw.blend();
         super.draw();
     }
 
