@@ -6,8 +6,10 @@ Endless Rusting was origionaly made because I wanted to try learn java, but now 
 
 ## Dev Note
 Hi, Sh1penfire here. I am not working on Endless Rusting anymore, period.
-I've decided to leave the project as a v6 mod due to the time it'd take to port, and i'd rather let it be. If you still want to play the mod, isntall a v6 build or a v7 beta build of Mindustry. Im sorry to those expecting that I'd come back for this or Pixelcraft.
+I previously decided to leave the project as a v6 mod due to the time it'd take to port, and i'd rather let it be. If you still want to play the mod, isntall a v6 build or a v7 beta build of Mindustry. Im sorry to those waiting for me ti come back for this or Pixelcraft.
 I shoudn't have setup expectations to come back. Im aware that most people have moved on though, and I think it's for the better.
+
+PS: Im going to come back and port this and pixelcraft after I finish Meld's HJSON version, since I figured it'd be a nice way to say goodbye to the mod
 
 ## Compiling
 
